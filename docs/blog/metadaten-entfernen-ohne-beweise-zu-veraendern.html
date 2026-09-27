@@ -3,17 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Apply theme before first paint to avoid flash -->
   <script>(function(){var t;try{t=localStorage.getItem('ow-theme')}catch(e){}if(!t)t=window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t)})()</script>
-  <title>HinSchG-Blog: Praxis für interne Meldestellen | OpenWhistle</title>
-  <meta name="description" content="Der OpenWhistle-Blog zum HinSchG: Pflichten und Fristen, interne Meldestelle einrichten, Hinweisgebersysteme im Vergleich und was jede Version ändert.">
+  <title>Metadaten entfernen, ohne das Beweisfoto zu verändern</title>
+  <meta name="description" content="Wie OpenWhistle GPS-Daten und Windows-Benutzernamen aus Anhängen entfernt, ohne ein Pixel zu ändern, und warum der alte Weg Beweisfotos schwarz färbte.">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#08080a" media="(prefers-color-scheme: dark)">
-  <link rel="canonical" href="https://openwhistle.net/blog/">
-  <link rel="alternate" hreflang="en" href="https://openwhistle.net/blog/en.html">
-  <link rel="alternate" hreflang="de" href="https://openwhistle.net/blog/">
-  <link rel="alternate" hreflang="x-default" href="https://openwhistle.net/blog/en.html">
+  <link rel="canonical" href="https://openwhistle.net/blog/metadaten-entfernen-ohne-beweise-zu-veraendern.html">
+  <link rel="alternate" hreflang="en" href="https://openwhistle.net/blog/removing-metadata-without-altering-evidence.html">
+  <link rel="alternate" hreflang="de" href="https://openwhistle.net/blog/metadaten-entfernen-ohne-beweise-zu-veraendern.html">
+  <link rel="alternate" hreflang="x-default" href="https://openwhistle.net/blog/removing-metadata-without-altering-evidence.html">
   <link rel="icon" type="image/svg+xml" href="../favicon.svg">
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
@@ -21,19 +20,22 @@
   <link rel="preload" href="../fonts/sora-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 
   <!-- Open Graph / Twitter -->
-  <meta property="og:type" content="website">
+  <meta property="og:type" content="article">
   <meta property="og:site_name" content="OpenWhistle">
-  <meta property="og:url" content="https://openwhistle.net/blog/">
-  <meta property="og:title" content="HinSchG-Blog: Praxis für interne Meldestellen | OpenWhistle">
-  <meta property="og:description" content="Der OpenWhistle-Blog zum HinSchG: Pflichten und Fristen, interne Meldestelle einrichten, Hinweisgebersysteme im Vergleich und was jede Version ändert.">
+  <meta property="og:url" content="https://openwhistle.net/blog/metadaten-entfernen-ohne-beweise-zu-veraendern.html">
+  <meta property="og:title" content="Metadaten entfernen, ohne das Beweisfoto zu verändern">
+  <meta property="og:description" content="Wie OpenWhistle GPS-Daten und Windows-Benutzernamen aus Anhängen entfernt, ohne ein Pixel zu ändern, und warum der alte Weg Beweisfotos schwarz färbte.">
   <meta property="og:image" content="https://openwhistle.net/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="OpenWhistle: sichere Hinweisgeber-Meldungen">
   <meta property="og:locale" content="de_DE">
+  <meta property="article:published_time" content="2026-09-27">
+  <meta property="article:modified_time" content="2026-09-27">
+  <meta property="article:section" content="Datenschutz">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="HinSchG-Blog: Praxis für interne Meldestellen | OpenWhistle">
-  <meta name="twitter:description" content="Der OpenWhistle-Blog zum HinSchG: Pflichten und Fristen, interne Meldestelle einrichten, Hinweisgebersysteme im Vergleich und was jede Version ändert.">
+  <meta name="twitter:title" content="Metadaten entfernen, ohne das Beweisfoto zu verändern">
+  <meta name="twitter:description" content="Wie OpenWhistle GPS-Daten und Windows-Benutzernamen aus Anhängen entfernt, ohne ein Pixel zu ändern, und warum der alte Weg Beweisfotos schwarz färbte.">
   <meta name="twitter:image" content="https://openwhistle.net/og-image.png">
   <meta name="twitter:image:alt" content="OpenWhistle: sichere Hinweisgeber-Meldungen">
 
@@ -41,10 +43,21 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "Blog",
-    "name": "OpenWhistle Blog",
-    "url": "https://openwhistle.net/blog/",
-    "inLanguage": "de",
+    "@type": "BlogPosting",
+    "headline": "Metadaten entfernen, ohne das Beweisfoto zu verändern",
+    "description": "Wie OpenWhistle GPS-Daten und Windows-Benutzernamen aus Anhängen entfernt, ohne ein Pixel zu ändern, und warum der alte Weg Beweisfotos schwarz färbte.",
+    "url": "https://openwhistle.net/blog/metadaten-entfernen-ohne-beweise-zu-veraendern.html",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://openwhistle.net/blog/metadaten-entfernen-ohne-beweise-zu-veraendern.html"
+    },
+    "datePublished": "2026-09-27",
+    "dateModified": "2026-09-27",
+    "author": {
+      "@type": "Organization",
+      "name": "OpenWhistle Contributors",
+      "url": "https://github.com/openwhistle"
+    },
     "publisher": {
       "@type": "Organization",
       "name": "OpenWhistle",
@@ -53,7 +66,9 @@
         "@type": "ImageObject",
         "url": "https://openwhistle.net/apple-touch-icon.png"
       }
-    }
+    },
+    "image": "https://openwhistle.net/og-image.png",
+    "inLanguage": "de"
   }
   </script>
   <script type="application/ld+json">
@@ -72,6 +87,12 @@
         "position": 2,
         "name": "Blog",
         "item": "https://openwhistle.net/blog/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Metadaten entfernen, ohne das Beweisfoto zu verändern",
+        "item": "https://openwhistle.net/blog/metadaten-entfernen-ohne-beweise-zu-veraendern.html"
       }
     ]
   }
@@ -92,8 +113,7 @@
 
   <style>
     /* ================================================================
-       OpenWhistle Blog — shares docs/index.html's design tokens, so the
-       blog looks like the rest of the site
+       OpenWhistle Blog article — shares docs/index.html's design tokens
        ================================================================ */
 
     :root {
@@ -165,7 +185,8 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; font-size: 16px; -webkit-text-size-adjust: 100%; }
     img, svg { display: block; max-width: 100%; }
-    a { color: inherit; text-decoration: none; }
+    a { color: var(--accent); text-decoration: underline; text-decoration-color: transparent; transition: text-decoration-color var(--duration-fast) ease; }
+    a:hover { text-decoration-color: currentColor; }
     button { cursor: pointer; border: none; background: none; font: inherit; }
     ul, ol { list-style: none; }
 
@@ -180,30 +201,22 @@
       transition: background var(--duration-mid) ease, color var(--duration-mid) ease;
     }
 
-    /* ── Skip link ───────────────────────────────────────────────── */
     .skip-link {
-      position: absolute;
-      top: -100%;
-      left: var(--space-4);
-      background: var(--accent);
-      color: #fff;
+      position: absolute; top: -100%; left: var(--space-4);
+      background: var(--accent); color: #fff;
       padding: var(--space-2) var(--space-4);
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      z-index: 9999;
+      font-family: var(--font-mono); font-size: 0.75rem; z-index: 9999;
+      text-decoration: none;
     }
     .skip-link:focus { top: var(--space-4); }
 
     /* ── Navigation ──────────────────────────────────────────────── */
     .site-nav {
-      position: sticky;
-      top: 0;
-      z-index: 200;
+      position: sticky; top: 0; z-index: 200;
       background: var(--nav-bg);
       border-bottom: 1px solid rgba(255,255,255,0.08);
       box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
-    /* Light-mode nav overrides — nav-bg is white, so text must be dark */
     [data-theme="light"] .site-nav { border-bottom-color: #e2e8f0; }
     [data-theme="light"] .nav-logo { color: #1e293b; }
     [data-theme="light"] .nav-logo:hover { color: #0c7253; }
@@ -218,44 +231,24 @@
     [data-theme="light"] .nav-toggle { color: #374151; }
 
     .nav-inner {
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: 0 var(--space-8);
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-6);
+      max-width: var(--max-width); margin: 0 auto; padding: 0 var(--space-8);
+      height: 60px; display: flex; align-items: center; justify-content: space-between; gap: var(--space-6);
     }
-
     .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-      font-family: var(--font-display);
-      font-size: 0.9rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      color: #e2dcd2;
-      flex-shrink: 0;
-      transition: color var(--duration-fast) ease;
+      display: flex; align-items: center; gap: var(--space-3);
+      font-family: var(--font-display); font-size: 0.9rem; font-weight: 600;
+      letter-spacing: 0.04em; color: #e2dcd2; flex-shrink: 0;
+      transition: color var(--duration-fast) ease; text-decoration: none;
     }
     .nav-logo:hover { color: #fff; }
     .nav-logo svg { flex-shrink: 0; }
     .nav-logo svg path, .nav-logo svg circle { stroke: var(--accent); }
 
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: var(--space-6);
-    }
+    .nav-links { display: flex; align-items: center; gap: var(--space-6); }
     .nav-links a {
-      font-family: var(--font-body);
-      font-size: 0.8rem;
-      letter-spacing: 0.02em;
-      color: rgba(226, 220, 210, 0.65);
-      transition: color var(--duration-fast) ease;
-      white-space: nowrap;
+      font-family: var(--font-body); font-size: 0.8rem; letter-spacing: 0.02em;
+      color: rgba(226, 220, 210, 0.65); transition: color var(--duration-fast) ease;
+      white-space: nowrap; text-decoration: none;
     }
     .nav-links a:hover { color: #e2dcd2; }
     .nav-links a.active { color: var(--accent); }
@@ -263,28 +256,15 @@
     .nav-cta {
       padding: var(--space-2) var(--space-4) !important;
       border: 1px solid rgba(12, 114, 83, 0.5) !important;
-      color: var(--accent) !important;
-      border-radius: 2px;
+      color: var(--accent) !important; border-radius: 2px;
       transition: background var(--duration-fast) ease !important;
     }
     .nav-cta:hover { background: rgba(12, 114, 83, 0.15) !important; color: var(--accent-strong) !important; }
 
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: var(--space-4);
-      flex-shrink: 0;
-    }
-
+    .nav-actions { display: flex; align-items: center; gap: var(--space-4); flex-shrink: 0; }
     .theme-toggle {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 34px;
-      height: 34px;
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 2px;
-      color: rgba(226, 220, 210, 0.65);
+      display: flex; align-items: center; justify-content: center; width: 34px; height: 34px;
+      border: 1px solid rgba(255,255,255,0.12); border-radius: 2px; color: rgba(226, 220, 210, 0.65);
       transition: color var(--duration-fast) ease, border-color var(--duration-fast) ease;
     }
     .theme-toggle:hover { color: #e2dcd2; border-color: rgba(255,255,255,0.25); }
@@ -293,227 +273,76 @@
     [data-theme="dark"] .icon-moon { display: none; }
     [data-theme="dark"] .icon-sun { display: block; }
 
-    .nav-toggle {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      padding: var(--space-2);
-      color: rgba(226, 220, 210, 0.65);
-    }
-    .nav-toggle span {
-      display: block;
-      width: 20px;
-      height: 1.5px;
-      background: currentColor;
-    }
+    .nav-toggle { display: none; flex-direction: column; gap: 5px; padding: var(--space-2); color: rgba(226, 220, 210, 0.65); }
+    .nav-toggle span { display: block; width: 20px; height: 1.5px; background: currentColor; }
 
-    /* ── Page header ─────────────────────────────────────────────── */
-    .page-header {
-      padding: var(--space-24) var(--space-8) var(--space-16);
-      background: var(--bg-surface);
-      border-bottom: 1px solid var(--border-subtle);
-      text-align: center;
-    }
-    .page-header-eyebrow {
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: var(--space-4);
-    }
-    .page-header h1 {
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 4vw, 3rem);
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      color: var(--text-primary);
-      margin-bottom: var(--space-4);
-    }
-    .page-header p {
-      font-size: 1.05rem;
-      font-weight: 300;
-      color: var(--text-secondary);
-      max-width: 50ch;
-      margin: 0 auto;
-    }
+    /* ── Article layout ──────────────────────────────────────────── */
+    .article-wrap { max-width: 70ch; margin: 0 auto; padding: var(--space-24) var(--space-8) var(--space-16); }
 
-    /* ── Blog grid ───────────────────────────────────────────────── */
-    .blog-section { padding: var(--space-16) var(--space-8); }
-    .blog-inner { max-width: var(--max-width); margin: 0 auto; }
-    .blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+    .article-header { margin-bottom: var(--space-12); padding-bottom: var(--space-8); border-bottom: 1px solid var(--border-subtle); }
+    .article-tag { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: var(--space-4); }
+    .article-title { font-family: var(--font-display); font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; color: var(--text-primary); margin-bottom: var(--space-4); }
+    .article-subtitle { font-size: 1.1rem; font-weight: 300; color: var(--text-secondary); line-height: 1.6; margin-bottom: var(--space-6); }
+    .article-meta { font-size: 0.8rem; color: var(--text-muted); display: flex; gap: var(--space-6); flex-wrap: wrap; }
 
-    .article-card {
-      background: var(--bg-base);
-      border: 1px solid var(--border-subtle);
-      border-top: 4px solid var(--accent-dim);
-      padding: var(--space-6);
-      display: flex;
-      flex-direction: column;
-      transition: border-top-color var(--duration-mid) ease, transform var(--duration-mid) ease, box-shadow var(--duration-mid) ease;
+    /* ── Article body ─────────────────────────────────────────────── */
+    .article-body h2 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; color: var(--text-primary); margin: var(--space-10) 0 var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--border-subtle); }
+    .article-body h3 { font-family: var(--font-display); font-size: 1.15rem; font-weight: 600; color: var(--text-primary); margin: var(--space-8) 0 var(--space-3); }
+    .article-body p { margin-bottom: var(--space-5); color: var(--text-secondary); line-height: 1.75; }
+    .article-body strong { color: var(--text-primary); font-weight: 600; }
+    .article-body ul, .article-body ol { margin: var(--space-4) 0 var(--space-6) var(--space-6); }
+    .article-body ul { list-style: disc; }
+    .article-body ol { list-style: decimal; }
+    .article-body li { margin-bottom: var(--space-2); color: var(--text-secondary); }
+
+    code { font-family: var(--font-mono); font-size: 0.88em; background: var(--bg-surface); padding: 0.15em 0.4em; border-radius: 3px; color: var(--accent); border: 1px solid var(--border-subtle); }
+
+    .article-cta { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-top: 4px solid var(--accent); padding: var(--space-8); margin: var(--space-10) 0; text-align: center; }
+    .article-cta h3 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-3); }
+    .article-cta p { font-size: 0.92rem; color: var(--text-secondary); margin-bottom: var(--space-6); }
+    .btn-cta {
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      padding: var(--space-3) var(--space-6); background: var(--accent); color: #fff; border-radius: 2px;
+      font-size: 0.85rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+      text-decoration: none; transition: background var(--duration-fast) ease;
     }
-    .article-card:hover {
-      border-top-color: var(--accent);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-    }
-    [data-theme="dark"] .article-card { background: var(--bg-surface); }
-    [data-theme="dark"] .article-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
-    .article-tag {
-      font-family: var(--font-mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: var(--space-3);
-    }
-    .article-title {
-      font-family: var(--font-display);
-      font-size: 1.15rem;
-      font-weight: 700;
-      line-height: 1.3;
-      letter-spacing: -0.01em;
-      color: var(--text-primary);
-      margin-bottom: var(--space-3);
-      flex-grow: 1;
-    }
-    .article-excerpt {
-      font-size: 0.88rem;
-      color: var(--text-secondary);
-      line-height: 1.65;
-      margin-bottom: var(--space-5);
-    }
-    .article-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-bottom: var(--space-5);
-    }
-    .article-read-more {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-2);
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--accent);
-      letter-spacing: 0.02em;
-      transition: gap var(--duration-fast) ease;
-    }
-    .article-read-more:hover { gap: var(--space-3); }
+    .btn-cta:hover { background: var(--accent-strong); color: #fff; text-decoration: none; }
 
     /* ── Footer ──────────────────────────────────────────────────── */
-    .site-footer {
-      background: var(--footer-bg);
-      color: rgba(226, 220, 210, 0.7);
-      padding: var(--space-16) var(--space-8) var(--space-8);
-    }
-    .footer-inner {
-      max-width: var(--max-width);
-      margin: 0 auto;
-    }
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 1.8fr 1fr 1fr;
-      gap: var(--space-12);
-      margin-bottom: var(--space-12);
-      padding-bottom: var(--space-10);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-    }
-    .footer-logo {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #e2dcd2;
-      margin-bottom: var(--space-4);
-    }
-    .footer-tagline {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: rgba(226, 220, 210, 0.5);
-      line-height: 1.6;
-      max-width: 32ch;
-    }
-    .footer-col-title {
-      font-family: var(--font-mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: rgba(226, 220, 210, 0.4);
-      margin-bottom: var(--space-5);
-    }
-    .footer-links {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-3);
-    }
-    .footer-links a {
-      font-size: 0.875rem;
-      color: rgba(226, 220, 210, 0.6);
-      transition: color var(--duration-fast) ease;
-    }
+    .site-footer { background: var(--footer-bg); color: rgba(226, 220, 210, 0.7); padding: var(--space-16) var(--space-8) var(--space-8); }
+    .footer-inner { max-width: var(--max-width); margin: 0 auto; }
+    .footer-grid { display: grid; grid-template-columns: 1.8fr 1fr 1fr; gap: var(--space-12); margin-bottom: var(--space-12); padding-bottom: var(--space-10); border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .footer-logo { display: flex; align-items: center; gap: var(--space-3); font-family: var(--font-mono); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: #e2dcd2; margin-bottom: var(--space-4); }
+    .footer-tagline { font-size: 0.875rem; font-weight: 500; color: rgba(226, 220, 210, 0.5); line-height: 1.6; max-width: 32ch; }
+    .footer-col-title { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(226, 220, 210, 0.4); margin-bottom: var(--space-5); }
+    .footer-links { display: flex; flex-direction: column; gap: var(--space-3); }
+    .footer-links a { font-size: 0.875rem; color: rgba(226, 220, 210, 0.6); transition: color var(--duration-fast) ease; text-decoration: none; }
     .footer-links a:hover { color: #e2dcd2; }
-    .footer-bottom {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.06em;
-      color: rgba(226, 220, 210, 0.3);
-      gap: var(--space-4);
-      flex-wrap: wrap;
-    }
-    .footer-bottom a {
-      color: rgba(226, 220, 210, 0.4);
-      transition: color var(--duration-fast) ease;
-    }
+    .footer-bottom { display: flex; align-items: center; justify-content: space-between; font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.06em; color: rgba(226, 220, 210, 0.3); gap: var(--space-4); flex-wrap: wrap; }
+    .footer-bottom a { color: rgba(226, 220, 210, 0.4); transition: color var(--duration-fast) ease; text-decoration: none; }
     .footer-bottom a:hover { color: rgba(226, 220, 210, 0.7); }
 
     /* ── Responsive ─────────────────────────────────────────────── */
-    /* Nav collapses at 1080px, not 768px: at 1024px the full item list
-       no longer fits the nav-inner row and overflows the viewport
-       horizontally. */
     @media (max-width: 1080px) {
       .nav-links { display: none; }
       .nav-links.open {
-        display: flex;
-        flex-direction: column;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        right: 0;
-        background: var(--nav-bg);
-        border-bottom: 1px solid rgba(255,255,255,0.08);
-        padding: var(--space-5) var(--space-6);
-        gap: var(--space-4);
-        z-index: 201;
+        display: flex; flex-direction: column; position: absolute; top: 60px; left: 0; right: 0;
+        background: var(--nav-bg); border-bottom: 1px solid rgba(255,255,255,0.08);
+        padding: var(--space-5) var(--space-6); gap: var(--space-4); z-index: 201;
       }
       .nav-toggle { display: flex; }
     }
 
     @media (max-width: 768px) {
-      .blog-grid { grid-template-columns: 1fr 1fr; }
+      .article-wrap { padding: var(--space-12) var(--space-5) var(--space-10); }
       .footer-grid { grid-template-columns: 1fr; gap: var(--space-8); }
       .footer-bottom { flex-direction: column; align-items: flex-start; }
-      .page-header { padding: var(--space-16) var(--space-5); }
-    }
-
-    @media (max-width: 540px) {
-      .blog-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <a href="#main-content" class="skip-link">Zum Inhalt springen</a>
+  <a class="skip-link" href="#main-content">Zum Inhalt springen</a>
 
-  <!-- Navigation -->
   <nav class="site-nav" role="navigation" aria-label="Hauptnavigation">
     <div class="nav-inner">
       <a href="../index.html" class="nav-logo" aria-label="OpenWhistle Startseite">
@@ -540,18 +369,16 @@
         <li><a href="../roadmap.html">Roadmap</a></li>
         <li><a href="../changelog.html">Änderungsprotokoll</a></li>
         <li><a href="index.html" class="active" aria-current="page">Blog</a></li>
-        <li><a href="en.html" hreflang="en">English</a></li>
+        <li><a href="removing-metadata-without-altering-evidence.html" hreflang="en">English</a></li>
         <li><a href="https://github.com/openwhistle/OpenWhistle" rel="noopener noreferrer" target="_blank">GitHub</a></li>
         <li><a href="https://demo.openwhistle.net" rel="noopener noreferrer" target="_blank" class="nav-cta">Demo testen</a></li>
       </ul>
 
       <div class="nav-actions">
         <button class="theme-toggle" id="theme-toggle" aria-label="Dunkelmodus umschalten">
-          <!-- Moon icon -->
           <svg class="icon-moon" viewBox="0 0 16 16" fill="none">
             <path d="M13.5 9.5A6 6 0 016 2a6 6 0 100 12 6 6 0 007.5-4.5z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
           </svg>
-          <!-- Sun icon -->
           <svg class="icon-sun" viewBox="0 0 16 16" fill="none">
             <circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.3"/>
             <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M11.54 4.46l-1.41 1.41M4.95 11.54l-1.41 1.41" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
@@ -562,124 +389,73 @@
   </nav>
 
   <main id="main-content">
-    <header class="page-header">
-      <p class="page-header-eyebrow">Wissen &amp; Praxis</p>
-      <h1>OpenWhistle Blog</h1>
-      <p>HinSchG-Compliance, Hinweisgeberschutz und interne Meldestellen praxisnah erklärt.</p>
-    </header>
+    <div class="article-wrap">
+      <article>
+        <header class="article-header">
+          <p class="article-tag">Datenschutz · Anhänge · v2.1</p>
+          <h1 class="article-title">Metadaten entfernen, ohne das Beweisfoto zu verändern</h1>
+          <p class="article-subtitle">Ein Foto vom Diensthandy verrät, wo es entstand. Eine Excel-Datei nennt den Windows-Benutzernamen. OpenWhistle entfernt beides. Bis Version 2.0 veränderte es dabei auch das Beweisstück selbst.</p>
+          <div class="article-meta">
+            <span>27. September 2026</span>
+            <span>4 Min. Lesezeit</span>
+            <span>OpenWhistle Contributors</span>
+          </div>
+        </header>
 
-    <section class="blog-section">
-      <div class="blog-inner">
-        <div class="blog-grid" role="list">
+        <div class="article-body">
 
-          <article class="article-card" role="listitem">
-            <p class="article-tag">DSGVO · EU-Hosting · Sicherheit</p>
-            <h2 class="article-title">
-              <a href="hinweisgebersystem-dsgvo-eu-hosting.html">Hinweisgebersystem mit EU-Hosting und DSGVO: wo die Daten liegen und was verschlüsselt ist</a>
-            </h2>
-            <p class="article-excerpt">Wer Hinweisgebersysteme mit EU-Hosting anbietet, was OpenWhistle verschlüsselt und nie speichert, und welche DSGVO-Pflichten beim Betreiber bleiben.</p>
-            <div class="article-meta">
-              <span>September 2026</span>
-              <span>5 Min. Lesezeit</span>
-            </div>
-            <a href="hinweisgebersystem-dsgvo-eu-hosting.html" class="article-read-more" aria-label="Hinweisgebersystem mit EU-Hosting und DSGVO lesen">
-              Weiterlesen &rarr;
-            </a>
-          </article>
+          <p>Wer einen Missstand meldet, hängt oft einen Beleg an: ein Foto, einen Screenshot, eine Tabelle. Jede dieser Dateien trägt Daten, die niemand sieht. Ein Handyfoto enthält GPS-Koordinaten und die Seriennummer der Kamera. Eine Office-Datei enthält den Autor. Eine anonyme Meldung ist nur so anonym wie ihr Anhang.</p>
 
-          <article class="article-card" role="listitem">
-            <p class="article-tag">Kosten · Open Source · HinSchG</p>
-            <h2 class="article-title">
-              <a href="interne-meldestelle-kostenlos.html">Kostenloses Hinweisgebersystem: was „kostenlos“ wirklich kostet</a>
-            </h2>
-            <p class="article-excerpt">Die Lizenz kostet 0 €, die Pflichten des HinSchG bleiben. Was an Server, Betrieb und Arbeit übrig bleibt, welche Optionen es gibt, mit veröffentlichten Preisen.</p>
-            <div class="article-meta">
-              <span>September 2026</span>
-              <span>6 Min. Lesezeit</span>
-            </div>
-            <a href="interne-meldestelle-kostenlos.html" class="article-read-more" aria-label="Kostenloses Hinweisgebersystem lesen">
-              Weiterlesen &rarr;
-            </a>
-          </article>
+          <p>OpenWhistle entfernt diese Daten deshalb beim Hochladen, bevor irgendetwas gespeichert wird. Eine Datei, die sich nicht säubern lässt, wird abgelehnt, nie ungesäubert abgelegt.</p>
 
-          <article class="article-card" role="listitem">
-            <p class="article-tag">Datenschutz · Anhänge · v2.1</p>
-            <h2 class="article-title">
-              <a href="metadaten-entfernen-ohne-beweise-zu-veraendern.html">Metadaten entfernen, ohne das Beweisfoto zu verändern</a>
-            </h2>
-            <p class="article-excerpt">Ein Handyfoto verrät, wo es entstand, eine Excel-Datei den Windows-Benutzernamen. Wie OpenWhistle beides entfernt, ohne ein Pixel zu ändern, und warum der alte Weg Screenshots schwarz färbte.</p>
-            <div class="article-meta">
-              <span>September 2026</span>
-              <span>4 Min. Lesezeit</span>
-            </div>
-            <a href="metadaten-entfernen-ohne-beweise-zu-veraendern.html" class="article-read-more" aria-label="Metadaten entfernen, ohne das Beweisfoto zu verändern lesen">
-              Weiterlesen &rarr;
-            </a>
-          </article>
+          <h2>Der alte Weg: das Bild neu malen</h2>
+          <p>Bis Version 2.0 las OpenWhistle ein Bild ein und schrieb nur die Pixel in eine neue Datei. Metadaten kamen so garantiert nicht mit. Die Pixel aber auch nicht immer. Ein Bug-Bounty-Durchlauf hat nachgemessen:</p>
 
-          <article class="article-card" role="listitem">
-            <p class="article-tag">Release · Sicherheit · v2.0</p>
-            <h2 class="article-title">
-              <a href="was-ist-neu-in-2-0.html">Was ist neu in OpenWhistle 2.0? Sechs Funde aus einem Härtungs-Release</a>
-            </h2>
-            <p class="article-excerpt">Ein PDF, das fremde Schriften verschluckte. Ein Header, dem zu sehr vertraut wurde. Und ein Rollback, der halbe Sitzungen zum Absturz brachte — sechs Funde aus Release 2.0, erzählt so, wie sie gefunden wurden.</p>
-            <div class="article-meta">
-              <span>September 2026</span>
-              <span>6 Min. Lesezeit</span>
-            </div>
-            <a href="was-ist-neu-in-2-0.html" class="article-read-more" aria-label="Was ist neu in OpenWhistle 2.0 lesen">
-              Weiterlesen &rarr;
-            </a>
-          </article>
+          <div class="table-scroll">
+          <table>
+            <thead><tr><th>Anhang</th><th>Vorher</th><th>Nach dem Säubern (bis 2.0)</th></tr></thead>
+            <tbody>
+              <tr><td>PNG mit Farbpalette, typisch für Screenshots</td><td>Rot (200, 10, 30)</td><td>Schwarz (0, 0, 0)</td></tr>
+              <tr><td>Animiertes PNG oder WebP</td><td>2 Einzelbilder</td><td>1 Einzelbild</td></tr>
+              <tr><td>JPEG-Foto</td><td>5,5 MB</td><td>14,4 MB, über der Grenze von 10 MB</td></tr>
+              <tr><td>PNG mit 12 000 × 12 000 Pixeln</td><td>450 KB Datei</td><td>1,1 GB Arbeitsspeicher</td></tr>
+            </tbody>
+          </table>
+          </div>
 
-          <article class="article-card" role="listitem">
-            <p class="article-tag">HinSchG · Compliance</p>
-            <h2 class="article-title">
-              <a href="hinschg-compliance-leitfaden.html">HinSchG-Compliance-Leitfaden 2026: Pflichten, Fristen und Checkliste ab 50 Beschäftigten</a>
-            </h2>
-            <p class="article-excerpt">Wer eine interne Meldestelle braucht, welche Fristen und Bußgelder gelten und was Software davon abdeckt. Jede Aussage mit Paragraf, geprüft am Gesetzestext.</p>
-            <div class="article-meta">
-              <span>Aktualisiert September 2026</span>
-              <span>8 Min. Lesezeit</span>
-            </div>
-            <a href="hinschg-compliance-leitfaden.html" class="article-read-more" aria-label="HinSchG-Compliance-Leitfaden lesen">
-              Weiterlesen &rarr;
-            </a>
-          </article>
+          <p>Ein Beweisfoto, das nach dem Upload anders aussieht als vorher, ist ein schlechtes Beweisfoto. Und jedes JPEG wurde neu komprimiert: Kein einziges Pixel blieb, wie es war.</p>
 
-          <article class="article-card" role="listitem">
-            <p class="article-tag">Vergleich · Kosten</p>
-            <h2 class="article-title">
-              <a href="whistleblower-software-vergleich.html">Hinweisgebersystem-Anbieter im Vergleich 2026: Open Source, verwaltet und SaaS</a>
-            </h2>
-            <p class="article-excerpt">Sieben Kriterien für den Vergleich, dazu Lizenz, Hosting, veröffentlichter Preis und Sprachen von fünf Hinweisgebersystemen. Jede Angabe mit Quelle und Abrufdatum.</p>
-            <div class="article-meta">
-              <span>Aktualisiert September 2026</span>
-              <span>7 Min. Lesezeit</span>
-            </div>
-            <a href="whistleblower-software-vergleich.html" class="article-read-more" aria-label="Hinweisgebersystem-Anbieter im Vergleich lesen">
-              Weiterlesen &rarr;
-            </a>
-          </article>
+          <h2>Warum kein Test es merkte</h2>
+          <p>Die Tests fragten, ob die Metadaten weg sind. Das waren sie. Ob das Bild danach noch dasselbe zeigte, fragte keiner. Und die Testbilder waren gewöhnliche Farbfotos, ohne Palette und ohne Animation. Der Fehler lag genau dort, wo niemand hinsah.</p>
 
-          <article class="article-card" role="listitem">
-            <p class="article-tag">Anleitung · Self-Hosting</p>
-            <h2 class="article-title">
-              <a href="interne-meldestelle-einrichten.html">Interne Meldestelle einrichten: Schritt-für-Schritt-Anleitung mit OpenWhistle 2.1.0</a>
-            </h2>
-            <p class="article-excerpt">Vom leeren Linux-Server bis zur ersten Testmeldung: Docker, Konfiguration, HTTPS-Zertifikat, Einrichtungsassistent und erste Schritte im Admin-Bereich.</p>
-            <div class="article-meta">
-              <span>Aktualisiert September 2026</span>
-              <span>10 Min. Lesezeit</span>
-            </div>
-            <a href="interne-meldestelle-einrichten.html" class="article-read-more" aria-label="Interne Meldestelle einrichten - Anleitung lesen">
-              Weiterlesen &rarr;
-            </a>
-          </article>
+          <h2>Der neue Weg: nur die Metadaten herausschneiden</h2>
+          <p>Seit Version 2.1 wird ein Bild nicht mehr neu geschrieben. JPEG, PNG und WebP bestehen aus einzelnen Abschnitten. OpenWhistle behält die Abschnitte, die das Bild beschreiben, und verwirft alle anderen. Die Pixel bleiben Bit für Bit gleich, die Datei wird nicht größer. Nur die Ausrichtung bleibt erhalten, damit ein Hochkantfoto hochkant bleibt.</p>
 
+          <p>Dabei fielen weitere Lücken auf, die jetzt geschlossen sind:</p>
+          <ul>
+            <li>Word und Excel speicherten den Windows-Benutzernamen in Ordnerpfaden wie <code>C:\Users\&lt;Name&gt;\…</code>.</li>
+            <li>PDFs trugen den Autor nicht nur im Dokument, sondern auch an einzelnen Seiten und Bildern.</li>
+            <li>Handyfotos mit bewegtem Foto hatten ein kurzes Video hinter dem Bild angehängt.</li>
+            <li>Eine eingebettete Vorschau im JPEG konnte das Bild vor dem Zuschneiden zeigen.</li>
+          </ul>
+
+          <p>Die gemessenen Zahlen und jeder einzelne Fix stehen im <a href="../changelog.html">Änderungsprotokoll</a>. Welche Formate angenommen werden, erklärt das <a href="../docs.html#whistleblower-guide">Handbuch für Hinweisgeber</a>.</p>
+
+          <div class="article-cta">
+            <h3>Selbst ausprobieren</h3>
+            <p>Die Live-Demo nimmt Anhänge an. Laden Sie ein Foto hoch und prüfen Sie die gespeicherte Datei mit einem EXIF-Werkzeug Ihrer Wahl.</p>
+            <a href="https://demo.openwhistle.net" rel="noopener noreferrer" target="_blank" class="btn-cta">Zur Demo &rarr;</a>
+          </div>
+
+          <p style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-subtle); font-size: 0.82rem; color: var(--text-muted);">
+            <strong>Weitere Ressourcen:</strong>
+            <a href="hinweisgebersystem-dsgvo-eu-hosting.html">DSGVO-konformes Hinweisgebersystem</a> ·
+            <a href="hinschg-compliance-leitfaden.html">HinSchG-Compliance-Leitfaden</a> ·
+            <a href="https://github.com/openwhistle/OpenWhistle/issues" rel="noopener noreferrer" target="_blank">GitHub Issues</a>
+          </p>
         </div>
-      </div>
-    </section>
+      </article>
+    </div>
   </main>
 
   <footer class="site-footer" role="contentinfo">
@@ -707,7 +483,7 @@
             <li><a href="../docs.html">Dokumentation</a></li>
             <li><a href="../changelog.html">Änderungsprotokoll</a></li>
             <li><a href="../de/">Startseite (Deutsch)</a></li>
-            <li><a href="en.html" hreflang="en">English</a></li>
+            <li><a href="removing-metadata-without-altering-evidence.html" hreflang="en">English</a></li>
             <li><a href="https://demo.openwhistle.net" rel="noopener noreferrer" target="_blank">Live-Demo</a></li>
             <li><a href="https://github.com/openwhistle/OpenWhistle/issues" rel="noopener noreferrer" target="_blank">Issues</a></li>
             <li><a href="https://github.com/openwhistle/OpenWhistle/blob/main/LICENSE" rel="noopener noreferrer" target="_blank">Lizenz (GPL-3.0)</a></li>
@@ -736,7 +512,6 @@
   </footer>
 
   <script>
-    // Theme toggle — detection already handled by inline head script
     var toggle = document.getElementById('theme-toggle');
     if (toggle) {
       toggle.addEventListener('click', function() {
@@ -746,8 +521,6 @@
         try { localStorage.setItem('ow-theme', next); } catch(e) {}
       });
     }
-
-    // Follow system preference changes when user hasn't overridden manually
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
       var stored;
       try { stored = localStorage.getItem('ow-theme'); } catch(e2) {}
@@ -755,8 +528,6 @@
         document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
       }
     });
-
-    // Mobile nav toggle
     var navToggle = document.querySelector('.nav-toggle');
     var navLinks = document.getElementById('nav-links');
     if (navToggle && navLinks) {
