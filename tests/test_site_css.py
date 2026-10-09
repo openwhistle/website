@@ -358,11 +358,36 @@ def test_figures_are_tabular() -> None:
     assert re.search(r"table[^{]*\{[^}]*tabular-nums", base)
 
 
+_FORCED = "@media (forced-colors: active) {"
+
+
+def _forced_blocks(text: str) -> list[tuple[int, int]]:
+    """(start, end) of every forced-colours block, matched by brace depth: an indented block
+    once ended at the next unindented `}` and hid every rule up to it from these checks."""
+    blocks, start = [], text.find(_FORCED)
+    while start != -1:
+        depth, i = 0, start + len(_FORCED) - 1
+        while True:
+            depth += {"{": 1, "}": -1}.get(text[i], 0)
+            i += 1
+            if not depth:
+                break
+        blocks.append((start, i))
+        start = text.find(_FORCED, i)
+    return blocks
+
+
 def _stripped(path: Path) -> str:
-    """The sheet without its forced-colours block, which draws real borders on purpose."""
-    return re.sub(
-        r"@media \(forced-colors: active\) \{.*?\n\}", "", path.read_text("utf-8"), flags=re.S
-    )
+    """The sheet without its forced-colours blocks, which draw real borders on purpose."""
+    text = path.read_text("utf-8")
+    for start, end in reversed(_forced_blocks(text)):
+        text = text[:start] + text[end:]
+    return text
+
+
+def test_a_forced_colours_block_ends_at_its_own_brace() -> None:
+    css = "a {}\n  @media (forced-colors: active) {\n    .x { border: 1px solid; }\n  }\n  .y {}\n}"
+    assert _forced_blocks(css) == [(7, css.index(".y") - 3)]
 
 
 def test_no_site_component_draws_a_decorative_border() -> None:
@@ -374,9 +399,8 @@ def test_no_site_component_draws_a_decorative_border() -> None:
 
 
 def _forced_colours(path: Path) -> str:
-    return "\n".join(
-        re.findall(r"@media \(forced-colors: active\) \{(.*?)\n\}", path.read_text("utf-8"), re.S)
-    )
+    text = path.read_text("utf-8")
+    return "\n".join(text[start + len(_FORCED) : end - 1] for start, end in _forced_blocks(text))
 
 
 def _listed(block: str, selector: str) -> bool:
