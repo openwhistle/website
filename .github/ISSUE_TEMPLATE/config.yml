@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: A bug or feature of OpenWhistle itself
+    url: https://github.com/openwhistle/OpenWhistle/issues/new/choose
+    about: The software lives in openwhistle/OpenWhistle; this repository is its website.
   - name: Report a vulnerability (private)
     url: https://github.com/openwhistle/OpenWhistle/security/advisories/new
     about: Never in a public issue. Research is welcome and unpaid; we credit every responsible report.

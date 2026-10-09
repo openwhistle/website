@@ -44,7 +44,7 @@
   },
   "packageRules": [
     {
-      "description": "Patch, pin and digest updates merge themselves once the required checks pass (main is protected). Everything else waits for a person: this software holds whistleblower reports, and a bad dependency is a breach, not an outage.",
+      "description": "Patch, pin and digest updates merge themselves once the required checks pass (main is protected). Everything else waits for a person.",
       "matchUpdateTypes": [
         "patch",
         "pin",
@@ -79,28 +79,7 @@
       ]
     },
     {
-      "description": "Security-relevant libraries never merge themselves, whatever the update type: crypto, JWT, password hashing, TOTP, the web framework and the attachment parsers that see untrusted files.",
-      "matchPackageNames": [
-        "cryptography",
-        "pyjwt",
-        "bcrypt",
-        "pyotp",
-        "fastapi",
-        "starlette",
-        "python-multipart",
-        "pypdf",
-        "pillow",
-        "python-ldap"
-      ],
-      "automerge": false,
-      "labels": [
-        "renovate",
-        "security-relevant",
-        "needs-review"
-      ]
-    },
-    {
-      "description": "uv is pinned in the Dockerfile (COPY --from=ghcr.io/astral-sh/uv) and in every workflow. They move in ONE pull request; tests/test_build_pins.py fails if they disagree.",
+      "description": "uv is pinned in website/Dockerfile (COPY --from=ghcr.io/astral-sh/uv) and in every workflow. They move in ONE pull request; tests/test_build_pins.py fails if they disagree.",
       "groupName": "uv",
       "matchPackageNames": [
         "uv",
@@ -108,7 +87,7 @@
       ]
     },
     {
-      "description": "Python is written in the Dockerfile, every workflow's setup-python and pyproject's requires-python. One pull request, never auto-merged for a version bump (minor/major) — a runtime bump is a release decision. Digest-only refreshes of the same tag are a different update type and fall through to the general digest rule above, so they still auto-merge.",
+      "description": "Python is written in website/Dockerfile, every workflow's setup-python and pyproject's requires-python. One pull request, never auto-merged for a version bump (minor/major) — a runtime bump is a release decision. Digest-only refreshes of the same tag are a different update type and fall through to the general digest rule above, so they still auto-merge.",
       "groupName": "Python runtime",
       "matchDepNames": [
         "python"
@@ -124,32 +103,6 @@
       ]
     },
     {
-      "description": "PostgreSQL and Redis images appear in both compose files, the Ansible template and three workflows. Each moves as one pull request. A PostgreSQL major needs a dump and restore (docs/en/docs/upgrade/index.html), so majors are never auto-merged.",
-      "groupName": "PostgreSQL",
-      "matchPackageNames": [
-        "postgres"
-      ],
-      "automerge": false
-    },
-    {
-      "description": "nginx is pinned by digest in docker-compose.prod.yml (docker-compose manager), the Ansible template and the CI docker run lines (regex manager). One pull request, or tests/test_build_pins.py fails on the half that moved.",
-      "groupName": "nginx",
-      "matchPackageNames": [
-        "nginx"
-      ]
-    },
-    {
-      "groupName": "Redis",
-      "matchPackageNames": [
-        "redis"
-      ],
-      "matchUpdateTypes": [
-        "major",
-        "minor"
-      ],
-      "automerge": false
-    },
-    {
       "description": "GitHub Actions, pinned to commit digests.",
       "matchManagers": [
         "github-actions"
@@ -163,9 +116,7 @@
     },
     {
       "matchManagers": [
-        "dockerfile",
-        "docker-compose",
-        "custom.regex"
+        "dockerfile"
       ],
       "matchDatasources": [
         "docker"
@@ -179,14 +130,16 @@
     },
     {
       "description": "Base images are pinned by digest; Renovate keeps the digest current (digest updates auto-merge like patches).",
-      "matchManagers": ["dockerfile"],
+      "matchManagers": [
+        "dockerfile"
+      ],
       "pinDigests": true
     }
   ],
   "customManagers": [
     {
       "customType": "regex",
-      "description": "uv installed with pip in the workflows. The Dockerfile copy is found by the dockerfile manager; tests/test_build_pins.py keeps both equal.",
+      "description": "uv installed with pip in the workflows. The website/Dockerfile copy is found by the dockerfile manager; tests/test_build_pins.py keeps both equal.",
       "managerFilePatterns": [
         "/^\\.github/workflows/[^/]+\\.yml$/"
       ],
@@ -206,19 +159,6 @@
         "uvx (?<depName>[a-z0-9-]+)==(?<currentValue>\\d+\\.\\d+\\.\\d+)"
       ],
       "datasourceTemplate": "pypi"
-    },
-    {
-      "customType": "regex",
-      "description": "Images in files no built-in manager reads: the compose files written inline inside workflow run: steps, the image argument of their docker run lines, and the Ansible compose template. A digest after the tag is updated with it; without currentDigest Renovate would move the tag and leave the old digest behind.",
-      "managerFilePatterns": [
-        "/^\\.github/workflows/[^/]+\\.yml$/",
-        "/^ansible/roles/openwhistle/templates/docker-compose\\.yml\\.j2$/"
-      ],
-      "matchStrings": [
-        "image: (?<depName>postgres|redis|nginx|clamav/clamav):(?<currentValue>[0-9a-z.\\-]+)(?:@(?<currentDigest>sha256:[0-9a-f]{64}))?",
-        "\\n\\s+(?<depName>nginx|python):(?<currentValue>[0-9a-z.\\-]+)@(?<currentDigest>sha256:[0-9a-f]{64})"
-      ],
-      "datasourceTemplate": "docker"
     },
     {
       "customType": "regex",

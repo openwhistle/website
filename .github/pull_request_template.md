@@ -12,5 +12,6 @@
 
 ## How it was tested
 
-- [ ] `uv run pytest` passes against PostgreSQL and Redis (CLAUDE.md, "Test coverage")
-- [ ] Documentation changed in the same commit (CONTRIBUTING.md, "Documentation")
+- [ ] `uv run pytest` passes against the latest OpenWhistle release (or its release branch via `OW_APP_SOURCE`)
+- [ ] Every changed page checked in Chrome, both themes (`docs-tech/local-review.md`)
+- [ ] The OpenWhistle pull request this documents, if any: openwhistle/OpenWhistle#

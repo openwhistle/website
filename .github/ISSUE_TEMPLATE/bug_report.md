@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Something does not work as documented
+about: A page of openwhistle.net is wrong, broken or out of date
 labels: bug
 ---
 
@@ -22,6 +22,6 @@ labels: bug
 
 1.
 
-## Version
+## Page
 
-OpenWhistle version (footer or Admin → System):
+URL on openwhistle.net:

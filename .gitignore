@@ -1,69 +1,29 @@
 # Python
 __pycache__/
 *.py[cod]
-*$py.class
-*.so
-.Python
-build/
-dist/
-*.egg-info/
-.eggs/
-*.egg
 .venv/
-venv/
-ENV/
 
-# uv
-.uv/
-
-# Testing
+# Testing and type checking
 .pytest_cache/
 .coverage
 coverage.json
 coverage.xml
 htmlcov/
-.tox/
-
-# Type checking
 .mypy_cache/
+.ruff_cache/
+test-results/
 
-# Environment
-.env
-.env.*
-!.env.example
-
-# IDE
+# IDE and OS
 .vscode/
 .idea/
 *.swp
-*.swo
 *~
-
-# OS
 .DS_Store
-Thumbs.db
 
-# Fonts (copied from docs/fonts at image build, not committed)
-app/static/fonts/*.woff
-app/static/fonts/*.woff2
-app/static/fonts/*.ttf
-
-# Docker
-docker-compose.override.yml
-nginx/certs/*.pem
-
-# Alembic
-migrations/versions/__pycache__/
-
-# Logs
-*.log
-
-# Generated at Docker build time (see scripts/generate_integrity_manifest.py)
-integrity-manifest.json
+# Built site, and the app release it documents (scripts/release_source.py)
+/_site/
+/.release/
 
 # Local agent tooling
 .serena/
-
-# Built site and agent scratch
-/_site/
 /.superpowers/

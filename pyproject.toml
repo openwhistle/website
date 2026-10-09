@@ -1,64 +1,17 @@
 [project]
-name = "openwhistle"
-version = "2.1.1"
-description = "Open source whistleblower reporting platform (HinSchG / EU 2019/1937)"
+name = "openwhistle-website"
+version = "0.0.0"
+description = "openwhistle.net: the website and documentation of OpenWhistle"
 license = { text = "GPL-3.0-only" }
 readme = "README.md"
 requires-python = ">=3.14"
 authors = [{ name = "OpenWhistle Contributors" }]
-
-dependencies = [
-    # Web framework
-    "fastapi>=0.139.0",
-    "uvicorn[standard]>=0.51.0",
-    "python-multipart>=0.0.32",
-
-    # Database
-    "sqlalchemy[asyncio]>=2.0.51",
-    "asyncpg>=0.31.0",
-    "alembic>=1.18.0",
-
-    # Cache / Sessions
-    "redis[hiredis]>=8.0.0",
-
-    # Auth
-    "pyjwt>=2.15.0",
-    "bcrypt>=5.0.0",
-    "pyotp>=2.10.0",
-    "qrcode[pil]>=8.2",
-
-    # Configuration
-    "pydantic-settings>=2.14.0",
-
-    # Templates
-    "jinja2>=3.1.6",
-
-    # Utilities
-    "httpx>=0.28.1",
-    "aiosmtplib>=5.1.0",
-
-    # Envelope encryption of report fields and attachments (Fernet, HKDF)
-    "cryptography>=50.0.1",
-
-    # PDF generation (pure Python, no system packages required)
-    "fpdf2>=2.8.7",
-
-    # Attachment metadata stripping: PDF info/XMP (pure Python). Images use
-    # Pillow, already present via qrcode[pil].
-    "pypdf>=6.19.0",
-    "pillow>=12.0.0",
-
-    # Structured logging
-    "python-json-logger>=4.1.0",
-
-    # Background task scheduling (SLA reminders)
-    "apscheduler>=3.11.3",
-]
+# Not a package: scripts/ builds the site from docs/; nothing is installed.
+dependencies = []
 
 [project.optional-dependencies]
 dev = [
     "pytest>=9.1.0",
-    "pytest-asyncio>=1.4.0",
     "pytest-cov>=7.1.0",
     "mypy>=2.2.0",
     "ruff>=0.15.0",
@@ -68,25 +21,9 @@ e2e = [
     "pytest-playwright>=0.8.0",
     "pytest-base-url>=2.1.0",
 ]
-perf = [
-    "locust>=2.45.0",
-]
-# LDAP / Active Directory authentication. python-ldap builds against the
-# OpenLDAP client: needs libldap2-dev libsasl2-dev (Debian) to install.
-ldap = [
-    "python-ldap>=3.4.8",
-]
-# S3-compatible object storage (optional backend for attachments)
-s3 = [
-    "boto3>=1.43.0",
-]
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[tool.hatch.build.targets.wheel]
-packages = ["app"]
+[tool.uv]
+package = false
 
 # ─── mypy ────────────────────────────────────────────────────────────────────
 
@@ -98,27 +35,7 @@ warn_unused_configs = true
 ignore_missing_imports = false
 
 [[tool.mypy.overrides]]
-module = [
-    "pyotp.*",
-    "qrcode.*",
-    "bcrypt.*",
-    "aiosmtplib.*",
-    "boto3.*",
-    "botocore.*",
-    "ldap",
-    "ldap.*",
-    "apscheduler.*",
-    "pythonjsonlogger.*",
-    "fontTools.*",
-    "yaml.*",
-]
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = [
-    "playwright.*",
-    "locust.*",
-]
+module = ["fontTools.*", "yaml.*", "playwright.*"]
 ignore_missing_imports = true
 
 # ─── ruff ────────────────────────────────────────────────────────────────────
@@ -141,15 +58,11 @@ select = [
 ]
 ignore = [
     "S101",  # assert allowed in tests
-    "B008",  # function calls in default args (FastAPI Depends)
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["S101", "S105", "S106", "S107", "S110"]
 "tests/e2e/*" = ["S101", "S105", "S106", "S107", "S110"]
-"tests/perf/*" = ["S101", "S105", "S106", "S107", "S110"]
-# Generated schema: wide column lists and seed rows; the only f-string is a fixed UUID constant.
-"migrations/versions/001_initial_schema.py" = ["E501", "S608"]
 # The page shell is copied verbatim from docs/en/roadmap/index.html as a template string;
 # its CSS/HTML lines are not code and keep that page's own line lengths.
 "scripts/render_changelog.py" = ["E501"]
@@ -157,37 +70,25 @@ ignore = [
 # ─── pytest ──────────────────────────────────────────────────────────────────
 
 [tool.pytest.ini_options]
-asyncio_mode = "auto"
-asyncio_default_fixture_loop_scope = "session"
 testpaths = ["tests"]
-addopts = "--cov=app --cov-report=term-missing --cov-fail-under=90 --ignore=tests/e2e --ignore=tests/perf --ignore=tests/website"
+# scripts/ are files, not a package: tests import them as the build does
+pythonpath = ["scripts", "."]
+addopts = "--cov=scripts --cov-report=term-missing --cov-fail-under=90 --ignore=tests/e2e --ignore=tests/website"
 
 markers = [
-    "integration: marks tests that require a live database and Redis",
-    "e2e: marks end-to-end browser tests that require a running app instance",
-    "perf: marks performance tests (run manually, not in standard CI)",
+    "e2e: browser tests against the built site or the website container",
     "website: tests against a running website container (WEBSITE_URL)",
 ]
 
-filterwarnings = [
-    # asyncpg's own internal connection-candidate cleanup task
-    # (asyncpg.connect_utils._connect._close_candidates) can be garbage-collected
-    # before the event loop gets to run it when a short-lived test engine is
-    # disposed right after connecting. Upstream internal, not a coroutine we create.
-    # https://github.com/MagicStack/asyncpg/blob/master/asyncpg/connect_utils.py
-    "ignore:coroutine '_connect.<locals>._close_candidates' was never awaited:RuntimeWarning:asyncpg(\\..*)?$",
-]
-
 [tool.coverage.run]
-# sys.monitoring (sysmon) is Python 3.12+'s native tracing API — correctly traces async coroutines
-core = "sysmon"
-source_pkgs = ["app"]
+source = ["scripts"]
 
 [tool.coverage.report]
 exclude_lines = [
     "pragma: no cover",
     "if TYPE_CHECKING:",
     "raise NotImplementedError",
+    "if __name__ == .__main__.:",
 ]
 
 [dependency-groups]

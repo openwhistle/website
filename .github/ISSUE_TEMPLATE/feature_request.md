@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Something OpenWhistle should do
+about: Something openwhistle.net should explain or show
 labels: enhancement
 ---
 

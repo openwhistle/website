@@ -1,6 +1,6 @@
 # Notes for AI agents
 
-OpenWhistle accepts AI-assisted contributions on one condition: they say so.
+openwhistle/website accepts AI-assisted contributions on one condition: they say so.
 
 - Begin every issue and pull request description you write with these two lines:
 

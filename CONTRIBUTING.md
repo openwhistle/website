@@ -1,25 +1,25 @@
-# Contributing to OpenWhistle
+# Contributing to openwhistle.net
 
-Open an issue before a pull request, so the change is agreed before it is built.
+Open an issue before a pull request, so the change is agreed before it is built. A change to OpenWhistle itself
+belongs in [openwhistle/OpenWhistle](https://github.com/openwhistle/OpenWhistle).
 
 ## Development
 
 | Step | Command |
 | --- | --- |
-| Install | `uv sync --extra dev` |
+| Install | `uv sync --extra dev --extra e2e --group site` |
 | Lint | `uv run ruff check .` |
 | Format | `uv run ruff format .` (CI runs `ruff format --check .`) |
-| Types | `uv run mypy --strict app` |
+| Types | `uv run mypy --strict scripts` |
 | Spelling | `uvx codespell` |
 | Workflows | `uvx zizmor --offline .github/workflows` (zero findings) |
 | Markdown | `npx --yes markdownlint-cli2 <files>` (rules in `.markdownlint.json`, lines ≤ 120) |
-| Tests | `uv run pytest` against a real PostgreSQL and Redis, as CI does |
+| Tests | `uv run pytest` (reads the latest app release; `OW_APP_SOURCE=<checkout>` works offline) |
+| Browser tests | `uv run pytest tests/e2e -m e2e --browser chromium` |
 
-Coverage below 90 % fails the run (`--cov-fail-under=90` in `pyproject.toml`). A new feature brings its
-tests. Dependencies are locked in `uv.lock`: after editing `pyproject.toml`, run `uv lock` and commit both.
-
-Commits follow [Conventional Commits](https://www.conventionalcommits.org/): `feat(admin): …`, `fix(csrf): …`,
-`docs(tech): …`. Code, comments and documentation are English only.
+Coverage below 90 % of `scripts/` fails the run. Dependencies are locked in `uv.lock`: after editing
+`pyproject.toml`, run `uv lock` and commit both. Commits follow
+[Conventional Commits](https://www.conventionalcommits.org/). Code, comments and documentation are English only.
 
 ## AI-assisted contributions
 
@@ -42,15 +42,16 @@ There are two kinds, and they are kept apart on purpose.
 | **User documentation** | whoever runs OpenWhistle | `docs/`, published as openwhistle.net |
 | **Technical documentation** | whoever maintains this repository | `docs-tech/` and `CLAUDE.md`, **never** published |
 
-`docs/` holds the sources; `scripts/build_site.py` builds them, and nothing outside `docs/` reaches the site.
+`docs/` holds the sources; `scripts/build_site.py` builds them, and nothing outside `docs/` and the app release
+reaches the site.
 
 | What | Where |
 | --- | --- |
 | A page | `docs/<lang>/…` (`.md` for new pages) |
 | Strings | `docs/_data/i18n/` |
 | Navigation | `docs/_data/nav.yml` |
+| Settings reference | `docs/_data/config.yml`: one row per `Settings` field of the latest release |
 
-Build: `uv run --group site python scripts/build_site.py` (output in `_site/`).
 `test_the_technical_docs_are_not_published` holds that boundary. A page in doubt: would a stranger running
 OpenWhistle need it? Yes → `docs/`. Only the next maintainer → `docs-tech/`.
 
@@ -76,24 +77,17 @@ abbreviations (`z. B.`, `d. h.`, `bzw.`, `Abs.`) and dates (`2. Juli`) do not en
 `docs-tech/_diagrams/`, rendered by `scripts/render_diagrams.py` to committed `-light.svg` and `-dark.svg`.
 Rules and roles: `docs-tech/diagrams.md`.
 
-**Screenshots are documentation.** They live in `docs/img/screens/<name>-light.png` and `-dark.png`,
-are taken by `scripts/take_screenshots.py`, and are re-taken in the change that alters the interface. A stale
-screenshot describes an interface that no longer exists.
+**Screenshots are documentation.** They live in `docs/img/screens/<name>-light.png` and `-dark.png`. OpenWhistle's
+`scripts/take_screenshots.py` takes them and writes them into a checkout of this repository; they are re-taken in
+the change that alters the interface.
 
 ### Technical pages: the rule and the incident behind it
 
 Without the incident, a rule gets optimised away at the next rewrite. Never write a dependency version number
-there: nothing updates it, and the file holding the pin is one link away. OpenWhistle's own release numbers in
-an incident history are fine.
+there: nothing updates it, and the file holding the pin is one link away.
 
-### A fix carries its documentation
+### A release of OpenWhistle carries its documentation
 
-A change that renames a setting, a label or a behaviour updates, in the same commit:
-
-- all five locales in `app/locales/` (`en`, `de`, `fr`, `es`, `pt-br`), checked against
-  [`docs-tech/i18n-review.md`](docs-tech/i18n-review.md);
-- `docs/_data/config.yml` and the docs page that explains the setting (`docs/en/docs/<page>/index.html`),
-  `README.md` and `docker-compose.prod.yml`;
-- the Helm chart (`charts/openwhistle/`) and `ansible/roles/openwhistle/templates/env.j2`.
-
-Otherwise the next audit finds the mismatch the change created.
+A user-facing change in OpenWhistle opens a pull request here in the same piece of work, linked from the app's
+pull request: settings in `docs/_data/config.yml` and the page that explains them, the guides, screenshots. The
+weekly website run fails until the documentation matches the latest release.
