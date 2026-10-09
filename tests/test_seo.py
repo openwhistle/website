@@ -234,12 +234,12 @@ def test_jsonld_parses_and_invents_no_ratings(page: Path) -> None:
 
 
 def test_software_version_is_the_app_version() -> None:
-    from app.config import settings
+    import release_source
 
     for page in LANDING:
         apps = [b for b in _jsonld(page) if b.get("@type") == "SoftwareApplication"]
         assert len(apps) == 1, page
-        assert apps[0]["softwareVersion"] == settings.app_version, page
+        assert apps[0]["softwareVersion"] == release_source.app_version(), page
         assert apps[0]["offers"]["price"] == "0", page
 
 

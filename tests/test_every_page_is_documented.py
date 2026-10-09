@@ -1,8 +1,9 @@
 """Every page of the interface is documented on some docs page (the built pages).
 
-The list of pages comes from the FastAPI app, not from a list somebody has to
-extend: every GET route is either a page — and then the docs must name it —
-or it is in ``NOT_A_PAGE`` by exact path, with the reason. A new route cannot
+The list of pages comes from the routes of the latest app release (scripts/release_source.py
+parses app/api/*.py), not from a list somebody has to extend: every GET route is either a
+page — and then the docs must name it — or it is in ``NOT_A_PAGE`` by exact path, with the
+reason. A new route cannot
 slip through by happening to look like an exclusion, and an exclusion whose
 route is gone fails too.
 
@@ -19,8 +20,9 @@ import html
 import re
 from pathlib import Path
 
+import release_source
+
 from tests.built_site import docs_text
-from tests.test_local_review import _walk_routes
 
 ROOT = Path(__file__).parents[1]
 
@@ -46,9 +48,7 @@ _EDGE_AFTER = r"(?![\w/{}-]|\.\w)"
 
 
 def _get_routes() -> set[str]:
-    from app.main import app
-
-    return {r.path for r in _walk_routes(app) if r.methods and "GET" in r.methods}
+    return {path for method, path in release_source.routes() if method == "GET"}
 
 
 def _pattern(path: str) -> re.Pattern[str]:

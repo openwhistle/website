@@ -93,25 +93,3 @@ def test_the_vendored_axe_is_the_pinned_version_and_hash() -> None:
         "run scripts/vendor_axe.py after a version bump"
     )
     assert hashlib.sha256(data).hexdigest() == digest
-
-
-def test_every_digest_pinned_image_in_a_workflow_is_managed() -> None:
-    """The CI nginx pins sat in `docker run` lines no matchString reached, so
-    Renovate never moved them and nothing said so."""
-    captured = {
-        hit.group("currentDigest")
-        for manager in CONFIG["customManagers"]
-        for rx in (re.compile(m.replace("(?<", "(?P<")) for m in manager["matchStrings"])
-        if "currentDigest" in rx.groupindex
-        for f in _files(manager)
-        for hit in rx.finditer(f.read_text())
-    }
-    pinned = {
-        digest
-        for wf in (ROOT / ".github/workflows").glob("*.yml")
-        for line in wf.read_text().splitlines()
-        if "uses:" not in line
-        for digest in re.findall(r"\S+@(sha256:[0-9a-f]{64})", line)
-    }
-    assert pinned, "no pinned image found — the check reaches nothing"
-    assert pinned <= captured, pinned - captured

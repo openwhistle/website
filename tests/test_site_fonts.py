@@ -181,8 +181,9 @@ def test_only_the_weight_is_never_synthesised() -> None:
         assert not re.search(r"font-synthesis\s*:|font-synthesis-style\s*:\s*none", css), name
 
 
-def test_the_apps_static_fonts_stay_full() -> None:
-    """The app image and the diagram geometry use docs/fonts as they are, never subset."""
+def test_the_static_fonts_stay_full() -> None:
+    """The diagram geometry uses docs/fonts as they are, never subset; the app ships the same
+    files (tests/test_release_assets.py)."""
     static_fonts = sorted((ROOT / "docs" / "fonts").glob("*.woff2"))
     assert len(static_fonts) == 6
     for path in static_fonts:

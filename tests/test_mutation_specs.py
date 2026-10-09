@@ -1,7 +1,7 @@
 """A mutation-audit entry whose `old` text no longer occurs in its file guards
 nothing: the audit can only report it as stale at release time. Every entry of
-the installed release's specs (`app_version`) and of every release in
-development after it must match its file exactly once, so a refactor
+the latest app release's specs (its `app_version`, scripts/release_source.py) and of every
+release in development after it must match its file exactly once, so a refactor
 that moves a guard fails here, in the change that moved it."""
 
 import json
@@ -9,8 +9,7 @@ import re
 from pathlib import Path
 
 import pytest
-
-from app.config import settings
+import release_source
 
 ROOT = Path(__file__).parents[1]
 _VERSION = re.compile(r"v(\d+)\.(\d+)\.(\d+)(?:-[\w-]+)?\.json")
@@ -23,7 +22,7 @@ def _version(name: str) -> tuple[int, ...]:
 
 
 def _current() -> tuple[int, ...]:
-    return tuple(int(part) for part in settings.app_version.split("."))
+    return tuple(int(part) for part in release_source.app_version().split("."))
 
 
 # The installed release and every release in development after it: once a
@@ -38,7 +37,7 @@ def test_every_spec_name_carries_a_version() -> None:
 
 
 def test_the_current_release_has_mutation_specs() -> None:
-    assert any(_version(p.name) == _current() for p in SPECS), (settings.app_version, SPECS)
+    assert any(_version(p.name) == _current() for p in SPECS), (release_source.app_version(), SPECS)
 
 
 def test_a_release_in_development_is_covered() -> None:
@@ -73,8 +72,8 @@ def test_every_id_names_one_mutation(spec: Path) -> None:
 def test_a_spec_cannot_name_a_file_outside_the_repo() -> None:
     from scripts.mutation_audit import inside_root
 
-    assert inside_root("app/config.py")
-    for bad in ("/etc/passwd", "../outside.txt", "app/../../outside.txt"):
+    assert inside_root("docs/_data/config.yml")
+    for bad in ("/etc/passwd", "../outside.txt", "docs/../../outside.txt"):
         assert not inside_root(bad), bad
 
 
@@ -85,3 +84,46 @@ def test_every_spec_file_is_inside_the_repo(spec: Path) -> None:
     for m in json.loads(spec.read_text())["mutations"]:
         name = m.get("file") or m["path"]
         assert inside_root(name), f"{m.get('id') or m.get('name')}: {name}"
+
+
+def test_the_audit_reports_red_green_and_stale(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """The audit itself, on a stand-in repository: a caught, an uncaught, a stale, an outside and
+    a created mutation, and every file restored afterwards."""
+    from scripts import mutation_audit
+
+    (tmp_path / "tests").mkdir()
+    (tmp_path / "a.txt").write_text("guarded\nfree\n")
+    (tmp_path / "tests" / "test_a.py").write_text(
+        "from pathlib import Path\n\n\n"
+        "def test_a():\n"
+        "    assert 'guarded' in Path('a.txt').read_text()\n"
+        "    assert not Path('extra.txt').exists()\n"
+    )
+    spec = {
+        "test_groups": {"A": ["tests/test_a.py"]},
+        "mutations": [
+            {"id": "CAUGHT", "file": "a.txt", "old": "guarded", "new": "gone", "tests": "A"},
+            {"id": "MISSED", "file": "a.txt", "old": "free", "new": "changed", "tests": "A"},
+            {"id": "STALE", "file": "a.txt", "old": "nowhere", "new": "x", "tests": "A"},
+            {"id": "OUTSIDE", "file": "../a.txt", "old": "x", "new": "y", "tests": "A"},
+            {"id": "CREATED", "file": "extra.txt", "create": "x", "tests": "A"},
+            {"id": "EXISTS", "file": "a.txt", "create": "x", "tests": "A"},
+        ],
+    }
+    (tmp_path / "spec.json").write_text(json.dumps(spec))
+    monkeypatch.setattr(mutation_audit, "ROOT", tmp_path)
+    monkeypatch.setattr("sys.argv", ["mutation_audit.py", str(tmp_path / "spec.json")])
+    assert mutation_audit.main() == 1
+    verdicts = {line.split()[0]: line.split()[1] for line in capsys.readouterr().out.splitlines()}
+    assert verdicts == {
+        "CAUGHT": "RED",
+        "MISSED": "GREEN",
+        "STALE": "STALE",
+        "OUTSIDE": "STALE",
+        "CREATED": "RED",
+        "EXISTS": "STALE",
+    }
+    assert (tmp_path / "a.txt").read_text() == "guarded\nfree\n"
+    assert not (tmp_path / "extra.txt").exists()

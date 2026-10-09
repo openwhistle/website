@@ -1,9 +1,6 @@
-"""E2E test configuration — fixtures for Playwright-based browser tests.
+"""Browser tests of the site: the built site served locally, or the website container.
 
-These tests require the full application stack to be running.
-Start with: docker compose up -d (or the CI e2e workflow).
-Default base URL: http://localhost:4009
-Override with: pytest --base-url=http://your-host:port
+uv run pytest tests/e2e -m e2e --browser chromium
 """
 
 from __future__ import annotations
@@ -16,7 +13,7 @@ from functools import partial
 from pathlib import Path
 
 import pytest
-from playwright.sync_api import Browser, BrowserContext, Page
+from playwright.sync_api import Page
 
 from tests.built_site import builder
 
@@ -45,49 +42,11 @@ def docs_server_url(tmp_path_factory: pytest.TempPathFactory) -> Generator[str]:
         thread.join()
 
 
-# Demo credentials — published intentionally for the demo instance
-DEMO_BASE_URL = "http://localhost:4009"
-DEMO_ADMIN_USERNAME = "demo"
-DEMO_ADMIN_PASSWORD = "demo"
-DEMO_ADMIN_TOTP_SECRET = "JBSWY3DPEHPK3PXP"
-DEMO_CM_USERNAME = "case_manager"
-DEMO_CM_PASSWORD = "demo"
-
-# Known demo report access credentials
-DEMO_CASE_RECEIVED = {"case_number": "OW-DEMO-00001", "pin": "demo-pin-received-00001"}
-DEMO_CASE_IN_REVIEW = {"case_number": "OW-DEMO-00002", "pin": "demo-pin-inreview-00002"}
-DEMO_CASE_PENDING = {"case_number": "OW-DEMO-00003", "pin": "demo-pin-pending-00003"}
-DEMO_CASE_CLOSED = {"case_number": "OW-DEMO-00004", "pin": "demo-pin-closed-00004"}
-
 # axe-core is vendored (tests/e2e/vendor/axe.min.js), never fetched. Renovate bumps
 # AXE_VERSION; scripts/vendor_axe.py then writes the file and AXE_SHA256.
 AXE_VERSION = "4.14.0"
 AXE_SHA256 = "20c09fe157a8a34a30e241aaa1fcdade657734f08ab379ecfbeb7d45cc46e878"
 _AXE = Path(__file__).parent / "vendor" / "axe.min.js"
-
-
-def _totp_now(secret: str = DEMO_ADMIN_TOTP_SECRET) -> str:
-    """The demo accounts' static code. A real TOTP code is single-use (replay
-    protection), and these tests log in several times within one 30 s step."""
-    return "000000"
-
-
-def _admin_login(page: Page, base_url: str, username: str, password: str, totp_secret: str) -> None:
-    page.goto(f"{base_url}/admin/login")
-    page.wait_for_load_state("networkidle")
-    page.fill('input[name="username"]', username)
-    page.fill('input[name="password"]', password)
-    # Use btn-primary to avoid matching the language-picker submit buttons
-    page.click("button.btn-primary[type='submit']")
-    page.wait_for_selector('input[name="totp_code"]')
-    page.fill('input[name="totp_code"]', _totp_now(totp_secret))
-    page.click("button.btn-primary[type='submit']")
-    page.wait_for_url("**/admin/dashboard**")
-
-
-@pytest.fixture(scope="session")
-def base_url(request: pytest.FixtureRequest) -> str:  # type: ignore[override]
-    return request.config.getoption("base_url") or DEMO_BASE_URL
 
 
 @pytest.fixture(scope="session")
@@ -96,30 +55,6 @@ def axe_source() -> str:
     data = _AXE.read_bytes()
     assert hashlib.sha256(data).hexdigest() == AXE_SHA256, "axe.min.js does not match AXE_SHA256"
     return data.decode("utf-8")
-
-
-@pytest.fixture
-def admin_page(page: Page, base_url: str) -> Page:
-    """Playwright Page already authenticated as the demo admin."""
-    _admin_login(page, base_url, DEMO_ADMIN_USERNAME, DEMO_ADMIN_PASSWORD, DEMO_ADMIN_TOTP_SECRET)
-    return page
-
-
-@pytest.fixture
-def cm_page(page: Page, base_url: str) -> Page:
-    """Playwright Page authenticated as the demo case_manager."""
-    _admin_login(page, base_url, DEMO_CM_USERNAME, DEMO_CM_PASSWORD, DEMO_ADMIN_TOTP_SECRET)
-    return page
-
-
-@pytest.fixture
-def admin_page2(browser: Browser, base_url: str) -> Generator[Page]:
-    """Second admin browser context — for 4-eyes tests."""
-    context: BrowserContext = browser.new_context()
-    page = context.new_page()
-    _admin_login(page, base_url, DEMO_ADMIN_USERNAME, DEMO_ADMIN_PASSWORD, DEMO_ADMIN_TOTP_SECRET)
-    yield page
-    context.close()
 
 
 def run_axe(page: Page, axe_source: str) -> list[dict]:  # type: ignore[type-arg]

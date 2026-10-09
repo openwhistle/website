@@ -39,15 +39,15 @@ def test_no_published_page_links_docs_tech() -> None:
 
 def test_the_public_roadmap_holds_no_test_chores() -> None:
     """Test infrastructure changes nothing a user sees; it is planned in
-    docs-tech/test-infrastructure.md, not on the published roadmap."""
+    docs-tech/test-infrastructure.md of openwhistle/OpenWhistle, not on the published roadmap."""
     roadmap = page("/en/roadmap/")
     assert not re.search(r"\btests/|\btest_\w+", roadmap)
-    assert (ROOT / "docs-tech/test-infrastructure.md").exists()
 
 
 def test_the_image_publishes_the_built_site_and_nothing_else() -> None:
     dockerfile = (ROOT / "website/Dockerfile").read_text()
     build = next(line for line in dockerfile.splitlines() if "build_site.py" in line)
+    # Its other input is the app release (OW_APP_SOURCE, scripts/release_source.py), never pages.
     assert "--src" not in build, "the build must read docs/ and nothing else"
     assert "COPY --from=site /out/site /usr/share/nginx/html" in dockerfile
 

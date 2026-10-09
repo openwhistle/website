@@ -14,9 +14,9 @@ from pathlib import Path
 from xml.etree import ElementTree as ET
 
 import pytest
+import release_source
 from fontTools.ttLib import TTFont
 
-from app.models.report import STATUS_TRANSITIONS, ReportStatus
 from tests.built_site import built, page, pages
 from tests.diagram_tools import geometry, renderer
 
@@ -280,40 +280,12 @@ def test_the_case_lifecycle_draws_exactly_the_status_transitions() -> None:
     labels, roles, edges = _graph("case-lifecycle")
     status = {cid: labels[cid] for cid, role in roles.items() if role == "ow:step"}
     drawn = {(status[a], status[b]) for a, b in edges if a in status and b in status}
-    allowed = {(a, b) for a, targets in STATUS_TRANSITIONS.items() for b in targets}
+    # The release's STATUS_TRANSITIONS, parsed (S-5): the diagram documents what one can install.
+    transitions = release_source.constant("app/models/report.py", "STATUS_TRANSITIONS")
+    allowed = {(a, b) for a, targets in transitions.items() for b in targets}
     assert drawn == allowed, (
         f"drawn, not allowed: {drawn - allowed}; allowed, not drawn: {allowed - drawn}"
     )
-
-
-def _step_key(text: str) -> str:
-    return text.split(" — ")[0].strip().lower()
-
-
-def test_the_release_gates_follow_the_steps_of_release_md() -> None:
-    """Node labels in flow order against the `## N.` headings of docs-tech/release.md.
-
-    The key is the lowercased text before any " — " qualifier. A heading "A and B" is two
-    steps, and a node may name the step's object after its key: "Tag and verify" is drawn as
-    "Tag vX.Y.Z" and "Verify images".
-    """
-    labels, roles, edges = _graph("release-gates")
-    following = dict(edges)
-    node = next(cid for cid, role in roles.items() if role == "ow:start")
-    flow = [labels[node]]
-    while node in following:
-        node = following[node]
-        flow.append(labels[node])
-    release = (DOCS_TECH / "release.md").read_text(encoding="utf-8")
-    steps = [
-        part
-        for heading in re.findall(r"^## \d+\. (.+)$", release, re.M)
-        for part in _step_key(heading).split(" and ")
-    ]
-    keys = [label.lower() for label in flow]
-    assert len(keys) == len(steps) and all(
-        k == s or k.startswith(f"{s} ") for k, s in zip(keys, steps, strict=True)
-    ), f"release-gates draws {flow}; release.md has the steps {steps}"
 
 
 def test_the_case_lifecycle_names_exactly_the_report_statuses() -> None:
@@ -321,7 +293,7 @@ def test_the_case_lifecycle_names_exactly_the_report_statuses() -> None:
     roles = renderer().roles_by_id(source)
     labels = dict(re.findall(r'<mxCell id="([^"]+)" value="([^"]*)"', source))
     steps = {labels[cid] for cid, role in roles.items() if role == "ow:step"}
-    assert steps == {s.value for s in ReportStatus}
+    assert steps == set(release_source.enum_values("app/models/report.py", "ReportStatus"))
 
 
 @pytest.mark.parametrize(("url", "name"), [("/en/", "home-flow"), ("/de/", "home-flow.de")])

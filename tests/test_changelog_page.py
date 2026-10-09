@@ -1,12 +1,8 @@
-"""/en/changelog/ is rendered from CHANGELOG.md at build time by
-scripts/render_changelog.py (scripts/build_site.py calls it). These guards
-keep the built page the render of its source, keep CHANGELOG.md's version headings and link
-definitions in agreement with each other (deliberately re-checked here with
-independent regexes, not by importing the renderer's own — a heading neither
-one parses would otherwise be invisible to both, see easywall's
-check-changelog-versions.mjs), keep the page free of links to anywhere but
-GitHub and the site's own domain, and pin the renderer's own escaping and
-list-nesting behaviour against a small fixture."""
+"""/en/changelog/ is rendered at build time from CHANGELOG.md of the latest app release by
+scripts/render_changelog.py (scripts/build_site.py calls it). These guards keep the built page
+the render of its source, keep the page free of links to anywhere but GitHub and the site's own
+domain, and pin the renderer's own escaping and list-nesting behaviour against a small fixture.
+The headings-versus-link-definitions check stays with CHANGELOG.md in openwhistle/OpenWhistle."""
 
 import importlib.util
 import re
@@ -14,11 +10,11 @@ from pathlib import Path
 from types import ModuleType
 
 import pytest
+import release_source
 
 from tests.built_site import built
 
 ROOT = Path(__file__).parents[1]
-CHANGELOG = ROOT / "CHANGELOG.md"
 
 
 def _page() -> Path:
@@ -39,13 +35,13 @@ RENDER_CHANGELOG = _load_renderer()
 
 
 def test_the_built_page_is_the_changelog() -> None:
-    versions, link_defs = RENDER_CHANGELOG.parse(CHANGELOG.read_text())
+    versions, link_defs = RENDER_CHANGELOG.parse(release_source.read("CHANGELOG.md"))
     content = RENDER_CHANGELOG.render_content(versions, link_defs)
     assert content in _page().read_text(encoding="utf-8")
 
 
 def test_the_older_page_holds_the_rest_and_no_release_is_on_both() -> None:
-    versions, link_defs = RENDER_CHANGELOG.parse(CHANGELOG.read_text())
+    versions, link_defs = RENDER_CHANGELOG.parse(release_source.read("CHANGELOG.md"))
     older = RENDER_CHANGELOG.render_content(versions, link_defs, older=True)
     assert older in (built() / "en/changelog/older/index.html").read_text(encoding="utf-8")
     ids = lambda page: set(re.findall(r'<section class="docs-section" id="([^"]+)"', page))  # noqa: E731
@@ -59,38 +55,6 @@ def test_the_older_page_holds_the_rest_and_no_release_is_on_both() -> None:
 def test_render_content_holds_no_site_chrome() -> None:
     content = RENDER_CHANGELOG.render_content(*RENDER_CHANGELOG.parse(_FIXTURE))
     assert "<footer" not in content and "site-nav" not in content and "<head" not in content
-
-
-# Deliberately independent of RENDER_CHANGELOG.HEADING_RE / LINK_DEF_RE: a
-# heading or link definition that the renderer's own regex fails to parse
-# would otherwise pass unnoticed on both sides of that one comparison.
-_HEADING_RE = re.compile(r"^## \[([^\]]+)\]", re.MULTILINE)
-_LINK_DEF_RE = re.compile(r"^\[([^\]]+)\]:\s*(\S+)", re.MULTILINE)
-
-
-def test_every_version_heading_has_a_link_definition_and_vice_versa() -> None:
-    changelog = CHANGELOG.read_text()
-    headings = _HEADING_RE.findall(changelog)
-    link_defs = dict(_LINK_DEF_RE.findall(changelog))
-
-    assert headings, "CHANGELOG.md has no `## [x.y.z]` version headings"
-    seen = set()
-    for name in headings:
-        assert name not in seen, f"version {name} has two headings"
-        seen.add(name)
-        assert name in link_defs, (
-            f"CHANGELOG.md: [{name}] has a heading and no link definition "
-            f"(`[{name}]: https://...`) at the foot of the file"
-        )
-
-    extra = set(link_defs) - seen
-    assert not extra, f"link definition(s) with no matching heading: {sorted(extra)}"
-
-    semver_headings = [n for n in headings if re.fullmatch(r"\d+\.\d+\.\d+", n)]
-    assert semver_headings, "CHANGELOG.md has no `## [x.y.z]` semantic-version headings"
-    for name in semver_headings:
-        url = link_defs[name]
-        assert url.startswith("https://github.com/openwhistle/OpenWhistle/"), (name, url)
 
 
 _HREF_URL_RE = re.compile(r'(?:href|src)="(https?://[^"]+)"')

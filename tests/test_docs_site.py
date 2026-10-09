@@ -34,11 +34,10 @@ ROADMAP = "/en/roadmap/"
 
 
 def _app_version() -> tuple[int, ...]:
-    # Same source tests/test_v100.py::test_every_published_version_string_matches
-    # reads from, rather than a second regex over app/config.py's source text.
-    from app.config import settings
+    # The latest release's app_version, the one the footer and the docs name.
+    import release_source
 
-    return tuple(int(p) for p in settings.app_version.split("."))
+    return tuple(int(p) for p in release_source.app_version().split("."))
 
 
 def test_roadmap_md_does_not_exist() -> None:

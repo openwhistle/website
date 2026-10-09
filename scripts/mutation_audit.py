@@ -5,8 +5,8 @@
 Each mutation is an exact text replacement that must match once, or, with
 "create", a file that must not exist yet (a guard against an extra file). A mutation
 the tests do not notice (GREEN) is a place where the code can be broken
-without a test failing; see docs-tech/release.md. Needs the test database
-environment (DATABASE_URL, REDIS_URL, SECRET_KEY) that the suite needs.
+without a test failing. Needs no database; the tests read the app release
+as the suite does (OW_APP_SOURCE, scripts/release_source.py).
 """
 
 from __future__ import annotations

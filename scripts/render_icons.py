@@ -5,14 +5,15 @@ github-avatar.png.
 
 An ink mark on a white tile, drawn by Chromium from the one geometry below; tests/test_mark.py
 holds every SVG copy of the mark to this path. The app serves byte-identical copies of the
-browser icons. github-avatar.png is uploaded by hand to the GitHub organisation, Docker Hub
-and quay.io (docs-tech/specs/2026-10-02-website-p2-design.md).
+browser icons and draws the same MARK: tests/test_release_assets.py compares both with the
+latest release, so a change here is copied into openwhistle/OpenWhistle. github-avatar.png is
+uploaded by hand to the GitHub organisation, Docker Hub and quay.io
+(docs-tech/specs/2026-10-02-website-p2-design.md).
 """
 
 from __future__ import annotations
 
 import io
-import shutil
 from pathlib import Path
 
 from PIL import Image
@@ -23,7 +24,6 @@ MARK = (
     "A4,4 0 0 1 7,3 Z M10.60,11.81 A3.5,3.5 0 1 1 13.40,11.81 L14.50,15.4 H9.50 Z"
 )
 INK = "#0a0a0b"
-APP_COPIES = ("favicon.ico", "apple-touch-icon.png")
 
 
 def _tile(size: int) -> str:
@@ -55,8 +55,6 @@ def main() -> int:
     img[180].save(docs / "apple-touch-icon.png", optimize=True)
     img[500].save(docs / "github-avatar.png", optimize=True)
     img[32].save(docs / "favicon.ico", sizes=[(16, 16), (32, 32)])
-    for name in APP_COPIES:
-        shutil.copyfile(docs / name, ROOT / "app" / "static" / name)
     return 0
 
 

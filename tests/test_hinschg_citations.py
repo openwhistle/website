@@ -1,9 +1,8 @@
-"""Every "§ N Abs. M" (and "Nr. K") the website, the README and the interface
-cite must exist in the HinSchG. The docs once cited § 17 Abs. 3 and § 16
-Abs. 7, which do not exist, and § 26 for data protection, which is about
-external reporting offices. A new citation of a section missing below fails
-here until someone has checked it against
-https://www.gesetze-im-internet.de/hinschg/ and added its shape."""
+"""Every "§ N Abs. M" (and "Nr. K") the website cites must exist in the HinSchG. The docs
+once cited § 17 Abs. 3 and § 16 Abs. 7, which do not exist, and § 26 for data protection,
+which is about external reporting offices. A new citation of a section missing below fails
+here until someone has checked it against https://www.gesetze-im-internet.de/hinschg/ and
+added its shape. The README and the interface: the same guard in openwhistle/OpenWhistle."""
 
 import re
 from pathlib import Path
@@ -41,7 +40,7 @@ def _files() -> list[Path]:
         for p in (ROOT / "docs").rglob("*")
         if p.suffix in {".html", ".md"} and "/docs/_" not in p.as_posix()
     ]
-    return [*docs, ROOT / "README.md", *(ROOT / "app" / "locales").glob("*.json")]
+    return docs
 
 
 def test_every_cited_absatz_exists() -> None:
