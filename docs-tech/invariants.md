@@ -26,6 +26,7 @@ for a release that changed.
 | `TRUNCATED-TREE-ACCEPTED` | `scripts/release_source.py` | `test_a_truncated_tree_is_refused` |
 | `HALF-FETCH-KEPT` | `scripts/release_source.py` | `test_the_fetch_takes_exactly_the_files_the_site_reads` |
 | `ROUTE-METHODS-UNRESOLVED` | `scripts/release_source.py` | `test_routes_cover_every_registration_form` |
+| `AUDIT-SHARED-PYC` | `scripts/mutation_audit.py` | `test_every_audit_run_gets_its_own_bytecode_cache` |
 | `IMAGE-BUILDS-ANOTHER-RELEASE` | `.github/workflows/website-image.yml` | `test_the_tests_and_the_image_read_one_fetched_release` |
 | `LIFECYCLE-EDGES` (`v2.1.1-site-p2a.json`) | `tests/fixtures/app_source/app/models/report.py` | `test_constants_are_read_as_literals` |
 | `FAVICONS-DIVERGE` (`v2.1.1-site-p2b.json`) | `tests/fixtures/app_source/app/static/favicon.svg` | `test_the_fixture_mark_and_favicon_are_the_sites` |

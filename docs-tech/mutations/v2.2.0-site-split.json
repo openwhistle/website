@@ -31,6 +31,11 @@
   ],
   "WEBSITE_WF": [
    "tests/test_website_workflow.py"
+  ],
+  "AUDIT": [
+   "tests/test_mutation_specs.py",
+   "-k",
+   "bytecode_cache"
   ]
  },
  "mutations": [
@@ -138,6 +143,13 @@
    "old": "--build-arg OW_APP_SOURCE -t",
    "new": "-t",
    "tests": "WEBSITE_WF"
+  },
+  {
+   "id": "AUDIT-SHARED-PYC",
+   "file": "scripts/mutation_audit.py",
+   "old": "env={**os.environ, \"PYTHONPYCACHEPREFIX\": pycache},",
+   "new": "env={**os.environ},",
+   "tests": "AUDIT"
   }
  ]
 }

@@ -127,3 +127,35 @@ def test_the_audit_reports_red_green_and_stale(
     }
     assert (tmp_path / "a.txt").read_text() == "guarded\nfree\n"
     assert not (tmp_path / "extra.txt").exists()
+
+
+def test_every_audit_run_gets_its_own_bytecode_cache(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Two same-length mutations of one module within a second shared a .pyc: the second ran
+    the first one's code."""
+    import subprocess
+
+    from scripts import mutation_audit
+
+    (tmp_path / "m.py").write_text("VALUE = 1\nOTHER = 2\n")
+    spec = {
+        "test_groups": {"A": ["tests"]},
+        "mutations": [
+            {"id": "ONE", "file": "m.py", "old": "VALUE = 1", "new": "VALUE = 3", "tests": "A"},
+            {"id": "TWO", "file": "m.py", "old": "OTHER = 2", "new": "OTHER = 4", "tests": "A"},
+        ],
+    }
+    (tmp_path / "spec.json").write_text(json.dumps(spec))
+    caches: list[str] = []
+
+    def run(*args: object, **kwargs: dict[str, str]) -> subprocess.CompletedProcess[str]:
+        caches.append(kwargs["env"]["PYTHONPYCACHEPREFIX"])
+        assert Path(caches[-1]).is_dir()
+        return subprocess.CompletedProcess([], 1, "FAILED tests/x.py::t\n", "")
+
+    monkeypatch.setattr(mutation_audit, "ROOT", tmp_path)
+    monkeypatch.setattr(mutation_audit.subprocess, "run", run)
+    monkeypatch.setattr("sys.argv", ["mutation_audit.py", str(tmp_path / "spec.json")])
+    assert mutation_audit.main() == 0
+    assert len(set(caches)) == 2 and not any(Path(c).exists() for c in caches)
