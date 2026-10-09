@@ -116,6 +116,7 @@ def test_a_git_checkout_dates_a_file_by_its_last_commit(
     release_source.root.cache_clear()
     try:
         assert release_source.changed("CHANGELOG.md") == "2026-10-02"
+        assert release_source.changed("never-committed.md") is None
     finally:
         release_source.root.cache_clear()
 

@@ -47,7 +47,8 @@ def test_the_older_page_holds_the_rest_and_no_release_is_on_both() -> None:
     ids = lambda page: set(re.findall(r'<section class="docs-section" id="([^"]+)"', page))  # noqa: E731
     current = ids(RENDER_CHANGELOG.render_content(versions, link_defs))
     assert current and ids(older) and not current & ids(older)
-    assert "v1-0-0" in ids(older) and "unreleased" in current
+    # A release's CHANGELOG.md may carry an empty [Unreleased] or none at all.
+    assert "v1-0-0" in ids(older) and "unreleased" not in ids(older)
     # Unreleased plus the newest NEWEST releases: a count, so a release never breaks the budget.
     assert len(current - {"unreleased"}) <= 5 == RENDER_CHANGELOG.NEWEST
 

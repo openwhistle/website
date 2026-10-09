@@ -152,6 +152,8 @@ def changed(rel: str) -> str | None:
     if meta.is_file():
         stamp = json.loads(meta.read_text(encoding="utf-8"))["committed"]
         return datetime.datetime.fromisoformat(stamp).astimezone(datetime.UTC).date().isoformat()
+    if not (root() / ".git").exists():
+        return None  # a copy, not a checkout: a parent repository's dates are not the app's
     run = subprocess.run(  # noqa: S603 (fixed git argv on the configured checkout)
         ["git", "log", "-1", "--format=%ct", "--", rel],  # noqa: S607
         cwd=root(),
