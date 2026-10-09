@@ -21,7 +21,7 @@ import threading
 from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from PIL import Image, ImageChops
 
@@ -30,7 +30,8 @@ if TYPE_CHECKING:
 
 ROOT = Path(__file__).resolve().parents[1]
 Image.MAX_IMAGE_PIXELS = None  # our own full-page screenshots, not untrusted input
-SHOTS: tuple[tuple[str, int], ...] = (
+# Playwright's color_scheme takes a Literal; typed here, no type: ignore can go stale without it.
+SHOTS: tuple[tuple[Literal["light", "dark"], int], ...] = (
     ("light", 1920),
     ("dark", 1920),
     ("light", 390),
@@ -123,7 +124,7 @@ def _screens(base_url: str, urls: list[str], out: Path) -> None:
     with sync_playwright() as p:
         browser = p.chromium.launch()
         for theme, width in SHOTS:
-            ctx = browser.new_context(viewport={"width": width, "height": 1000}, color_scheme=theme)  # type: ignore[arg-type]  # theme is a str; playwright wants a Literal
+            ctx = browser.new_context(viewport={"width": width, "height": 1000}, color_scheme=theme)
             ctx.add_init_script(f"try{{localStorage.setItem('ow-theme','{theme}')}}catch(e){{}}")
             page = ctx.new_page()
             for url in urls:
