@@ -89,8 +89,8 @@ def test_every_spec_file_is_inside_the_repo(spec: Path) -> None:
 def test_the_audit_reports_red_green_and_stale(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    """The audit itself, on a stand-in repository: a caught, an uncaught, a stale, an outside and
-    a created mutation, and every file restored afterwards."""
+    """The audit itself, on a stand-in repository: a caught, an uncaught, a stale, an outside, a
+    created mutation and one whose file is gone, and every file restored afterwards."""
     from scripts import mutation_audit
 
     (tmp_path / "tests").mkdir()
@@ -110,6 +110,7 @@ def test_the_audit_reports_red_green_and_stale(
             {"id": "OUTSIDE", "file": "../a.txt", "old": "x", "new": "y", "tests": "A"},
             {"id": "CREATED", "file": "extra.txt", "create": "x", "tests": "A"},
             {"id": "EXISTS", "file": "a.txt", "create": "x", "tests": "A"},
+            {"id": "GONE", "file": "gone.txt", "old": "x", "new": "y", "tests": "A"},
         ],
     }
     (tmp_path / "spec.json").write_text(json.dumps(spec))
@@ -124,6 +125,7 @@ def test_the_audit_reports_red_green_and_stale(
         "OUTSIDE": "STALE",
         "CREATED": "RED",
         "EXISTS": "STALE",
+        "GONE": "STALE",
     }
     assert (tmp_path / "a.txt").read_text() == "guarded\nfree\n"
     assert not (tmp_path / "extra.txt").exists()

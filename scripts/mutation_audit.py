@@ -41,6 +41,11 @@ def main() -> int:
             green += 1
             continue
         path = ROOT / m["file"]
+        if "create" not in m and not path.is_file():
+            # A guard whose file is gone guards nothing; the rest of the spec still runs.
+            print(f"{m['id']:28} STALE  {m['file']} does not exist")
+            green += 1
+            continue
         original = None if "create" in m else path.read_text()
         if original is None and path.exists():
             print(f"{m['id']:28} STALE  {m['file']} already exists")

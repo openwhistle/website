@@ -36,6 +36,11 @@
    "tests/test_mutation_specs.py",
    "-k",
    "bytecode_cache"
+  ],
+  "AUDIT_SELF": [
+   "tests/test_mutation_specs.py",
+   "-k",
+   "audit_reports"
   ]
  },
  "mutations": [
@@ -150,6 +155,13 @@
    "old": "env={**os.environ, \"PYTHONPYCACHEPREFIX\": pycache},",
    "new": "env={**os.environ},",
    "tests": "AUDIT"
+  },
+  {
+   "id": "AUDIT-CRASHES-ON-A-GONE-FILE",
+   "file": "scripts/mutation_audit.py",
+   "old": "        if \"create\" not in m and not path.is_file():\n",
+   "new": "        if \"create\" not in m and not path.is_file() and False:\n",
+   "tests": "AUDIT_SELF"
   }
  ]
 }
