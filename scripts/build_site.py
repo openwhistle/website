@@ -45,6 +45,8 @@ from markupsafe import Markup
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
+sys.path.insert(0, str(ROOT / "scripts"))
+import release_source  # noqa: E402 (a sibling script, not a package)
 
 PAGE_KEYS = {
     "title",
@@ -140,12 +142,8 @@ def _yaml(path: Path) -> dict[str, Any]:
 def load_data(src: Path) -> dict[str, Any]:
     data = src / "_data"
     site = _yaml(data / "site.yml")
-    # One version string: the app's. A footer that typed it by hand would go stale.
-    found = re.search(
-        r'app_version: str = "([^"]+)"', (ROOT / "app" / "config.py").read_text(encoding="utf-8")
-    )
-    assert found
-    site["version"] = found.group(1)
+    # One version string: the latest release's. A footer that typed it by hand would go stale.
+    site["version"] = release_source.app_version()
     i18n = {lang: _yaml(data / "i18n" / f"{lang}.yml") for lang in site["languages"]}
     want = set(_flatten(i18n[site["default_language"]]))
     for lang, strings in i18n.items():
@@ -175,7 +173,7 @@ def _load_script(name: str) -> ModuleType:
 
 def _changelog(src: Path, *, older: bool = False) -> str:
     changelog = _load_script("render_changelog")
-    source = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+    source = release_source.read("CHANGELOG.md")
     return str(changelog.render_content(*changelog.parse(source), older=older))
 
 
@@ -263,11 +261,24 @@ def _configuration(src: Path) -> str:
     return "\n".join(parts) + "\n"
 
 
+@dataclass(frozen=True)
+class Origin:
+    """The file a generated page comes from: in the app's release or in this repository."""
+
+    repo: str  # the site.yml key of its repository: github_url (the app) or site_repo_url
+    rel: str
+
+    def lastmod(self) -> str:
+        if self.repo == "github_url":
+            return release_source.changed(self.rel) or _today()
+        return lastmod(ROOT / self.rel)
+
+
 # generator name -> (function, the file its output comes from)
-GENERATORS: dict[str, tuple[Callable[[Path], str], Path]] = {
-    "changelog": (_changelog, ROOT / "CHANGELOG.md"),
-    "changelog_older": (_changelog_older, ROOT / "CHANGELOG.md"),
-    "configuration": (_configuration, DOCS / "_data" / "config.yml"),
+GENERATORS: dict[str, tuple[Callable[[Path], str], Origin]] = {
+    "changelog": (_changelog, Origin("github_url", "CHANGELOG.md")),
+    "changelog_older": (_changelog_older, Origin("github_url", "CHANGELOG.md")),
+    "configuration": (_configuration, Origin("site_repo_url", "docs/_data/config.yml")),
 }
 
 
@@ -491,11 +502,8 @@ def docs_context(
             {"label": flat[here][1]["label"], "href": None},
         ]
     generator = page.meta.get("generated")
-    rel = (
-        GENERATORS[generator][1].relative_to(ROOT).as_posix()
-        if generator
-        else f"docs/{page.source.as_posix()}"
-    )
+    origin = GENERATORS[generator][1] if generator else Origin("site_repo_url", "")
+    rel = origin.rel or f"docs/{page.source.as_posix()}"
     return {
         "sidebar": sidebar,
         "toc": [
@@ -505,7 +513,7 @@ def docs_context(
         "prev": flat[here - 1][1] if here > 0 else None,
         "next": flat[here + 1][1] if here + 1 < len(flat) else None,
         "crumbs": crumbs,
-        "edit_url": f"{site['github_url']}/edit/main/{rel}",
+        "edit_url": f"{site[origin.repo]}/edit/main/{rel}",
         "anchors": data["docs_anchors"] if here == 0 else {},
     }
 
@@ -655,8 +663,12 @@ def _git(*args: str) -> str:
     return run.stdout.strip()
 
 
+def _today() -> str:
+    return datetime.datetime.now(datetime.UTC).date().isoformat()
+
+
 def lastmod(path: Path) -> str:
-    today = datetime.datetime.now(datetime.UTC).date().isoformat()
+    today = _today()
     try:
         rel = str(path.resolve().relative_to(ROOT))
     except ValueError:
@@ -790,13 +802,13 @@ def write_sitemap(out: Path, src: Path, pages: list[Page], site: dict[str, Any])
         if page.meta.get("noindex"):
             continue
         generator = page.meta.get("generated")
-        source = GENERATORS[generator][1] if generator else src / page.source
+        date = GENERATORS[generator][1].lastmod() if generator else lastmod(src / page.source)
         lines = [f"    <loc>{html.escape(site['base_url'] + page.url)}</loc>"]
         lines += [
             f'    <xhtml:link rel="alternate" hreflang="{lang}" href="{html.escape(href)}"/>'
             for lang, href in hreflang(page, site)
         ]
-        lines.append(f"    <lastmod>{lastmod(source)}</lastmod>")
+        lines.append(f"    <lastmod>{date}</lastmod>")
         entries.append("  <url>\n" + "\n".join(lines) + "\n  </url>")
     (out / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n'

@@ -9,6 +9,9 @@ COPY pyproject.toml uv.lock ./
 RUN uv export --frozen --only-group site --no-emit-project -o /tmp/requirements.txt \
     && uv pip install --system --no-cache -r /tmp/requirements.txt
 COPY . .
+# The app release the site documents: a directory in the context that the workflow filled
+# (scripts/release_source.py --relative). Unset, the build fetches the latest release itself.
+ARG OW_APP_SOURCE
 RUN git config --global --add safe.directory /src \
     && python scripts/build_site.py --out /out/site \
     && python scripts/package_site.py /out/site /out/redirects.map

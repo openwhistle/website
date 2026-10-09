@@ -3,6 +3,7 @@
 base_url: https://openwhistle.net
 default_language: en
 github_url: https://github.com/openwhistle/OpenWhistle
+site_repo_url: https://github.com/openwhistle/website
 demo_url: https://demo.openwhistle.net
 sponsor_url: https://github.com/sponsors/jp1337
 security_contact: https://github.com/openwhistle/OpenWhistle/security/advisories/new

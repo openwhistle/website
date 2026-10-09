@@ -30,8 +30,8 @@ B = _load()
 
 
 @pytest.fixture
-def src(tmp_path: Path) -> Path:
-    """A writable copy of the fixture, so a test can break one file."""
+def src(tmp_path: Path, fixture_app: Path) -> Path:
+    """A writable copy of the fixture, so a test can break one file; the app is the fixture's."""
     copy = tmp_path / "src"
     shutil.copytree(FIXTURE, copy)
     return copy
@@ -400,10 +400,8 @@ def test_a_page_no_nav_entry_leads_to_fails(src: Path, tmp_path: Path) -> None:
 
 
 def test_the_footer_shows_the_app_version(src: Path, tmp_path: Path) -> None:
-    config = (ROOT / "app/config.py").read_text()
-    version = re.search(r'app_version: str = "([^"]+)"', config).group(1)
     html = (_build(src, tmp_path) / "en" / "index.html").read_text(encoding="utf-8")
-    assert f"Version {version}</span>" in html
+    assert "Version 9.9.9</span>" in html  # tests/fixtures/app_source/app/config.py
 
 
 def test_title_and_description_are_html_escaped_and_utf8_stays_literal(
@@ -583,6 +581,11 @@ def test_the_sitemap_lists_indexable_pages_with_alternates(src: Path, tmp_path: 
     assert alts == {"en", "de", "x-default"}
 
 
+def test_a_release_without_a_date_is_dated_today(fixture_app: Path) -> None:
+    """A checkout outside git (the fixture) has no commit date: the changelog is today's."""
+    assert B.GENERATORS["changelog"][1].lastmod() == B._today()
+
+
 def test_lastmod_is_the_last_commit_of_the_source() -> None:
     if B._git("status", "--porcelain", "--", "LICENSE"):
         pytest.skip("LICENSE has uncommitted changes")
@@ -599,17 +602,18 @@ def test_lastmod_is_a_utc_date_not_the_local_one(monkeypatch: pytest.MonkeyPatch
     assert B.lastmod(ROOT / "LICENSE") == "2026-10-02"
 
 
-def test_the_changelog_page_is_dated_by_changelog_md(
+def test_the_changelog_page_is_dated_by_the_releases_changelog_md(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     monkeypatch.setattr(B, "lastmod", lambda path: path.name)
+    monkeypatch.setattr(B.release_source, "changed", lambda rel: f"release {rel}")
     site = {"base_url": "https://e.test", "languages": {"en": {}}, "default_language": "en"}
     generated = {"generated": "changelog"}
     changelog = B.Page(Path("en/changelog.html"), "/en/changelog/", "en", generated, "")
     roadmap = B.Page(Path("en/roadmap.html"), "/en/roadmap/", "en", {}, "")
     B.write_sitemap(tmp_path, tmp_path, [changelog, roadmap], site)
     sitemap = (tmp_path / "sitemap.xml").read_text(encoding="utf-8")
-    assert "/en/changelog/</loc>\n    <lastmod>CHANGELOG.md</lastmod>" in sitemap
+    assert "/en/changelog/</loc>\n    <lastmod>release CHANGELOG.md</lastmod>" in sitemap
     assert "/en/roadmap/</loc>\n    <lastmod>roadmap.html</lastmod>" in sitemap
 
 
@@ -783,7 +787,7 @@ def test_the_docs_layout_builds_sidebar_toc_pager_and_edit_link(src: Path, tmp_p
     assert re.search(r'<details class="sidebar-group" open>\s*<summary>How-to</summary>', html)
     assert '<a href="#setup">Set it up</a>' in html  # on this page
     assert 'rel="prev" href="/en/docs/"' in html and 'rel="next"' not in html
-    assert "/edit/main/docs/en/docs/ldap/index.html" in html
+    assert "https://github.com/openwhistle/website/edit/main/docs/en/docs/ldap/index.html" in html
     crumbs = re.findall(r'<script type="application/ld\+json">(.*?)</script>', html)
     assert any(
         '"BreadcrumbList"' in b and '"https://example.test/en/docs/ldap/"' in b for b in crumbs
@@ -912,7 +916,11 @@ def test_a_generated_pages_edit_link_names_its_source(src: Path, tmp_path: Path)
         )
     )
     html = (_build(src, tmp_path) / "en" / "docs" / "configuration" / "index.html").read_text()
-    assert "/edit/main/docs/_data/config.yml" in html
+    assert "https://github.com/openwhistle/website/edit/main/docs/_data/config.yml" in html
+
+
+def test_the_changelog_is_the_releases(src: Path) -> None:
+    assert "A fixture release." in B._changelog(src)  # tests/fixtures/app_source/CHANGELOG.md
 
 
 def test_the_build_indexes_only_docs_pages() -> None:

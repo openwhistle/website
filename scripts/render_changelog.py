@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """CHANGELOG.md -> the body of /en/changelog/.
 
-GitHub and the release tooling read CHANGELOG.md at the repository root. This
-renders it as one page in the site's own design (the shell copied from the
+GitHub and the release tooling read CHANGELOG.md at the root of openwhistle/OpenWhistle. This
+renders the latest release's copy as one page in the site's own design (the shell copied from the
 roadmap page), newest release first.
 
-Imported by scripts/build_site.py; CHANGELOG.md stays the single source.
+Imported by scripts/build_site.py, which reads the file through scripts/release_source.py;
+CHANGELOG.md stays the single source.
 
 CHANGELOG.md uses a small Markdown subset, and this parses exactly that:
 h2 (`## [x.y.z] — date`) and h3 (`### Section`) headings, paragraphs, bullet
