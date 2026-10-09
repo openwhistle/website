@@ -333,3 +333,41 @@ def test_relative_outside_the_working_directory_fails_loudly(
     monkeypatch.chdir(tmp_path)
     assert release_source.main(["--relative"]) == 1
     assert "is outside" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("broken", ["", '{"tag": "v9.9', "[]", "\xff\xfe"])
+def test_a_corrupt_cache_is_fetched_again(github: _Fake, tmp_path: Path, broken: str) -> None:
+    dest = release_source.fetch(tmp_path)
+    (dest / "release.json").write_bytes(broken.encode("latin-1"))
+    github.requests.clear()
+    assert release_source.fetch(tmp_path) == dest
+    assert json.loads((dest / "release.json").read_text())["tag"] == TAG
+    assert f"{release_source.API}/git/trees/{TAG}?recursive=1" in [
+        r.full_url for r in github.requests
+    ]
+
+
+def test_a_non_ascii_digit_is_no_release_tag(
+    github: _Fake, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("OW_RELEASE_TAG", "v\u0662.1.1")  # ARABIC-INDIC DIGIT TWO
+    with pytest.raises(release_source.ReleaseError, match="is not a release tag"):
+        release_source.fetch(tmp_path)
+
+
+def test_tag_asks_for_the_latest_release_once(
+    github: _Fake,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.delenv("OW_APP_SOURCE", raising=False)
+    monkeypatch.setattr(release_source, "CACHE", tmp_path)
+    release_source.root.cache_clear()
+    try:
+        assert release_source.main(["--tag"]) == 0
+    finally:
+        release_source.root.cache_clear()
+    assert capsys.readouterr().out.strip() == TAG
+    latest = [r for r in github.requests if r.full_url.endswith("/releases/latest")]
+    assert len(latest) == 1

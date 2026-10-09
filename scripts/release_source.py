@@ -52,7 +52,7 @@ FETCH = (
     "migrations/versions/*.py",
     "charts/openwhistle/values.yaml",
 )
-TAG = re.compile(r"v\d+\.\d+\.\d+")
+TAG = re.compile(r"v[0-9]+\.[0-9]+\.[0-9]+")  # ASCII digits: \d also matches other scripts
 _SKIP = {".git", ".venv", "node_modules", "__pycache__", ".pytest_cache", ".mypy_cache"}
 
 
@@ -91,10 +91,11 @@ def release_tag() -> str:
 
 def _cached(dest: Path) -> bool:
     """A whole fetch of this FETCH list: a cache from a shorter list lacks files the site reads."""
-    meta = dest / "release.json"
-    return meta.is_file() and json.loads(meta.read_text(encoding="utf-8")).get("fetch") == list(
-        FETCH
-    )
+    try:
+        meta = json.loads((dest / "release.json").read_text(encoding="utf-8"))
+    except OSError, ValueError:  # missing, unreadable, cut short, not JSON: fetch again
+        return False
+    return isinstance(meta, dict) and meta.get("fetch") == list(FETCH)
 
 
 def fetch(cache_dir: Path = CACHE) -> Path:

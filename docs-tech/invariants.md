@@ -39,6 +39,8 @@ for a release that changed.
 | `IDENTITY-OTHER-REPO` | `.github/workflows/website-image.yml` | `test_the_image_is_signed_with_sbom_and_provenance_for_the_amd64_target` |
 | `INLINE-PIN-SCAN-BLIND` | `tests/test_renovate.py` | `test_the_inline_pin_scan_sees_a_docker_run_and_skips_actions` |
 | `HISTORY-SPEC-LIVE` | `docs-tech/mutations/v2.1.0-site-p1.json` | `test_every_mutation_matches_its_file_exactly_once` |
+| `CORRUPT-CACHE-CRASHES` | `scripts/release_source.py` | `test_a_corrupt_cache_is_fetched_again` |
+| `TAG-ANY-DIGIT` | `scripts/release_source.py` | `test_a_non_ascii_digit_is_no_release_tag` |
 | `IMAGE-BUILDS-ANOTHER-RELEASE` | `.github/workflows/website-image.yml` | `test_the_tests_and_the_image_read_one_fetched_release` |
 | `LIFECYCLE-EDGES` (`v2.1.1-site-p2a.json`) | `docs/_diagrams/case-lifecycle.drawio` | `test_the_case_lifecycle_draws_exactly_the_status_transitions` |
 | `FAVICONS-DIVERGE` (`v2.1.1-site-p2b.json`) | `tests/fixtures/app_source/app/static/favicon.svg` | `test_the_fixture_mark_and_favicon_are_the_sites` |

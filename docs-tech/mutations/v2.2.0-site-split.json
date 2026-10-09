@@ -202,8 +202,8 @@
   {
    "id": "CACHE-IGNORES-FETCH-LIST",
    "file": "scripts/release_source.py",
-   "old": ".get(\"fetch\") == list(\n        FETCH\n    )",
-   "new": ".get(\"fetch\") is not None",
+   "old": "meta.get(\"fetch\") == list(FETCH)",
+   "new": "meta.get(\"fetch\") is not None",
    "tests": "RELEASE"
   },
   {
@@ -254,6 +254,20 @@
    "old": "\"history\": \"P2",
    "new": "\"retired\": \"P2",
    "tests": "MUTSPECS"
+  },
+  {
+   "id": "CORRUPT-CACHE-CRASHES",
+   "file": "scripts/release_source.py",
+   "old": "    except OSError, ValueError:  #",
+   "new": "    except OSError:  #",
+   "tests": "RELEASE"
+  },
+  {
+   "id": "TAG-ANY-DIGIT",
+   "file": "scripts/release_source.py",
+   "old": "TAG = re.compile(r\"v[0-9]+\\.[0-9]+\\.[0-9]+\")",
+   "new": "TAG = re.compile(r\"v\\d+\\.\\d+\\.\\d+\")",
+   "tests": "RELEASE"
   }
  ]
 }
