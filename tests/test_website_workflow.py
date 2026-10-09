@@ -57,7 +57,7 @@ def test_the_tests_and_the_image_read_one_fetched_release() -> None:
     for job in ("test", "publish"):
         steps = JOBS[job]["steps"]
         fetch = next(s for s in steps if s.get("id") == "release")
-        assert fetch["run"].startswith('echo "dir=$(python scripts/release_source.py --relative)')
+        assert fetch["run"].startswith("dir=$(python scripts/release_source.py --relative)\n")
         assert fetch["env"] == {"GITHUB_TOKEN": "${{ github.token }}"}
     test = {s.get("name"): s for s in JOBS["test"]["steps"]}
     source = "${{ steps.release.outputs.dir }}"

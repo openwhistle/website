@@ -307,7 +307,7 @@
    "file": "docs/assets/css/docs.css",
    "tests": "CODE_E2E",
    "old": "    pre { max-width: 100%; overflow-x: auto; }\n",
-   "new": "    pre { max-width: 100%; overflow-x: auto; }\n    [data-theme=\"dark\"] .docs-section code { background: var(--surface-3); }\n"
+   "new": "    pre { max-width: 100%; overflow-x: auto; }\n    [data-theme=\"dark\"] .docs-article pre code { background: var(--surface-3); }\n"
   },
   {
    "id": "RECOMMENDED-PILL-LOW-CONTRAST",
