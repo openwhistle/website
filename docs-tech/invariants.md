@@ -13,7 +13,7 @@ for a release that changed.
 | Mutation | File | Test that fires |
 | --- | --- | --- |
 | `SETTING-UNDOCUMENTED` | `docs/_data/config.yml` | `test_config_yml_lists_every_setting_once_and_nothing_else` |
-| `STATUSES-STALE-IN-GUIDE` | `docs/en/docs/admin/index.html` | `test_the_admin_guide_names_exactly_the_report_statuses` |
+| `STATUSES-STALE-IN-GUIDE`, `DARK-ALT-DROPS-A-TRANSITION` | `docs/en/docs/admin/index.html` | `test_the_admin_guide_describes_exactly_the_report_statuses_and_transitions` |
 | `FONT-DIVERGES` | `docs/fonts/sora-LICENSE` | `test_every_shared_file_is_the_releases` |
 | `DESIGN-MD-DIVERGES` | `DESIGN.md` | `test_every_shared_file_is_the_releases` |
 | `MARK-DIVERGES` | `scripts/render_icons.py` | `test_the_mark_is_the_releases_geometry`, `test_every_copy_draws_the_one_geometry` |
@@ -29,8 +29,18 @@ for a release that changed.
 | `AUDIT-SHARED-PYC` | `scripts/mutation_audit.py` | `test_every_audit_run_gets_its_own_bytecode_cache` |
 | `AUDIT-CRASHES-ON-A-GONE-FILE` | `scripts/mutation_audit.py` | `test_the_audit_reports_red_green_and_stale` |
 | `DOCS-TECH-CONTENT-LEAK` | `docs/assets/site-css.txt` (a copy of `docs-tech/site-css.md`) | `test_no_built_file_comes_from_docs_tech` |
+| `TAG-UNVALIDATED` | `scripts/release_source.py` | `test_a_tag_that_is_no_release_version_is_refused` |
+| `PINNED-TAG-IGNORED` | `scripts/release_source.py` | `test_a_pinned_tag_is_fetched_without_asking_for_the_latest` |
+| `CACHE-IGNORES-FETCH-LIST` | `scripts/release_source.py` | `test_a_cache_fetched_with_another_list_is_fetched_again` |
+| `TREE-SPLIT-ON-SPACE` | `scripts/release_source.py` | `test_a_fetched_release_is_read_by_tag_tree_and_date` |
+| `RELATIVE-OUTSIDE-UNCHECKED` | `scripts/release_source.py` | `test_relative_outside_the_working_directory_fails_loudly` |
+| `PUBLISH-REFETCHES-LATEST` | `.github/workflows/website-image.yml` | `test_publish_builds_exactly_the_release_the_tests_tested` |
+| `PUBLISH-EMPTY-TAG-ALLOWED` | `.github/workflows/website-image.yml` | `test_publish_builds_exactly_the_release_the_tests_tested` |
+| `IDENTITY-OTHER-REPO` | `.github/workflows/website-image.yml` | `test_the_image_is_signed_with_sbom_and_provenance_for_the_amd64_target` |
+| `INLINE-PIN-SCAN-BLIND` | `tests/test_renovate.py` | `test_the_inline_pin_scan_sees_a_docker_run_and_skips_actions` |
+| `HISTORY-SPEC-LIVE` | `docs-tech/mutations/v2.1.0-site-p1.json` | `test_every_mutation_matches_its_file_exactly_once` |
 | `IMAGE-BUILDS-ANOTHER-RELEASE` | `.github/workflows/website-image.yml` | `test_the_tests_and_the_image_read_one_fetched_release` |
-| `LIFECYCLE-EDGES` (`v2.1.1-site-p2a.json`) | `tests/fixtures/app_source/app/models/report.py` | `test_constants_are_read_as_literals` |
+| `LIFECYCLE-EDGES` (`v2.1.1-site-p2a.json`) | `docs/_diagrams/case-lifecycle.drawio` | `test_the_case_lifecycle_draws_exactly_the_status_transitions` |
 | `FAVICONS-DIVERGE` (`v2.1.1-site-p2b.json`) | `tests/fixtures/app_source/app/static/favicon.svg` | `test_the_fixture_mark_and_favicon_are_the_sites` |
 | `DEMO-COOKIE-NEW` (`v2.1.2-site-p3.json`) | `tests/fixtures/app_source/app/api/reports.py` | `test_the_cookie_scan_reads_every_set_cookie_of_the_release` |
 | `WEEKLY-RELEASE-RUN` (`v2.1.2-site-p4.json`) | `.github/workflows/website-image.yml` | `test_a_new_app_release_is_built_within_a_week` |

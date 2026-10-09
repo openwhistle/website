@@ -48,13 +48,50 @@ def test_the_mark_is_the_releases_geometry() -> None:
     assert icons.MARK == release_source.constant("scripts/render_icons.py", "MARK")
 
 
-def test_the_admin_guide_names_exactly_the_report_statuses() -> None:
-    """The case-lifecycle figure's text alternative is the guide's status list."""
+# One clause per status the case can leave: "From a it goes to b or c", "from a to b, c or back to
+# d", "a closed case can reopen to b". The figure's text alternative is the guide's status list.
+_CLAUSE = re.compile(r"(?:[Ff]rom (\w+)(?: it goes)? to|[Aa] (\w+) case can reopen to) ([^;.]+)")
+_TARGETS = re.compile(r",\s*|\s+or\s+")
+
+
+def _described(alt: str) -> tuple[set[str], set[tuple[str, str]]]:
+    """(the statuses, the transitions) a lifecycle text alternative describes."""
+    edges = set()
+    for found in _CLAUSE.finditer(alt):
+        source = found.group(1) or found.group(2)
+        for target in _TARGETS.split(found.group(3).strip()):
+            edges.add((source, target.removeprefix("back to ").strip()))
+    first = re.search(r"a submitted report is (\w+)\.", alt)
+    named = {first.group(1)} if first else set()
+    return named | {s for edge in edges for s in edge}, edges
+
+
+def test_the_lifecycle_text_is_parsed_clause_by_clause() -> None:
+    statuses, edges = _described(
+        "a submitted report is new. From new it goes to open or done; from open to waiting, "
+        "done or back to new; a done case can reopen to open. New carries a deadline."
+    )
+    assert statuses == {"new", "open", "done", "waiting"}
+    assert edges == {
+        ("new", "open"),
+        ("new", "done"),
+        ("open", "waiting"),
+        ("open", "done"),
+        ("open", "new"),
+        ("done", "open"),
+    }
+
+
+def test_the_admin_guide_describes_exactly_the_report_statuses_and_transitions() -> None:
+    """Both themes' text alternative: a status or a transition the release dropped, renamed or
+    added — with an underscore or without — fails."""
     guide = (ROOT / "docs/en/docs/admin/index.html").read_text(encoding="utf-8")
-    alts = re.findall(r'src="/img/diagrams/case-lifecycle-light\.svg" alt="([^"]+)"', guide)
-    assert len(alts) == 1, alts
-    alt = html.unescape(alts[0])
+    alts = re.findall(r'src="/img/diagrams/case-lifecycle-(light|dark)\.svg" alt="([^"]+)"', guide)
+    assert sorted(theme for theme, _ in alts) == ["dark", "light"], alts
     statuses = set(release_source.enum_values("app/models/report.py", "ReportStatus"))
-    named = {s for s in statuses if re.search(rf"\b{s}\b", alt)}
-    stray = set(re.findall(r"\b[a-z]+(?:_[a-z]+)+\b", alt)) - statuses
-    assert named == statuses and not stray, {"missing": statuses - named, "stray": stray}
+    transitions = release_source.constant("app/models/report.py", "STATUS_TRANSITIONS")
+    allowed = {(a, b) for a, targets in transitions.items() for b in targets}
+    for theme, alt in alts:
+        named, edges = _described(html.unescape(alt))
+        assert named == statuses, (theme, {"missing": statuses - named, "stray": named - statuses})
+        assert edges == allowed, (theme, {"missing": allowed - edges, "stray": edges - allowed})

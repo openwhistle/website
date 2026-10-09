@@ -1,15 +1,18 @@
 """A mutation-audit entry whose `old` text no longer occurs in its file guards
-nothing: the audit can only report it as stale at release time. Every entry of
-the latest app release's specs (its `app_version`, scripts/release_source.py) and of every
-release in development after it must match its file exactly once, so a refactor
-that moves a guard fails here, in the change that moved it."""
+nothing: the audit can only report it as stale. Every entry of every live spec must
+match its file exactly once, so a change that moves a guard fails here, in the change
+that moved it.
+
+Live is a property of this repository, not of the app's releases (ruling, 2026-10-09):
+a spec stays live until a website change retires it with a `"history"` reason. An app
+release never turns this file red.
+"""
 
 import json
 import re
 from pathlib import Path
 
 import pytest
-import release_source
 
 ROOT = Path(__file__).parents[1]
 _VERSION = re.compile(r"v(\d+)\.(\d+)\.(\d+)(?:-[\w-]+)?\.json")
@@ -21,14 +24,8 @@ def _version(name: str) -> tuple[int, ...]:
     return tuple(int(part) for part in found.groups())
 
 
-def _current() -> tuple[int, ...]:
-    return tuple(int(part) for part in release_source.app_version().split("."))
-
-
-# The installed release and every release in development after it: once a
-# release is tagged its specs are history, but until then they must hold.
 ALL_SPECS = sorted((ROOT / "docs-tech" / "mutations").glob("*.json"))
-SPECS = [p for p in ALL_SPECS if _version(p.name) >= _current()]
+SPECS = [p for p in ALL_SPECS if "history" not in json.loads(p.read_text())]
 
 
 def test_every_spec_name_carries_a_version() -> None:
@@ -36,13 +33,11 @@ def test_every_spec_name_carries_a_version() -> None:
         _version(spec.name)
 
 
-def test_the_current_release_has_mutation_specs() -> None:
-    assert any(_version(p.name) == _current() for p in SPECS), (release_source.app_version(), SPECS)
-
-
-def test_a_release_in_development_is_covered() -> None:
-    # Pins the >= comparison: a v2.1.0 spec counts while app_version is 2.0.0.
-    assert _version("v2.1.0-x.json") > _version("v2.0.0-x.json") > _version("v1.10.0.json")
+def test_a_retired_spec_says_why_and_a_live_one_remains() -> None:
+    for spec in ALL_SPECS:
+        reason = json.loads(spec.read_text()).get("history", "x")
+        assert isinstance(reason, str) and reason.strip(), spec.name
+    assert SPECS, "every spec is history: the guards of this repository go unaudited"
 
 
 @pytest.mark.parametrize("spec", SPECS, ids=lambda p: p.name)

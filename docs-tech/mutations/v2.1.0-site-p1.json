@@ -1,4 +1,5 @@
 {
+ "history": "P2\u2013P5 rewrote what it mutates (Pages workflow, stubs, CNAME, axe bump); its guards live on in the later specs.",
  "test_groups": {
   "FM-OPEN": [
    "tests/test_build_site.py::test_a_page_without_front_matter_fails"

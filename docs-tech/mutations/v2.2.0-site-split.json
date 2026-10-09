@@ -44,6 +44,12 @@
   ],
   "LEAK": [
    "tests/test_docs_boundary.py::test_no_built_file_comes_from_docs_tech"
+  ],
+  "RENOVATE": [
+   "tests/test_renovate.py"
+  ],
+  "MUTSPECS": [
+   "tests/test_mutation_specs.py"
   ]
  },
  "mutations": [
@@ -171,6 +177,83 @@
    "file": "docs/assets/site-css.txt",
    "create": "# Changing the site's CSS\n\nHow-to: change a stylesheet under `docs/assets/css/` and prove what it changed on screen.\n\n## Which sheet\n\n| Sheet | Holds | Linked by |\n| --- | --- | --- |\n| `tokens.css` | every custom property, light and dark; names follow `DESIGN.md` | every page, first |\n| `fonts.css` | the self-hosted `@font-face` rules | every page |\n| `base.css` | reset, nav, footer, callout, motion, forced colours | every page |\n| `home.css` | the two landing pages | `css: [home]` |\n| `docs.css` | the docs layout: sidebar, content type, code blocks, tables | `css: [docs]`, and the text pages |\n| `post.css` | a blog post | `css: [post]` |\n| `page.css` | only what the text pages (roadmap, changelog, compare, blog index, 404) add to `docs.css` | `css: [docs, page]` |\n\n`tests/test_site_css.py` holds the table: a value is a token, a corner is a `--radius-*` token or 0, an edge\nis a `box-shadow` ring, `page.css` repeats no `docs.css` selector, and no rule styles a class no page uses.\n\n## Prove the change: `compare_site_screens.py`\n\n```bash\nuv run python scripts/compare_site_screens.py --base main\nuv run python scripts/compare_site_screens.py --base main --only /en/docs/ --out /tmp/shots-docs\n```\n\nIt builds `--base` and the working tree, screenshots every page light and dark at 1920 and 390 px, and\ncompares the pixels. Run it before every CSS commit.\n\n| Change | Expect |\n| --- | --- |\n| A refactor (move, merge, delete a dead rule) | exit 0, `0 differing shot(s)` |\n| A visible change | exit 1; every listed shot is one you meant, with a `diff-*.png` to look at |\n\n- A shot listed with a size change (`a size change counts every extra pixel`) moved everything below it;\n  look at the first difference, not the count.\n- A capture that times out: run that page alone with `--only`.\n- `--out` must be new or empty, so an old run is never read as this one.\n- From a `git worktree`, call the repository's own `.venv/bin/python`: the worktree has no environment\n  of its own, and `uv run` there builds one without Playwright.\n\nIncident: P2b's `docs.css`/`page.css` merge was declared \"the same\" from the diff; the compare proved it\n(0 of 104 shots) before the radius change, which then listed every page for the nav button alone.\n\n## A new character in a CSS `content:` string\n\n`scripts/build_site.py` subsets the fonts to the characters the built pages draw. It reads page text, not\nCSS, so a character that only a `content:` string draws (an arrow, a bullet) must be added to\n`FONT_TEXT_EXTRA`, or the browser falls back to another font for that one glyph.\n`tests/test_site_fonts.py` checks the page text against the subset, not `content:` strings: this step is\nyours (today: `—`, `+`, `−`).\n",
    "tests": "LEAK"
+  },
+  {
+   "id": "DARK-ALT-DROPS-A-TRANSITION",
+   "file": "docs/en/docs/admin/index.html",
+   "old": "case-lifecycle-dark.svg\" alt=\"Case statuses: a submitted report is received. From received it goes to in_review or closed;",
+   "new": "case-lifecycle-dark.svg\" alt=\"Case statuses: a submitted report is received. From received it goes to in_review;",
+   "tests": "ASSETS"
+  },
+  {
+   "id": "TAG-UNVALIDATED",
+   "file": "scripts/release_source.py",
+   "old": "    if not TAG.fullmatch(tag):\n",
+   "new": "    if not tag:\n",
+   "tests": "RELEASE"
+  },
+  {
+   "id": "PINNED-TAG-IGNORED",
+   "file": "scripts/release_source.py",
+   "old": "tag = os.environ.get(\"OW_RELEASE_TAG\") or str(",
+   "new": "tag = str(",
+   "tests": "RELEASE"
+  },
+  {
+   "id": "CACHE-IGNORES-FETCH-LIST",
+   "file": "scripts/release_source.py",
+   "old": ".get(\"fetch\") == list(\n        FETCH\n    )",
+   "new": ".get(\"fetch\") is not None",
+   "tests": "RELEASE"
+  },
+  {
+   "id": "TREE-SPLIT-ON-SPACE",
+   "file": "scripts/release_source.py",
+   "old": "listing.read_text(encoding=\"utf-8\").splitlines()",
+   "new": "listing.read_text(encoding=\"utf-8\").split()",
+   "tests": "RELEASE"
+  },
+  {
+   "id": "RELATIVE-OUTSIDE-UNCHECKED",
+   "file": "scripts/release_source.py",
+   "old": "            if not found.is_relative_to(Path.cwd()):\n",
+   "new": "            if False:\n",
+   "tests": "RELEASE"
+  },
+  {
+   "id": "PUBLISH-REFETCHES-LATEST",
+   "file": ".github/workflows/website-image.yml",
+   "old": "          OW_RELEASE_TAG: ${{ needs.test.outputs.tag }}\n",
+   "new": "",
+   "tests": "WEBSITE_WF"
+  },
+  {
+   "id": "PUBLISH-EMPTY-TAG-ALLOWED",
+   "file": ".github/workflows/website-image.yml",
+   "old": "          test -n \"$OW_RELEASE_TAG\"\n",
+   "new": "",
+   "tests": "WEBSITE_WF"
+  },
+  {
+   "id": "IDENTITY-OTHER-REPO",
+   "file": ".github/workflows/website-image.yml",
+   "old": "IDENTITY: https://github.com/${{ github.repository }}/",
+   "new": "IDENTITY: https://github.com/openwhistle/OpenWhistle/",
+   "tests": "WEBSITE_WF"
+  },
+  {
+   "id": "INLINE-PIN-SCAN-BLIND",
+   "file": "tests/test_renovate.py",
+   "old": "        if \"uses:\" not in line\n        for digest in re.findall",
+   "new": "        if \"uses:\" in line\n        for digest in re.findall",
+   "tests": "RENOVATE"
+  },
+  {
+   "id": "HISTORY-SPEC-LIVE",
+   "file": "docs-tech/mutations/v2.1.0-site-p1.json",
+   "old": "\"history\": \"P2",
+   "new": "\"retired\": \"P2",
+   "tests": "MUTSPECS"
   }
  ]
 }

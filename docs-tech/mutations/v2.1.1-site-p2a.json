@@ -34,8 +34,10 @@
    "--browser",
    "chromium"
   ],
-  "RELEASE": [
-   "tests/test_release_source.py"
+  "LIFECYCLE": [
+   "tests/test_diagrams.py",
+   "-k",
+   "case_lifecycle_draws"
   ]
  },
  "mutations": [
@@ -440,10 +442,10 @@
   },
   {
    "id": "LIFECYCLE-EDGES",
-   "file": "tests/fixtures/app_source/app/models/report.py",
-   "tests": "RELEASE",
-   "old": "    \"closed\": {\"received\"},",
-   "new": "    \"closed\": {\"received\", \"closed\"},"
+   "file": "docs/_diagrams/case-lifecycle.drawio",
+   "tests": "LIFECYCLE",
+   "old": "edge=\"1\" parent=\"1\" source=\"closed\" target=\"in_review\">",
+   "new": "edge=\"1\" parent=\"1\" source=\"closed\" target=\"received\">"
   },
   {
    "id": "E2E-TWIN",
