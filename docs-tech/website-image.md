@@ -7,11 +7,12 @@ Why it is built this way: `docs-tech/specs/2026-10-09-website-p4-design.md`.
 
 Build from a **full clone** of openwhistle/website. A linked git worktree fails: `build_site.py` runs git
 (sitemap `lastmod`) and sees a `.git` pointer file. The site documents the latest app release: fetch it
-into the build context first (`.release/<tag>/`), or leave the build arg out and the build fetches it.
+into the build context first (`.release/<tag>/`). Assign the path before the build: inside `--build-arg "$(…)"`
+a failed fetch would pass an empty value, and the build would fetch whatever is latest by then.
 
 ```bash
-docker build -f website/Dockerfile -t openwhistle-website:local \
-  --build-arg OW_APP_SOURCE="$(python scripts/release_source.py --relative)" .
+dir=$(python scripts/release_source.py --relative) &&
+docker build -f website/Dockerfile -t openwhistle-website:local --build-arg OW_APP_SOURCE="$dir" .
 docker run --rm --name ow-website --read-only --tmpfs /tmp -p 8080:8080 \
   -v "$PWD/tests/website/fixtures/private:/usr/share/nginx/private:ro" openwhistle-website:local
 ```
@@ -19,6 +20,7 @@ docker run --rm --name ow-website --read-only --tmpfs /tmp -p 8080:8080 \
 | Variant | Change |
 | --- | --- |
 | podman | `podman` for `docker`; `CONTAINER_CLI=podman` for the tests |
+| An app checkout instead of the release | copy it into the context first (`rsync -a --exclude .git ../OpenWhistle/ .release/local/`), then `dir=.release/local`; `--relative` refuses a path outside the working directory |
 | SELinux host | `:ro,z` instead of `:ro` on the mount |
 
 ## Check
@@ -49,3 +51,11 @@ docker run --rm --name ow-website --read-only --tmpfs /tmp -p 8080:8080 \
 | Leak guard | `OW_PRIVATE_STRINGS` (one string per line) arms `test_no_file_in_the_repository_holds_the_real_data`; unset, it skips. It holds the operator's name, the c/o line and the street only, never postcode or city: those are also in the processor's business address, which the privacy policy must show |
 | Deploy | As energysharing in wdk-ansible: digest pin in `docker_images.yml`, Renovate PR per new digest, merge runs Semaphore template 22. No token leaves GitHub |
 | Signature | keyless cosign; identity `https://github.com/openwhistle/website/.github/workflows/website-image.yml@refs/heads/main`, issuer `https://token.actions.githubusercontent.com` |
+
+## First publish from this repository
+
+`ghcr.io/openwhistle/website` was created by `openwhistle/OpenWhistle`'s workflow, so a token of
+`openwhistle/website` cannot push to it yet. Before the first `main` build: the package's settings →
+"Manage Actions access" → add `openwhistle/website` with the role **Write** (or relink the package to this
+repository). This is a setting of the package, kept by the maintainer; no code changes it. Then the publish job
+signs with the identity above, and wdk-ansible's `cosign verify` must name it.

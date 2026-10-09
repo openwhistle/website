@@ -24,6 +24,7 @@ test-results/
 /_site/
 /.release/
 
-# Local agent tooling
+# Local agent tooling and agent settings (settings.local.json)
 .serena/
+/.claude/
 /.superpowers/
