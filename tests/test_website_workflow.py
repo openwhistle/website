@@ -36,7 +36,10 @@ def test_the_image_is_signed_with_sbom_and_provenance_for_the_amd64_target() -> 
     assert '--certificate-identity "${IDENTITY}"' in run
     assert "--certificate-oidc-issuer https://token.actions.githubusercontent.com" in run
     env = next(s["env"] for s in steps if s.get("name") == "Sign and verify")
-    assert env["IDENTITY"].endswith("/.github/workflows/website-image.yml@refs/heads/main")
+    assert env["IDENTITY"] == (
+        "https://github.com/${{ github.repository }}/.github/workflows/website-image.yml"
+        "@refs/heads/main"
+    )
     assert all("docker.io" not in str(s) and "quay.io" not in str(s) for s in steps)
 
 
@@ -54,20 +57,34 @@ def test_a_new_app_release_is_built_within_a_week() -> None:
 
 
 def test_the_tests_and_the_image_read_one_fetched_release() -> None:
-    for job in ("test", "publish"):
-        steps = JOBS[job]["steps"]
-        fetch = next(s for s in steps if s.get("id") == "release")
-        assert fetch["run"].startswith("dir=$(python scripts/release_source.py --relative)\n")
-        assert fetch["env"] == {"GITHUB_TOKEN": "${{ github.token }}"}
     test = {s.get("name"): s for s in JOBS["test"]["steps"]}
+    fetch = next(s for s in JOBS["test"]["steps"] if s.get("id") == "release")
+    assert fetch["env"] == {"GITHUB_TOKEN": "${{ github.token }}"}
+    # resolved once, then pinned: two lookups of "latest" could straddle a release
+    assert fetch["run"].startswith(
+        "tag=$(python scripts/release_source.py --tag)\n"
+        'dir=$(OW_RELEASE_TAG="$tag" python scripts/release_source.py --relative)\n'
+    )
+    assert 'echo "tag=$tag"' in fetch["run"] and 'echo "dir=$dir"' in fetch["run"]
     source = "${{ steps.release.outputs.dir }}"
     for name in ("The documentation matches the release (unit suite)", "Build the image"):
         assert test[name]["env"]["OW_APP_SOURCE"] == source, name
     assert "--build-arg OW_APP_SOURCE " in test["Build the image"]["run"]
-    build = next(
-        s for s in JOBS["publish"]["steps"] if s.get("uses", "").startswith("docker/build-push")
-    )
-    assert build["with"]["build-args"] == f"OW_APP_SOURCE={source}"
+
+
+def test_publish_builds_exactly_the_release_the_tests_tested() -> None:
+    assert JOBS["test"]["outputs"]["tag"] == "${{ steps.release.outputs.tag }}"
+    steps = JOBS["publish"]["steps"]
+    fetch = next(s for s in steps if s.get("id") == "release")
+    assert fetch["env"] == {
+        "GITHUB_TOKEN": "${{ github.token }}",
+        "OW_RELEASE_TAG": "${{ needs.test.outputs.tag }}",
+    }
+    # an empty tag would mean "latest" again
+    assert fetch["run"].startswith('test -n "$OW_RELEASE_TAG"\n')
+    assert "--relative" in fetch["run"] and "--tag" not in fetch["run"]
+    build = next(s for s in steps if s.get("uses", "").startswith("docker/build-push"))
+    assert build["with"]["build-args"] == "OW_APP_SOURCE=${{ steps.release.outputs.dir }}"
 
 
 def test_the_browser_tests_cannot_skip_in_the_website_job() -> None:

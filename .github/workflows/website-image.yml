@@ -41,6 +41,8 @@ jobs:
     timeout-minutes: 45
     permissions:
       contents: read
+    outputs:
+      tag: ${{ steps.release.outputs.tag }} # the release publish must build
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -66,10 +68,12 @@ jobs:
         id: release
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        # An assignment, not an echo of $(…): a failed fetch fails the step.
+        # Assignments, not an echo of $(…): a failed fetch fails the step. The tag is resolved
+        # once and pinned, so the tests, the image and the publish job read one release.
         run: |
-          dir=$(python scripts/release_source.py --relative)
-          echo "dir=$dir" >> "$GITHUB_OUTPUT"
+          tag=$(python scripts/release_source.py --tag)
+          dir=$(OW_RELEASE_TAG="$tag" python scripts/release_source.py --relative)
+          { echo "tag=$tag"; echo "dir=$dir"; } >> "$GITHUB_OUTPUT"
 
       - name: The documentation matches the release (unit suite)
         env:
@@ -142,12 +146,14 @@ jobs:
         with:
           python-version: "3.14"
 
-      - name: Fetch the latest app release
+      - name: Fetch the release the test job tested
         id: release
         env:
           GITHUB_TOKEN: ${{ github.token }}
-        # An assignment, not an echo of $(…): a failed fetch fails the step.
+          OW_RELEASE_TAG: ${{ needs.test.outputs.tag }}
+        # Never the latest again: a release published while the tests ran was not tested.
         run: |
+          test -n "$OW_RELEASE_TAG"
           dir=$(python scripts/release_source.py --relative)
           echo "dir=$dir" >> "$GITHUB_OUTPUT"
 

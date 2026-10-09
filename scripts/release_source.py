@@ -3,6 +3,7 @@
 
     python scripts/release_source.py [--relative]   fetch the release into .release/<tag>/,
                                                     print its path
+    python scripts/release_source.py --tag          print the release's tag
 
 The site describes what one can install, so it reads the latest release tag, never `main`
 (docs-tech/specs/2026-10-09-website-repo-split-design.md, S-4). The tag is resolved with the
@@ -10,7 +11,9 @@ GitHub API (GITHUB_TOKEN is sent when set: unauthenticated runners share 60 requ
 its tree listed once and the files the site reads fetched from raw.githubusercontent.com into
 `.release/<tag>/`, which every later build and test reuses until the next release.
 
-OW_APP_SOURCE=<directory> replaces the release by a local checkout: offline work, the app's
+OW_RELEASE_TAG=<tag> fetches that tag instead of the latest: the website workflow publishes
+exactly the release its test job tested. OW_APP_SOURCE=<directory> replaces the release by a
+local checkout: offline work, the app's
 unreleased branch, tests. Nothing of the app is ever imported; its Python is parsed with `ast`
 (S-5), so the website needs none of the app's packages.
 """
@@ -21,6 +24,7 @@ import ast
 import datetime
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -48,6 +52,7 @@ FETCH = (
     "migrations/versions/*.py",
     "charts/openwhistle/values.yaml",
 )
+TAG = re.compile(r"v\d+\.\d+\.\d+")
 _SKIP = {".git", ".venv", "node_modules", "__pycache__", ".pytest_cache", ".mypy_cache"}
 
 
@@ -76,11 +81,27 @@ def wanted(path: str) -> bool:
     return any(PurePosixPath(path).full_match(pattern) for pattern in FETCH)
 
 
+def release_tag() -> str:
+    """OW_RELEASE_TAG, or the latest release's tag; either must be vX.Y.Z (a path and URL part)."""
+    tag = os.environ.get("OW_RELEASE_TAG") or str(_json(f"{API}/releases/latest")["tag_name"])
+    if not TAG.fullmatch(tag):
+        raise ReleaseError(f"{tag!r} is not a release tag vX.Y.Z")
+    return tag
+
+
+def _cached(dest: Path) -> bool:
+    """A whole fetch of this FETCH list: a cache from a shorter list lacks files the site reads."""
+    meta = dest / "release.json"
+    return meta.is_file() and json.loads(meta.read_text(encoding="utf-8")).get("fetch") == list(
+        FETCH
+    )
+
+
 def fetch(cache_dir: Path = CACHE) -> Path:
-    """The latest release in `cache_dir/<tag>/`, downloaded unless it is there already."""
-    tag = str(_json(f"{API}/releases/latest")["tag_name"])
+    """The release in `cache_dir/<tag>/`, downloaded unless it is there already."""
+    tag = release_tag()
     dest = cache_dir / tag
-    if (dest / "release.json").is_file():
+    if _cached(dest):
         return dest
     tree = _json(f"{API}/git/trees/{tag}?recursive=1")
     if tree.get("truncated"):
@@ -97,7 +118,7 @@ def fetch(cache_dir: Path = CACHE) -> Path:
     with ThreadPoolExecutor(8) as pool:
         list(pool.map(download, filter(wanted, paths)))  # list(): re-raises a failed download
     commit = _json(f"{API}/commits/{tag}")
-    meta = {"tag": tag, "committed": commit["commit"]["committer"]["date"]}
+    meta = {"tag": tag, "committed": commit["commit"]["committer"]["date"], "fetch": list(FETCH)}
     partial.mkdir(parents=True, exist_ok=True)
     (partial / "tree.txt").write_text("\n".join(paths) + "\n", encoding="utf-8")
     (partial / "release.json").write_text(json.dumps(meta) + "\n", encoding="utf-8")
@@ -138,7 +159,7 @@ def files() -> list[str]:
     """Every file of the app source, relative and sorted; a fetched release lists its tree."""
     listing = root() / "tree.txt"
     if (root() / "release.json").is_file():
-        return listing.read_text(encoding="utf-8").split()
+        return listing.read_text(encoding="utf-8").splitlines()
     return sorted(
         p.relative_to(root()).as_posix()
         for p in root().rglob("*")
@@ -305,11 +326,20 @@ def main(argv: list[str] | None = None) -> int:
     args = sys.argv[1:] if argv is None else argv
     try:
         found = root()
+        if "--tag" in args:
+            print(tag())
+        elif "--relative" in args:
+            # a path inside the build context, for `docker build --build-arg OW_APP_SOURCE`
+            if not found.is_relative_to(Path.cwd()):
+                raise ReleaseError(
+                    f"{found} is outside {Path.cwd()}: copy it into the build context first"
+                )
+            print(found.relative_to(Path.cwd()))
+        else:
+            print(found)
     except ReleaseError as error:
         print(f"release source: {error}", file=sys.stderr)
         return 1
-    # --relative: a path inside the build context, for `docker build --build-arg OW_APP_SOURCE`
-    print(found.relative_to(Path.cwd()) if "--relative" in args else found)
     return 0
 
 

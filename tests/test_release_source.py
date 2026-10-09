@@ -142,14 +142,22 @@ def test_a_directory_without_app_is_refused(
 # ── the fetch: GitHub faked ───────────────────────────────────────────────
 
 TAG = "v9.9.9"
-TREE = ["CHANGELOG.md", "README.md", "app/config.py", "app/static/fonts/a.woff2", "tests/x.py"]
+TREE = [
+    "CHANGELOG.md",
+    "README.md",
+    "app/config.py",
+    "app/static/fonts/a.woff2",
+    "docs notes/a b.md",  # a space: the listing is one path per line
+    "tests/x.py",
+]
 
 
 class _Fake:
     """The GitHub API and raw.githubusercontent.com, as urlopen sees them."""
 
-    def __init__(self, truncated: bool = False) -> None:
+    def __init__(self, truncated: bool = False, latest: str = TAG) -> None:
         self.truncated = truncated
+        self.latest = latest
         self.requests: list[urllib.request.Request] = []
 
     def __call__(self, request: urllib.request.Request, timeout: float) -> io.BytesIO:
@@ -157,7 +165,7 @@ class _Fake:
         url = request.full_url
         body: Any
         if url == f"{release_source.API}/releases/latest":
-            body = {"tag_name": TAG}
+            body = {"tag_name": self.latest}
         elif url == f"{release_source.API}/git/trees/{TAG}?recursive=1":
             body = {
                 "truncated": self.truncated,
@@ -178,6 +186,7 @@ def github(monkeypatch: pytest.MonkeyPatch) -> _Fake:
     fake = _Fake()
     monkeypatch.setattr(urllib.request, "urlopen", fake)
     monkeypatch.delenv("GITHUB_TOKEN", raising=False)
+    monkeypatch.delenv("OW_RELEASE_TAG", raising=False)
     return fake
 
 
@@ -193,7 +202,7 @@ def test_the_fetch_takes_exactly_the_files_the_site_reads(github: _Fake, tmp_pat
         "tree.txt",
     ]
     assert (dest / "app/config.py").read_text() == "config.py"
-    assert (dest / "tree.txt").read_text().split() == TREE
+    assert (dest / "tree.txt").read_text().splitlines() == TREE
     assert not (tmp_path / f"{TAG}.partial").exists()
 
 
@@ -271,3 +280,56 @@ def test_main_reports_a_release_error_as_exit_1(
     finally:
         release_source.root.cache_clear()
     assert "no app/ directory" in capsys.readouterr().err
+
+
+def test_a_pinned_tag_is_fetched_without_asking_for_the_latest(
+    github: _Fake, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The publish job builds the tag its test job tested, not whatever is latest by then."""
+    github.latest = "v10.0.0"
+    monkeypatch.setenv("OW_RELEASE_TAG", TAG)
+    assert release_source.fetch(tmp_path) == tmp_path / TAG
+    assert f"{release_source.API}/releases/latest" not in [r.full_url for r in github.requests]
+
+
+@pytest.mark.parametrize("bad", ["../../etc", "v1.2", "main", "v1.2.3/../x", "v1.2.3\n"])
+def test_a_tag_that_is_no_release_version_is_refused(
+    github: _Fake, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, bad: str
+) -> None:
+    github.latest = bad
+    with pytest.raises(release_source.ReleaseError, match="is not a release tag"):
+        release_source.fetch(tmp_path)
+    monkeypatch.setenv("OW_RELEASE_TAG", bad)
+    with pytest.raises(release_source.ReleaseError, match="is not a release tag"):
+        release_source.fetch(tmp_path)
+    assert not any(tmp_path.iterdir())
+
+
+def test_a_cache_fetched_with_another_list_is_fetched_again(
+    github: _Fake, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    release_source.fetch(tmp_path)
+    monkeypatch.setattr(release_source, "FETCH", (*release_source.FETCH, "README.md"))
+    github.requests.clear()
+    dest = release_source.fetch(tmp_path)
+    assert (dest / "README.md").is_file()
+    assert f"{release_source.API}/git/trees/{TAG}?recursive=1" in [
+        r.full_url for r in github.requests
+    ]
+
+
+def test_main_prints_the_tag(fixture_app: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    assert release_source.main(["--tag"]) == 0
+    assert capsys.readouterr().out.strip() == "v9.9.9"
+
+
+def test_relative_outside_the_working_directory_fails_loudly(
+    fixture_app: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """An empty --build-arg would let the image build fetch the latest release instead."""
+    monkeypatch.chdir(tmp_path)
+    assert release_source.main(["--relative"]) == 1
+    assert "is outside" in capsys.readouterr().err
