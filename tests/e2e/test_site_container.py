@@ -11,7 +11,8 @@ from tests.built_site import built, pages
 from tests.website import require_url
 
 BASE = os.environ.get("WEBSITE_URL", "")
-# WEBSITE_REQUIRED, not CI: e2e.yml runs tests/e2e in CI with no container to point at.
+# WEBSITE_REQUIRED, not CI: website-image.yml also runs tests/e2e against the built site, with no
+# container to point at.
 _RUN = require_url(BASE, os.environ.get("WEBSITE_REQUIRED", ""))
 pytestmark = [pytest.mark.e2e, pytest.mark.skipif(not _RUN, reason="WEBSITE_URL is not set")]
 URLS = sorted("/" + p.relative_to(built()).as_posix().removesuffix("index.html") for p in pages())

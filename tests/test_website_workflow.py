@@ -48,9 +48,26 @@ def test_publishes_run_one_at_a_time_in_order() -> None:
     }
 
 
-def test_a_version_bump_rebuilds_the_image() -> None:
-    """The footer shows app_version from app/config.py."""
-    assert "app/config.py" in WF[True]["push"]["paths"]
+def test_a_new_app_release_is_built_within_a_week() -> None:
+    """The site documents the latest app release; the weekly run meets a new one (S-6)."""
+    assert {"cron": "41 4 * * 1"} in WF[True]["schedule"]
+
+
+def test_the_tests_and_the_image_read_one_fetched_release() -> None:
+    for job in ("test", "publish"):
+        steps = JOBS[job]["steps"]
+        fetch = next(s for s in steps if s.get("id") == "release")
+        assert fetch["run"].startswith('echo "dir=$(python scripts/release_source.py --relative)')
+        assert fetch["env"] == {"GITHUB_TOKEN": "${{ github.token }}"}
+    test = {s.get("name"): s for s in JOBS["test"]["steps"]}
+    source = "${{ steps.release.outputs.dir }}"
+    for name in ("The documentation matches the release (unit suite)", "Build the image"):
+        assert test[name]["env"]["OW_APP_SOURCE"] == source, name
+    assert "--build-arg OW_APP_SOURCE " in test["Build the image"]["run"]
+    build = next(
+        s for s in JOBS["publish"]["steps"] if s.get("uses", "").startswith("docker/build-push")
+    )
+    assert build["with"]["build-args"] == f"OW_APP_SOURCE={source}"
 
 
 def test_the_browser_tests_cannot_skip_in_the_website_job() -> None:
