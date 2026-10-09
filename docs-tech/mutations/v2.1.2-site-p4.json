@@ -324,16 +324,16 @@
    "tests": "WEBSITE_WF"
   },
   {
-   "id": "PATHS-NO-CONFIG",
+   "id": "WEEKLY-RELEASE-RUN",
    "file": ".github/workflows/website-image.yml",
-   "old": "      - \"app/config.py\" # the footer shows app_version\n",
-   "new": "",
+   "old": "    - cron: \"41 4 * * 1\"",
+   "new": "    - cron: \"41 4 1 * *\"",
    "tests": "WEBSITE_WF"
   },
   {
    "id": "BROWSER-NOT-REQUIRED",
    "file": ".github/workflows/website-image.yml",
-   "old": "          WEBSITE_REQUIRED: \"1\" # e2e.yml collects this file too, without a container\n",
+   "old": "          WEBSITE_REQUIRED: \"1\" # the step against the built site collects this file too, without a container\n",
    "new": "",
    "tests": "WEBSITE_WF"
   },
@@ -368,8 +368,8 @@
   {
    "id": "IMAGE-NO-RENEWAL",
    "file": ".github/workflows/website-image.yml",
-   "old": "    - cron: \"41 4 2 * *\"",
-   "new": "    - cron: \"41 4 2 1 *\"",
+   "old": "    - cron: \"41 4 * * 1\"",
+   "new": "    - cron: \"41 4 * 1 1\"",
    "tests": "LEGAL"
   },
   {

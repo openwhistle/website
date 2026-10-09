@@ -1,0 +1,143 @@
+{
+ "timeout_seconds": 900,
+ "test_groups": {
+  "CONFIG": [
+   "tests/test_config_documented.py"
+  ],
+  "ASSETS": [
+   "tests/test_release_assets.py"
+  ],
+  "MARK": [
+   "tests/test_release_assets.py",
+   "tests/test_mark.py"
+  ],
+  "FOOTER": [
+   "tests/test_build_site.py",
+   "-k",
+   "footer_shows_the_app_version"
+  ],
+  "CHANGELOG": [
+   "tests/test_build_site.py",
+   "-k",
+   "changelog_is_the_releases"
+  ],
+  "EDIT_LINK": [
+   "tests/test_build_site.py",
+   "-k",
+   "edit_link"
+  ],
+  "RELEASE": [
+   "tests/test_release_source.py"
+  ],
+  "WEBSITE_WF": [
+   "tests/test_website_workflow.py"
+  ]
+ },
+ "mutations": [
+  {
+   "id": "SETTING-UNDOCUMENTED",
+   "file": "docs/_data/config.yml",
+   "old": "  - name: ONION_LOCATION\n",
+   "new": "  - name: ONION_ADDRESS\n",
+   "tests": "CONFIG"
+  },
+  {
+   "id": "STATUSES-STALE-IN-GUIDE",
+   "file": "docs/en/docs/admin/index.html",
+   "old": "light.svg\" alt=\"Case statuses: a submitted report is received. From received it goes to in_review or closed; from in_review to pending_feedback",
+   "new": "light.svg\" alt=\"Case statuses: a submitted report is received. From received it goes to in_review or closed; from in_review to awaiting_feedback",
+   "tests": "ASSETS"
+  },
+  {
+   "id": "FONT-DIVERGES",
+   "file": "docs/fonts/sora-LICENSE",
+   "old": "OTHER DEALINGS IN THE FONT SOFTWARE.",
+   "new": "OTHER DEALINGS IN THE FONT SOFTWARE!",
+   "tests": "ASSETS"
+  },
+  {
+   "id": "DESIGN-MD-DIVERGES",
+   "file": "DESIGN.md",
+   "old": "\n## Overview\n",
+   "new": "\n## Overview of the site\n",
+   "tests": "ASSETS"
+  },
+  {
+   "id": "MARK-DIVERGES",
+   "file": "scripts/render_icons.py",
+   "old": "H9.50 Z\"",
+   "new": "H9.40 Z\"",
+   "tests": "MARK"
+  },
+  {
+   "id": "VERSION-FROM-ELSEWHERE",
+   "file": "scripts/build_site.py",
+   "old": "site[\"version\"] = release_source.app_version()",
+   "new": "site[\"version\"] = \"2.1.1\"",
+   "tests": "FOOTER"
+  },
+  {
+   "id": "CHANGELOG-FROM-ELSEWHERE",
+   "file": "scripts/build_site.py",
+   "old": "source = release_source.read(\"CHANGELOG.md\")",
+   "new": "source = (ROOT / \"README.md\").read_text(encoding=\"utf-8\")",
+   "tests": "CHANGELOG"
+  },
+  {
+   "id": "EDIT-LINK-TO-APP-REPO",
+   "file": "scripts/build_site.py",
+   "old": "\"edit_url\": f\"{site[origin.repo]}/edit/main/{rel}\",",
+   "new": "\"edit_url\": f\"{site['github_url']}/edit/main/{rel}\",",
+   "tests": "EDIT_LINK"
+  },
+  {
+   "id": "FETCH-TAKES-EVERYTHING",
+   "file": "scripts/release_source.py",
+   "old": "    \"app/**/*.py\",\n",
+   "new": "    \"**\",\n",
+   "tests": "RELEASE"
+  },
+  {
+   "id": "TOKEN-TO-RAW-HOST",
+   "file": "scripts/release_source.py",
+   "old": "if token and url.startswith(API):",
+   "new": "if token:",
+   "tests": "RELEASE"
+  },
+  {
+   "id": "OVERRIDE-MISREAD",
+   "file": "scripts/release_source.py",
+   "old": "path = Path(local).resolve()\n",
+   "new": "path = Path(local).resolve().parent\n",
+   "tests": "RELEASE"
+  },
+  {
+   "id": "TRUNCATED-TREE-ACCEPTED",
+   "file": "scripts/release_source.py",
+   "old": "    if tree.get(\"truncated\"):\n",
+   "new": "    if tree.get(\"truncated\") and False:\n",
+   "tests": "RELEASE"
+  },
+  {
+   "id": "HALF-FETCH-KEPT",
+   "file": "scripts/release_source.py",
+   "old": "    shutil.rmtree(dest, ignore_errors=True)\n    partial.rename(dest)",
+   "new": "    shutil.rmtree(dest, ignore_errors=True)\n    shutil.copytree(partial, dest)",
+   "tests": "RELEASE"
+  },
+  {
+   "id": "ROUTE-METHODS-UNRESOLVED",
+   "file": "scripts/release_source.py",
+   "old": "methods = list(_str(kw[\"methods\"], names)) if \"methods\" in kw else [\"GET\"]",
+   "new": "methods = [\"GET\"]",
+   "tests": "RELEASE"
+  },
+  {
+   "id": "IMAGE-BUILDS-ANOTHER-RELEASE",
+   "file": ".github/workflows/website-image.yml",
+   "old": "--build-arg OW_APP_SOURCE -t",
+   "new": "-t",
+   "tests": "WEBSITE_WF"
+  }
+ ]
+}

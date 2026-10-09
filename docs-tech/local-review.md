@@ -1,158 +1,13 @@
 # Local review: checking every page in Chrome
 
-How-to: an agent (the Claude-in-Chrome extension) needs to visually check every
-page before a release, and must be able to sign in by itself — a human never
-types credentials into a browser for this. Reference:
-[easywall's own `local-review.md`](https://github.com/jp1337/easywall/blob/main/docs-tech/local-review.md)'s
-"Enter the demo" button — the same idea applied here.
-
-## Two stacks, not one
-
-`docker-compose.e2e.yml` is also CI's own E2E file (`.github/workflows/e2e.yml`).
-The one-click button never lives there: `LOCAL_REVIEW_LOGIN` on that file would
-put a second `<button>` in front of the E2E suite's own login helper, which
-clicks the *first* `button.btn-primary[type='submit']` it finds — so it would
-click the local-review button by accident and every E2E admin test would
-silently sign in as someone who never typed a password.
-
-Instead, `docker-compose.review.yml` is a review-only override:
-
-```bash
-podman compose -f docker-compose.e2e.yml -f docker-compose.review.yml up -d --build
-```
-
-It adds `LOCAL_REVIEW_LOGIN=true` and rebinds the app's published port to
-`127.0.0.1:4009` (loopback only — the plain file publishes on every interface,
-fine for CI's throwaway runner, not fine for a maintainer's LAN-reachable
-machine). The button also gets its own `id` (`local-review-login-btn`) and a
-non-primary class (`btn-secondary`, not `btn-primary`), so even pointing the
-E2E suite at the review stack by mistake would not make its selectors match
-it.
-
-`docker compose` works the same way if that is what is installed.
-
-## Why the flag alone is not the only gate
-
-`LOCAL_REVIEW_LOGIN` requires `DEMO_MODE=true`, `SECURE_COOKIES=false` and an
-`APP_PUBLIC_URL` whose host is loopback (the app refuses to start otherwise;
-the review override sets `SECURE_COOKIES=false`). `DEMO_MODE` alone would not
-do: the public demo runs with it. So both the route and the button
-check a second, independent condition, `_local_review_reachable()` in
-`app/api/auth.py`: no header only a reverse proxy adds
-(every header the IP middleware strips — `X-Forwarded-For`, `X-Real-IP`,
-`Forwarded`, `X-Client-IP`, `CF-Connecting-IP`, … — plus `X-Forwarded-Proto` and
-`Via`, one list in the code; nginx and every
-ingress controller always set `X-Forwarded-Proto` in front of this app, and a
-client cannot strip a header the proxy adds after it) **and** the `Host` the
-request addressed is a loopback name (`localhost`, `127.0.0.1`, `[::1]`, with
-or without a port).
-
-A client-*address* check does not work here: the app's `uvicorn` takes
-`X-Forwarded-For` only from `127.0.0.1` (its default `forwarded_allow_ips`), so a
-browser on the same machine,
-reaching the container through podman/docker's NAT, shows up as the
-container's gateway IP — never as `127.0.0.1`. Either half of the header/Host
-check alone can be spoofed (a stray client header; nginx's default server
-echoing back whatever `Host` it was given). Together they still pass a peer
-that reaches the app port directly with `Host: localhost` (another pod, a LAN
-host on a published port) — which is what the loopback-only port binding
-above and the settings check are for.
-
-Fails either check → 404, same as the flag being off. This also means: on
-the public demo host, even a hand-edited `LOCAL_REVIEW_LOGIN=true` gets no
-button and no route, because every real request to `demo.openwhistle.net`
-arrives through nginx with `X-Forwarded-Proto` set and a `Host` that is not
-loopback.
-
-## Signing in
-
-Open `/admin/login` and click **Enter the local review**. One POST,
-CSRF-protected, no form fields — it signs in as the seeded demo admin
-(`demo`) with a full session, password and MFA already satisfied. Every
-admin page is reachable from there.
-
-With the flag off, unreachable (a proxy header present, or a non-loopback
-`Host`), or the demo admin deactivated, the route answers 404 or redirects to
-`/admin/login` — never a session, never an audit row for a login that did not
-happen. `GET`/`HEAD /admin/local-review-login` also answer 404 (not the 405 a
-path with only a `POST` handler would otherwise give, which would reveal the
-path exists).
-
-Each successful sign-in writes an audit log entry (`auth.local_review_login`),
-same as any other admin login, so a real access review is never missing them.
-Not separately rate-limited: the reachability check above already confines it
-to a loopback request with no proxy in front of it.
-
-## The setup stack: what the button cannot show
-
-`/setup`, `/admin/mfa/setup` (a fresh account's first login) and
-`/admin/organisations` (needs `MULTI_TENANCY_ENABLED=true`) are never
-reachable through the button — its whole existence assumes setup is already
-done and MFA already enrolled, and the review stack does not turn on
-multi-tenancy. Bring up a second, independent instance for these, as a compose
-profile so it costs nothing when not needed:
-
-```bash
-podman compose -f docker-compose.e2e.yml -f docker-compose.review.yml --profile setup up -d --build app-setup
-```
-
-`app-setup` has its own database and Redis (`db-setup`/`redis-setup`, no
-volumes — same as the main stack, a plain `down` already clears them),
-`DEMO_MODE=false`, no `LOCAL_REVIEW_LOGIN`, `SECURE_COOKIES=false` (plain
-HTTP), and `MULTI_TENANCY_ENABLED=true`, at **<http://localhost:4010>**. Walk:
-
-1. `/setup` — the wizard, using `SETUP_TOKEN=review-setup-token-not-for-production`
-   (pinned in `docker-compose.review.yml`, a test value that exists only in
-   that file — never a real secret).
-2. `/admin/login` — the login page an operator *without* `LOCAL_REVIEW_LOGIN`
-   actually sees: no button.
-3. Sign in with the admin account the wizard just created. First login lands
-   on `/admin/mfa/setup` — viewing the QR/enrolment page is enough, nobody has
-   to finish enrolling it.
-4. `/admin/organisations` — reachable now that multi-tenancy is on.
-
-Tear down with `podman compose -f docker-compose.e2e.yml -f docker-compose.review.yml --profile setup down -v`.
+How-to: before a change to the site is merged, an agent (the Claude-in-Chrome extension) checks every
+page below visually, in a Full HD window. Playwright at 390 px adds the phone width; it never replaces
+the Chrome check. The app's own pages: `docs-tech/local-review.md` in openwhistle/OpenWhistle.
 
 ## The page matrix
 
-Every public and admin page the app itself renders, every page template under
-`app/templates` (`tests/test_local_review.py` fails if either grows a route or
-a template missing from this table — parsed from the table rows only, and
-checked against a floor so an empty walk cannot pass by accident), plus the
-marketing/documentation site under `docs/`.
-
-### The app
-
-| Page | Template | Notes |
-|---|---|---|
-| `/` | — | Redirects to `/setup` or `/submit`; no template of its own. |
-| `/submit` | `submit.html` | Whistleblower submission wizard — walk every step, both submission modes. |
-| `/submit/{org_slug}` | `submit.html` | An organisation's wizard. Multi-tenancy only: the review stack runs with it off, so `/submit/default` redirects to `/submit` and any other slug is the 404 page. |
-| — (finishing the wizard) | `submit_success.html` | The PIN screen. Complete a submission on `/submit` to reach it. |
-| — (a concurrent double-submit) | `submit_pending.html` | "Still processing" page for a second submit of the same draft. Hard to force by hand reliably — throttle the network in devtools and click Submit twice quickly; `tests/test_submit_prg.py` exercises it directly if a manual attempt does not land. |
-| `/status` | `status.html` | Whistleblower status/PIN lookup — use a seeded demo case (`OW-DEMO-00001` / `demo-pin-received-00001`); also check the signed-in state after a lookup succeeds. |
-| `/setup` | `wizard/setup.html` | Setup stack only (see above) — the plain/review stack's `DEMO_MODE` seeding has already completed setup, so this redirects to `/admin/login` there. |
-| `/admin/login` | `login.html` | With the button (review stack) and without it (setup stack). |
-| — (login with `demo`/`demo`, then no code) | `login_mfa.html` | The TOTP verify screen. The one-click button skips straight past it — use the login form's own demo-credentials autofill instead (local test credentials from the seed) and stop before entering `000000`. |
-| `/admin/mfa/setup` | `login_mfa_setup.html` | Setup stack only — a fresh account's first login. |
-| — (a 422) | `error.html` | Open devtools on any admin page and run `fetch('/admin/login/mfa',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'csrf_token='+document.cookie.match(/ow_csrf=([^;]+)/)[1]})` — no `temp_token` field triggers the 422 validation page. |
-| `/admin/dashboard` | `admin/dashboard.html` | Filters, search, status pills, the case list. |
-| `/admin/reports/{report_id}` | `admin/report.html` | One representative report detail page (any seeded `OW-DEMO-000xx`) — exercise the identity-reveal form, internal notes, status change, and the four-eyes deletion flow. |
-| `/admin/users` | `admin/users.html` | User management. |
-| `/admin/account` | `admin/account.html` | Own account, reached from "My account" in the sidebar. The demo admin sees the demo notice instead of the password form; the forced change needs a new account (setup stack). |
-| `/admin/organisations` | `admin/organisations.html` | Setup stack only — needs `MULTI_TENANCY_ENABLED=true`. |
-| `/admin/categories` | `admin/categories.html` | Category management. |
-| `/admin/locations` | `admin/locations.html` | Location management. |
-| `/admin/retention` | `admin/retention.html` | Retention policy settings. |
-| `/admin/stats` | `admin/stats.html` | Statistics dashboard. |
-| `/admin/system` | `admin/system.html` | System info page. |
-| `/admin/telephone-channel` | `admin/telephone_channel.html` | HinSchG §16 compliance checklist page. |
-| `/admin/audit-log` | `admin/audit_log.html` | Audit log, with its action filter. |
-
-Excluded from the template floor, by name, with why: `base.html` (layout, no
-route renders it standalone) and every partial starting with `_`
-(`_field.html`, `_icons.html`, `admin/_audit.html`, `admin/_layout.html` —
-included by another template, never rendered on their own).
+Every page the site builds. `tests/test_local_review.py` fails if a built page is missing from this
+table (parsed from the table rows only, against a floor, so an empty build cannot pass).
 
 ### The website (`docs/` sources, built to `_site/`)
 
@@ -160,10 +15,12 @@ Build, then serve the output (the image serves the build, not `docs/`). The lega
 their address only in the container (`docs-tech/website-image.md`):
 
 ```bash
-uv run --group site python scripts/build_site.py && python -m http.server -d _site 8901
+OW_APP_SOURCE=../OpenWhistle uv run --group site python scripts/build_site.py \
+  && python -m http.server -d _site 8901
 ```
 
-Rebuild after every edit to `docs/`; the server serves what was built.
+Rebuild after every edit to `docs/`; the server serves what was built. Without `OW_APP_SOURCE`
+the build reads the latest app release (`scripts/release_source.py`); with it, the checkout named.
 
 | Page | Notes |
 |---|---|
@@ -225,7 +82,7 @@ Rebuild after every edit to `docs/`; the server serves what was built.
 | `/en/docs/install/#highlight=docker` | Docs search result: the term is marked and scrolled into view; press `/` for the search dialog. |
 | `/en/compare/` | Comparison with GlobaLeaks, SecureDrop, Hush Line — the table scrolls inside its box at 390 px. |
 | `/404.html` | Not-found page (noindex); open any missing path on the served site. |
-| `/en/changelog/` | Changelog, rendered from `CHANGELOG.md` — check the version nav in the sidebar. |
+| `/en/changelog/` | Changelog, rendered from the release's `CHANGELOG.md` — check the version nav in the sidebar. |
 | `/en/changelog/older/` | The releases before the newest five — the version nav, the link back. |
 | `/de/blog/` | Blog index. |
 | `/de/blog/hinschg-compliance-leitfaden/` | Article. |
@@ -246,61 +103,20 @@ Rebuild after every edit to `docs/`; the server serves what was built.
 
 ## What to check, on every page
 
-- **Both themes**: light and dark (`prefers-color-scheme`, or the in-page
-  toggle where there is one — exercise the toggle itself, not just the OS
-  preference).
-- **Both widths**: 1440px (desktop) and 390px (phone) — no sideways scroll.
-- **Both languages**: `en` and `de` (`?lang=de` or the language switcher) — German
-  strings are the longest and are what breaks a layout first.
-- **Console**: no error, and specifically no CSP violation
-  (`Refused to ... because it violates the following Content Security Policy
-  directive`) — this app runs a strict CSP with no `unsafe-inline`.
-- **Interactive paths**, not just the resting state: the setup/submission
-  wizard's steps, the identity-reveal form, the dashboard's filters, a theme
-  toggle, a language switch.
+- **Both themes**: light and dark (`prefers-color-scheme`, and the in-page toggle itself).
+- **Both widths**: 1920 px (Chrome) and 390 px (Playwright) — no sideways scroll.
+- **Both languages** where a page has a twin: the language switch leads to it.
+- **Console**: no error, and no CSP violation (`Refused to ... because it violates the following
+  Content Security Policy directive`) — the image serves a strict CSP without `unsafe-inline`.
+- **Interactive paths**, not only the resting state: search (`/`), the docs menu on a phone, the
+  theme toggle, the language switch.
 
-Fix every finding before the release PR — nothing here is carried forward.
+Fix every finding in the change that found it — nothing here is carried forward.
 
 ## Traps
 
 | Trap | What happens |
 |---|---|
-| The admin login rate limiter | `MAX_LOGIN_ATTEMPTS` failed attempts within `LOGIN_LOCKOUT_MINUTES` locks a username. The one-click button never touches this limiter — it has no password or code to get wrong. The regular username/password + TOTP form (the demo-credentials autofill on the same page) still goes through it, so a sweep that signs in that way instead can trip it. |
-| `/setup` and `/admin/mfa/setup` redirect away on the plain/review stack | `DEMO_MODE` seeding completes setup and enrols the demo admin's TOTP before either page is ever requested. Use the setup stack (above) for both. |
 | Serving `docs/` instead of `_site/` | `docs/` holds sources (templates, `.md`), not pages. Build first, serve `_site/`; the root-absolute links resolve there. |
-| A stack kept up across two review sessions | The four seeded demo reports (`OW-DEMO-00001`..`00004`) are always the same rows — nothing accumulates, so this one has no gotcha, unlike a counting assertion in an automated test. |
-
-## Re-taking the documentation screenshots
-
-`scripts/take_screenshots.py` renders `docs/img/screens/*-{light,dark}.png` against
-this same review stack — the login button above is how it signs in, with no
-password ever typed:
-
-```bash
-podman compose -f docker-compose.e2e.yml -f docker-compose.review.yml up -d --build
-uv run python scripts/take_screenshots.py
-podman compose -f docker-compose.e2e.yml -f docker-compose.review.yml down -v
-```
-
-Look at every written PNG before committing — `tests/test_screenshots.py` checks
-that both themes exist and that the viewport is still above the admin layout's
-two-column breakpoint, not that a page's content is still accurate.
-
-Re-run it in the change that alters the interface a screenshot documents — a
-template, `site.css`, or the theme/demo-banner behaviour in `app/static/js/site.js`
-— never on an unrelated release. A screenshot nobody looked at since is still
-correct; one nobody re-took after the page changed underneath it is not.
-
-## Tearing down
-
-```bash
-podman compose -f docker-compose.e2e.yml -f docker-compose.review.yml down -v
-```
-
-Neither this file nor `docker-compose.e2e.yml` declares a named volume, so
-every `db`/`redis` container gets a fresh anonymous one on `up`, regardless
-of `-v` — a plain `down` (no `-v`) does not delete the previous one, only
-orphans it on disk (checked directly: `podman volume ls`/`inspect` after a
-plain `down` still lists it). So `-v` is not what gives the next `up` a
-clean slate — that already happens either way — it only matters for not
-leaving an orphaned volume behind on every cycle.
+| The legal pages show `{address}`-less text | The address is mounted into the container only (`docs-tech/website-image.md`); a local `_site/` shows the include comment. Check those pages once in the container too. |
+| A stale release in `.release/` | The cache is keyed by tag; a new app release lands in a new directory. Delete `.release/` to force a fresh fetch. |

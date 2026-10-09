@@ -53,27 +53,11 @@
    "--browser",
    "chromium"
   ],
-  "CODE_PILL_E2E": [
-   "tests/e2e/test_site_look.py",
-   "-k",
-   "inline_code_pill",
-   "-m",
-   "e2e",
-   "--browser",
-   "chromium"
-  ],
   "FONTS": [
    "tests/test_site_fonts.py"
   ],
   "COMPARE": [
    "tests/test_compare_site_screens.py"
-  ],
-  "LOOK": [
-   "tests/e2e/test_site_look.py",
-   "-m",
-   "e2e",
-   "--browser",
-   "chromium"
   ],
   "SITE_CSS_K_UNDEFINED": [
    "tests/test_site_css.py",
@@ -115,11 +99,6 @@
    "-k",
    "retired_token"
   ],
-  "SITE_CSS_K_TEMPLATE_SCHEME": [
-   "tests/test_site_css.py",
-   "-k",
-   "no_template_declares"
-  ],
   "SITE_CSS_K_DRIFT": [
    "tests/test_site_css.py",
    "-k",
@@ -135,11 +114,6 @@
    "-k",
    "radius_tokens"
   ],
-  "SITE_CSS_K_HOVER_RING": [
-   "tests/test_site_css.py",
-   "-k",
-   "hover_that_changes_the_ring"
-  ],
   "SITE_CSS_K_DEAD": [
    "tests/test_site_css.py",
    "-k",
@@ -154,19 +128,6 @@
    "tests/test_site_css.py",
    "-k",
    "every_ringed_site_component"
-  ],
-  "SITE_CSS_K_APP_RINGS": [
-   "tests/test_site_css.py",
-   "-k",
-   "every_ringed_app_component"
-  ],
-  "SITE_CSS_K_APP_BORDER": [
-   "tests/test_site_css.py",
-   "-k",
-   "no_app_component_draws"
-  ],
-  "PAGINATION": [
-   "tests/test_pagination_style.py"
   ],
   "LOOK_K_PHONE": [
    "tests/e2e/test_site_look.py",
@@ -241,16 +202,6 @@
    "-k",
    "three_icons"
   ],
-  "MARK_K_SAME": [
-   "tests/test_mark.py",
-   "-k",
-   "same_file"
-  ],
-  "FONTS_K_LATIN1": [
-   "tests/test_site_fonts.py",
-   "-k",
-   "latin1"
-  ],
   "COMPARE_K_ONE_SIDE": [
    "tests/test_compare_site_screens.py",
    "-k",
@@ -275,6 +226,9 @@
    "tests/test_design_md.py",
    "-k",
    "read_as_built"
+  ],
+  "RELEASE": [
+   "tests/test_release_source.py"
   ]
  },
  "mutations": [
@@ -293,32 +247,11 @@
    "new": "d=\"M7,3 H18"
   },
   {
-   "id": "APP-MARK-GEOMETRY",
-   "file": "app/templates/base.html",
-   "tests": "MARK",
-   "old": "d=\"M7,3 H17",
-   "new": "d=\"M7,3 H18"
-  },
-  {
    "id": "SHIELD-BACK",
    "file": "docs/_includes/footer.html",
    "tests": "MARK",
    "old": "<svg class=\"mark\" width=\"18\"",
    "new": "<!-- M11 1 L20 5 --><svg class=\"mark\" width=\"18\""
-  },
-  {
-   "id": "OPERATOR-LOGO-IGNORED",
-   "file": "app/templates/base.html",
-   "tests": "MARK",
-   "old": "{% if brand.logo_url %}",
-   "new": "{% if false %}"
-  },
-  {
-   "id": "APP-MARK-NO-FILL",
-   "file": "app/static/css/site.css",
-   "tests": "MARK",
-   "old": "  color: var(--ink);\n  fill: currentColor;\n  flex: none;",
-   "new": "  color: var(--ink);\n  flex: none;"
   },
   {
    "id": "SITE-MARK-NO-FILL",
@@ -361,13 +294,6 @@
    "tests": "COLOURS",
    "old": ".footer-links a:hover { color: var(--inverse-ink); }",
    "new": ".footer-links a:hover { color: #e2dcd2; }"
-  },
-  {
-   "id": "APP-SURFACE-OFF-DESIGN",
-   "file": "app/static/css/site.css",
-   "tests": "COLOURS",
-   "old": "  --surface-card: #131315;",
-   "new": "  --surface-card: #161619;"
   },
   {
    "id": "PAGE-PAINT-LITERAL",
@@ -440,34 +366,6 @@
    "new": "<circle cx=\"8\" cy=\"8\" r=\"3\" stroke='#0c7253' stroke-width=\"1.3\"/>"
   },
   {
-   "id": "APP-DARK-BLOCK-SCOPED",
-   "file": "app/static/css/site.css",
-   "tests": "COLOURS",
-   "old": "[data-theme=\"dark\"] {\n  --canvas: #08080a;",
-   "new": ".nav [data-theme=\"dark\"] {\n  --canvas: #08080a;"
-  },
-  {
-   "id": "APP-DARK-ACCENT-DERIVED",
-   "file": "app/static/css/site.css",
-   "tests": "COLOURS",
-   "old": "  --accent: var(--brand-accent-dark,color-mix(in srgb,var(--brand-primary) 72%,#fff));",
-   "new": "  --accent: color-mix(in srgb,var(--brand-primary) 72%,#fff);"
-  },
-  {
-   "id": "DEFAULT-BRAND-WRONG-WEAK",
-   "file": "app/templating.py",
-   "tests": "COLOURS",
-   "old": "    \"accent-weak-dark\": \"#0d211a\",",
-   "new": "    \"accent-weak-dark\": \"#0d2a1a\","
-  },
-  {
-   "id": "CUSTOM-BRAND-GETS-DESIGN",
-   "file": "app/templating.py",
-   "tests": "COLOURS",
-   "old": "    return _DESIGN_ACCENT if primary_color.strip().lower() == default else {}",
-   "new": "    return _DESIGN_ACCENT"
-  },
-  {
    "id": "HEADINGS-NOT-BALANCED",
    "file": "docs/assets/css/base.css",
    "tests": "COLOURS",
@@ -480,13 +378,6 @@
    "tests": "COLOURS",
    "old": "transition: background var(--duration-fast) var(--ease-stiff), box-shadow",
    "new": "transition: all var(--duration-fast) var(--ease-stiff), box-shadow"
-  },
-  {
-   "id": "APP-TOGGLE-TRANSITIONS-ALL",
-   "file": "app/static/css/site.css",
-   "tests": "COLOURS",
-   "old": "transition-property: color, background-color, box-shadow;",
-   "new": "transition-property: all;"
   },
   {
    "id": "FIGURES-NOT-TABULAR",
@@ -538,27 +429,6 @@
    "new": "color: var(--accent); border: 1px solid var(--hairline); }"
   },
   {
-   "id": "APP-PANEL-BORDER-BACK",
-   "file": "app/static/css/site.css",
-   "tests": "COLOURS",
-   "old": ".panel-outline {\n  animation: fadeSlideIn 0.4s ease both;\n  background: var(--canvas);\n  border-radius: 12px;\n  padding: 1.5rem;\n  box-shadow: 0 0 0 1px var(--hairline);",
-   "new": ".panel-outline {\n  animation: fadeSlideIn 0.4s ease both;\n  background: var(--canvas);\n  border-radius: 12px;\n  padding: 1.5rem;\n  border-width: 1px;\n  border-color: var(--hairline);"
-  },
-  {
-   "id": "APP-STAT-NOT-TABULAR",
-   "file": "app/static/css/site.css",
-   "tests": "COLOURS",
-   "old": ".credential-display,\n.stat-card__number,\n.stat-card__value,",
-   "new": ".credential-display,\n.stat-card__value,"
-  },
-  {
-   "id": "APP-LANG-OPTION-NOT-CONCENTRIC",
-   "file": "app/static/css/site.css",
-   "tests": "COLOURS",
-   "old": ".lang-picker-option {\n  border-radius: 0.25rem;",
-   "new": ".lang-picker-option {\n  border-radius: 0.5rem;"
-  },
-  {
    "id": "SITE-TERMINAL-BAR-NOT-CONCENTRIC",
    "file": "docs/assets/css/home.css",
    "tests": "CONCENTRIC_E2E",
@@ -587,53 +457,11 @@
    "new": "### Brand mark (K3)\n\nSee --bg-base.\n"
   },
   {
-   "id": "PANEL-PRIMARY-STRIPE-LOST",
-   "file": "app/static/css/site.css",
-   "tests": "COLOURS",
-   "old": "box-shadow: inset 0 3px 0 var(--ink), 0 0 0 1px var(--hairline);",
-   "new": "box-shadow: 0 0 0 1px var(--hairline);"
-  },
-  {
-   "id": "BANNER-EXPIRED-SHADOWLESS",
-   "file": "app/static/css/site.css",
-   "tests": "COLOURS",
-   "old": "box-shadow: 0 0 0 1px var(--danger), 0 6px 24px rgba(0, 0, 0, 0.15);",
-   "new": "box-shadow: 0 0 0 1px var(--danger);"
-  },
-  {
-   "id": "FORCED-APP-MODE-CARD-MISSING",
-   "file": "app/static/css/site.css",
-   "tests": "COLOURS",
-   "old": ".badge-received, .mode-card,\n  .credential-display",
-   "new": ".badge-received,\n  .credential-display"
-  },
-  {
    "id": "FORCED-SITE-ENV-PILL-MISSING",
    "file": "docs/assets/css/base.css",
    "tests": "COLOURS",
    "old": ".env-req-yes, .env-req-no, code,",
    "new": ".env-req-yes, code,"
-  },
-  {
-   "id": "LANG-MENU-NARROW",
-   "file": "app/static/css/site.css",
-   "tests": "COLOURS",
-   "old": "  width: max-content;\n  padding-bottom: 0.25rem;",
-   "new": "  padding-bottom: 0.25rem;"
-  },
-  {
-   "id": "LANG-MENU-RADIUS-CHANGED",
-   "file": "app/static/css/site.css",
-   "tests": "COLOURS",
-   "old": "border-radius: 0.5rem;\n  box-shadow: 0 0 0 1px var(--hairline), 0 4px 16px",
-   "new": "border-radius: 0.25rem;\n  box-shadow: 0 0 0 1px var(--hairline), 0 4px 16px"
-  },
-  {
-   "id": "TRANSITION-PROPERTY-TWICE",
-   "file": "app/static/css/site.css",
-   "tests": "COLOURS",
-   "old": "transition-property: background-color, border-color, color;",
-   "new": "transition-property: background-color, border-color, color, color;"
   },
   {
    "id": "WEBHOOK-PRE-UNFRAMED",
@@ -648,20 +476,6 @@
    "tests": "COLOURS",
    "old": "[data-theme=\"light\"] { color-scheme: only light; }",
    "new": "[data-theme=\"light\"] { color-scheme: light; }"
-  },
-  {
-   "id": "APP-COLOR-SCHEME-LIGHT",
-   "file": "app/static/css/site.css",
-   "tests": "COLOURS",
-   "old": "[data-theme=\"light\"] { color-scheme: only light; }",
-   "new": "[data-theme=\"light\"] { color-scheme: light; }"
-  },
-  {
-   "id": "APP-COLOR-SCHEME-DARK-GONE",
-   "file": "app/static/css/site.css",
-   "tests": "COLOURS",
-   "old": "[data-theme=\"dark\"] { color-scheme: dark; }\n",
-   "new": ""
   },
   {
    "id": "FONTS-WITHOUT-EXTRA",
@@ -740,13 +554,6 @@
    "new": "    .t-cmd    { color: var(--code-text, var(--inverse-ink)); }"
   },
   {
-   "id": "TEMPLATE-COLOR-SCHEME",
-   "file": "app/templates/base.html",
-   "tests": "SITE_CSS_K_TEMPLATE_SCHEME",
-   "old": "    <style nonce=\"{{ request.state.csp_nonce }}\">\n        :root {\n",
-   "new": "    <style nonce=\"{{ request.state.csp_nonce }}\">\n        :root {\n            color-scheme: light;\n"
-  },
-  {
    "id": "PAGE-TYPE-SHEETS-DRIFT",
    "file": "docs/assets/css/home.css",
    "tests": "SITE_CSS_K_DRIFT",
@@ -797,8 +604,8 @@
   },
   {
    "id": "FAVICONS-DIVERGE",
-   "file": "app/static/favicon.svg",
-   "tests": "MARK_K_SAME",
+   "file": "tests/fixtures/app_source/app/static/favicon.svg",
+   "tests": "RELEASE",
    "old": "path{fill:#0a0a0b}",
    "new": "path{fill:#0a0a0c}"
   },
@@ -880,13 +687,6 @@
    "new": "color: var(--accent-ink); border-radius: 2px;"
   },
   {
-   "id": "APP-TOGGLE-RING-SNAPS",
-   "file": "app/static/css/site.css",
-   "tests": "SITE_CSS_K_HOVER_RING",
-   "old": "transition-property: color, background-color, box-shadow;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  box-shadow: 0 0 0 1px var(--hairline);",
-   "new": "transition-property: color, background-color, border-color;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  box-shadow: 0 0 0 1px var(--hairline);"
-  },
-  {
    "id": "SITE-DASHED-BORDER",
    "file": "docs/assets/css/home.css",
    "tests": "SITE_CSS_K_SITE_BORDER",
@@ -915,34 +715,6 @@
    "new": "    .docs-breadcrumb span { color: var(--muted); box-shadow: inset 0 0 0 1px var(--hairline); }"
   },
   {
-   "id": "APP-COMPOSED-RING-UNLISTED",
-   "file": "app/static/css/site.css",
-   "tests": "SITE_CSS_K_APP_RINGS",
-   "old": "  .panel-primary, .pagination-page, .pagination-page-current {",
-   "new": "  .pagination-page, .pagination-page-current {"
-  },
-  {
-   "id": "PAGINATION-BORDER-BACK",
-   "file": "app/static/css/site.css",
-   "tests": "SITE_CSS_K_APP_BORDER",
-   "old": "  border-radius: 0.375rem;\n  box-shadow: 0 0 0 1px var(--hairline);\n  color: var(--body-text);",
-   "new": "  border-radius: 0.375rem;\n  border-color: var(--hairline);\n  border-width: 1px;\n  color: var(--body-text);"
-  },
-  {
-   "id": "PAGINATION-DISABLED-NO-EDGE",
-   "file": "app/static/css/site.css",
-   "tests": "PAGINATION",
-   "old": "  outline: 1px dashed var(--hairline);\n  outline-offset: -1px;\n",
-   "new": ""
-  },
-  {
-   "id": "PAGINATION-FORCED-SOLID",
-   "file": "app/static/css/site.css",
-   "tests": "PAGINATION",
-   "old": "  .pagination-disabled { border-style: dashed; outline: none; }\n",
-   "new": ""
-  },
-  {
    "id": "STEP-TITLE-BELOW-NUMERAL",
    "file": "docs/assets/css/post.css",
    "tests": "LOOK_K_STEP",
@@ -969,20 +741,6 @@
    "tests": "SITE_CSS_K_DEAD",
    "old": "    .val-good { color: var(--accent); font-weight: 600; }\n",
    "new": "    .val-good { color: var(--accent); font-weight: 600; }\n    .val-warn { color: var(--warning); }\n"
-  },
-  {
-   "id": "APP-WORDMARK-NO-TRANSLATE",
-   "file": "app/templates/base.html",
-   "tests": "MARK",
-   "old": "<span translate=\"no\">{{ brand.name }}</span>\n        </a>",
-   "new": "<span>{{ brand.name }}</span>\n        </a>"
-  },
-  {
-   "id": "APP-WORDMARK-ACCENT-SPLIT",
-   "file": "app/templates/base.html",
-   "tests": "MARK",
-   "old": "<span translate=\"no\">{{ brand.name }}</span>\n        </a>",
-   "new": "<span translate=\"no\">Open<strong>Whistle</strong></span>\n        </a>"
   }
  ]
 }

@@ -33,6 +33,9 @@
    "e2e",
    "--browser",
    "chromium"
+  ],
+  "RELEASE": [
+   "tests/test_release_source.py"
   ]
  },
  "mutations": [
@@ -338,13 +341,6 @@
    "new": "src=\"/img/diagrams/architecture-light.svg\""
   },
   {
-   "id": "MERMAID-FENCE",
-   "file": "docs-tech/release.md",
-   "tests": "COMMITTED",
-   "old": "<picture>",
-   "new": "```mermaid\nflowchart LR\n  A --> B\n```\n\n<picture>"
-  },
-  {
    "id": "FENCED-PICTURE",
    "file": "docs-tech/specs/2026-10-01-website-redesign-design.md",
    "tests": "COMMITTED",
@@ -443,18 +439,11 @@
    "new": "            pass"
   },
   {
-   "id": "RELEASE-STEPS",
-   "file": "docs-tech/release.md",
-   "tests": "COMMITTED",
-   "old": "## 2. UI check",
-   "new": "## 2. UI review"
-  },
-  {
    "id": "LIFECYCLE-EDGES",
-   "file": "app/models/report.py",
-   "tests": "COMMITTED",
-   "old": "    \"closed\": {\"in_review\"},",
-   "new": "    \"closed\": {\"in_review\", \"received\"},"
+   "file": "tests/fixtures/app_source/app/models/report.py",
+   "tests": "RELEASE",
+   "old": "    \"closed\": {\"received\"},",
+   "new": "    \"closed\": {\"received\", \"closed\"},"
   },
   {
    "id": "E2E-TWIN",

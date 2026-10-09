@@ -5,11 +5,13 @@ Why it is built this way: `docs-tech/specs/2026-10-09-website-p4-design.md`.
 
 ## Build and run
 
-Build from a **full clone**. A linked git worktree fails: `build_site.py` runs git (sitemap `lastmod`)
-and sees a `.git` pointer file.
+Build from a **full clone** of openwhistle/website. A linked git worktree fails: `build_site.py` runs git
+(sitemap `lastmod`) and sees a `.git` pointer file. The site documents the latest app release: fetch it
+into the build context first (`.release/<tag>/`), or leave the build arg out and the build fetches it.
 
 ```bash
-docker build -f website/Dockerfile -t openwhistle-website:local .
+docker build -f website/Dockerfile -t openwhistle-website:local \
+  --build-arg OW_APP_SOURCE="$(python scripts/release_source.py --relative)" .
 docker run --rm --name ow-website --read-only --tmpfs /tmp -p 8080:8080 \
   -v "$PWD/tests/website/fixtures/private:/usr/share/nginx/private:ro" openwhistle-website:local
 ```
@@ -33,7 +35,7 @@ docker run --rm --name ow-website --read-only --tmpfs /tmp -p 8080:8080 \
 | --- | --- |
 | An inline script | `tests/test_website_config.py` names the new hash; put it in **both** CSP lines of `website/nginx.conf` |
 | A redirect | `docs/_data/redirects.yml` only |
-| A font | Variable originals are in `docs/_fonts`; the build subsets them and inlines them as `data:` URIs in `fonts.css`. `docs/fonts/*.woff2` belong to the app image (copied by name): leave them |
+| A font | Variable originals are in `docs/_fonts`; the build subsets them and inlines them as `data:` URIs in `fonts.css`. `docs/fonts/*` are byte copies of the release's `app/static/fonts` (`tests/test_release_assets.py`): change both repositories together |
 | Page views | `journalctl CONTAINER_NAME=openwhistle-website -o cat --since -7d \| python scripts/site_stats.py` |
 
 ## Private data and deploy
@@ -46,3 +48,4 @@ docker run --rm --name ow-website --read-only --tmpfs /tmp -p 8080:8080 \
 | `/healthz` | 204 with the fragment, 503 without; not logged |
 | Leak guard | `OW_PRIVATE_STRINGS` (one string per line) arms `test_no_file_in_the_repository_holds_the_real_data`; unset, it skips. It holds the operator's name, the c/o line and the street only, never postcode or city: those are also in the processor's business address, which the privacy policy must show |
 | Deploy | As energysharing in wdk-ansible: digest pin in `docker_images.yml`, Renovate PR per new digest, merge runs Semaphore template 22. No token leaves GitHub |
+| Signature | keyless cosign; identity `https://github.com/openwhistle/website/.github/workflows/website-image.yml@refs/heads/main`, issuer `https://token.actions.githubusercontent.com` |
