@@ -111,19 +111,13 @@ Impressum
 
 Inhalte gemäß § 5 DDG
 
-[name]
-[c/o]
-Ludwig-Erhard-Straße 18
-20459 Hamburg
+[name and c/o address: private, injected at deploy]
 
 Kontaktdaten:
 E-Mail: info@openwhistle.net
 
 Redaktionell verantwortlich (§ 18 Abs. 2 MStV):
-[name]
-[c/o]
-Ludwig-Erhard-Straße 18
-20459 Hamburg
+[name and c/o address: private, injected at deploy]
 
 Quelle: Impressum-Privatschutz
 ```
