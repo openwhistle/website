@@ -108,6 +108,18 @@ def test_the_audit_reports_red_green_and_stale(
             {"id": "GONE", "file": "gone.txt", "old": "x", "new": "y", "tests": "A"},
         ],
     }
+    # A group that finds no test, or fails before any mutation, catches nothing: any exit
+    # code but 0 used to count as RED.
+    (tmp_path / "tests" / "test_b.py").write_text("def test_b():\n    assert False\n")
+    spec["test_groups"] |= {
+        "MISSING": ["tests/test_gone.py"],
+        "NOMATCH": ["tests/test_a.py", "-k", "nomatch"],
+        "FAILING": ["tests/test_b.py"],
+    }
+    spec["mutations"] += [
+        {"id": f"FREE_{g}", "file": "a.txt", "old": "free", "new": "x", "tests": g}
+        for g in ("MISSING", "NOMATCH", "FAILING")
+    ]
     (tmp_path / "spec.json").write_text(json.dumps(spec))
     monkeypatch.setattr(mutation_audit, "ROOT", tmp_path)
     monkeypatch.setattr("sys.argv", ["mutation_audit.py", str(tmp_path / "spec.json")])
@@ -121,6 +133,9 @@ def test_the_audit_reports_red_green_and_stale(
         "CREATED": "RED",
         "EXISTS": "STALE",
         "GONE": "STALE",
+        "FREE_MISSING": "STALE",
+        "FREE_NOMATCH": "STALE",
+        "FREE_FAILING": "STALE",
     }
     assert (tmp_path / "a.txt").read_text() == "guarded\nfree\n"
     assert not (tmp_path / "extra.txt").exists()
@@ -149,10 +164,12 @@ def test_every_audit_run_gets_its_own_bytecode_cache(
     def run(*args: object, **kwargs: dict[str, str]) -> subprocess.CompletedProcess[str]:
         caches.append(kwargs["env"]["PYTHONPYCACHEPREFIX"])
         assert Path(caches[-1]).is_dir()
+        if (tmp_path / "m.py").read_text() == "VALUE = 1\nOTHER = 2\n":
+            return subprocess.CompletedProcess([], 0, "", "")  # the unmutated baseline
         return subprocess.CompletedProcess([], 1, "FAILED tests/x.py::t\n", "")
 
     monkeypatch.setattr(mutation_audit, "ROOT", tmp_path)
     monkeypatch.setattr(mutation_audit.subprocess, "run", run)
     monkeypatch.setattr("sys.argv", ["mutation_audit.py", str(tmp_path / "spec.json")])
     assert mutation_audit.main() == 0
-    assert len(set(caches)) == 2 and not any(Path(c).exists() for c in caches)
+    assert len(set(caches)) == 3 and not any(Path(c).exists() for c in caches)

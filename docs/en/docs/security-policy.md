@@ -74,8 +74,11 @@ All report data is **Restricted** and subject to the controls in section 4.
 
 ### 4.3 Authentication and Access Control
 
-- All admin accounts require TOTP multi-factor authentication (no exceptions,
-  no bypass). TOTP enrollment is enforced at first login.
+- All admin accounts require TOTP multi-factor authentication. TOTP enrollment
+  is enforced at first login. The only exceptions need `DEMO_MODE=true` and touch
+  only the seeded demo accounts. They accept the static code `000000`. And
+  `LOCAL_REVIEW_LOGIN` (loopback URL and plain HTTP only) signs in without a
+  password or code. Never run either against a real database.
 - Passwords are hashed with bcrypt (cost factor ≥ 12).
 - Login attempts are rate-limited (`MAX_LOGIN_ATTEMPTS`, default 10, failures
   lock the username for `LOGIN_LOCKOUT_MINUTES` after the last one; kept in Redis).

@@ -13,6 +13,13 @@ function updateActive() {
       active = s.getAttribute('id');
     }
   });
+  // The section a link or the address named wins while its heading is in the window: a short
+  // one ends above the line, and the section after it was marked instead of the one clicked.
+  var named = location.hash && document.getElementById(location.hash.slice(1));
+  if (named && named.matches('.docs-section[id]')) {
+    var top = named.getBoundingClientRect().top;
+    if (top >= 0 && top < window.innerHeight) active = named.id;
+  }
   sidebarLinks.forEach(function(a) {
     var href = a.getAttribute('href');
     if (href === '#' + active) {
@@ -24,4 +31,5 @@ function updateActive() {
 }
 
 window.addEventListener('scroll', updateActive, { passive: true });
+window.addEventListener('hashchange', updateActive);
 updateActive();

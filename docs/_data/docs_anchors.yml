@@ -1,6 +1,5 @@
 # Every id of the one-pager /en/docs/ (until 2026-10-04) -> where that content lives now.
 # The inline script on /en/docs/ sends #<id> there; tests/test_docs_split.py holds the list.
-overview: /en/docs/
 overview-h2: /en/docs/
 requirements: /en/docs/requirements/
 requirements-h2: /en/docs/requirements/

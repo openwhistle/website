@@ -209,11 +209,17 @@ def test_ssi_is_on_for_the_legal_pages_only_and_without_the_prebuilt_gzip() -> N
 def test_the_health_check_is_not_logged() -> None:
     block = _location("=\\s+/healthz")
     assert re.search(r"^\s*access_log\s+off;", block, re.M)
-    assert "return 204;" in block
-    guard = re.search(
-        r"if\s*\(!-f /usr/share/nginx/private/address\.html\)\s*\{\s*return 503;", block
-    )
-    assert guard and guard.start() < block.index("return 204;"), "no fragment, no healthy answer"
+
+
+def test_the_health_check_reads_the_fragment_before_it_answers() -> None:
+    """`return` runs before the access phase and would skip auth_request; try_files runs after."""
+    block = _location("=\\s+/healthz")
+    assert re.search(r"^\s*auth_request\s+/_private/address\.html;", block, re.M)
+    assert re.search(r"^\s*try_files\s+\S+\s+=204;", block, re.M)
+    assert not re.search(r"^\s*(?:return|if)\b", block, re.M)
+    # Missing (auth_request: 500) or unreadable (403): the probe fails with 503.
+    assert re.search(r"^\s*error_page\s+403\s+500\s+=\s+@unhealthy;", block, re.M)
+    assert re.search(r"^\s*return\s+503;", _location("@unhealthy"), re.M)
 
 
 def test_subrequests_are_never_logged() -> None:

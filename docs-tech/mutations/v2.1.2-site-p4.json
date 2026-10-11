@@ -47,8 +47,8 @@
   {
    "id": "MAP-UNSAFE",
    "file": "scripts/package_site.py",
-   "old": "            if not _SAFE.fullmatch(part):",
-   "new": "            if False:",
+   "old": "        if not _KEY.fullmatch(old) or not _SAFE.fullmatch(new):",
+   "new": "        if False:",
    "tests": "PACKAGE"
   },
   {
@@ -61,8 +61,8 @@
   {
    "id": "MAP-OLD-ONLY",
    "file": "scripts/package_site.py",
-   "old": "        for part in (old, new):",
-   "new": "        for part in (old,):",
+   "old": " or not _SAFE.fullmatch(new):",
+   "new": ":",
    "tests": "PACKAGE"
   },
   {
@@ -75,7 +75,7 @@
   {
    "id": "STATS-COUNTS-ERRORS",
    "file": "scripts/site_stats.py",
-   "old": "        if len(parts) != 4 or parts[2] != \"200\":",
+   "old": "        if len(parts) != 4 or parts[2] not in {\"200\", \"304\"}:",
    "new": "        if len(parts) != 4:",
    "tests": "STATS"
   },
@@ -250,7 +250,7 @@
   {
    "id": "HEALTHZ-NO-503",
    "file": "website/nginx.conf",
-   "old": "            if (!-f /usr/share/nginx/private/address.html) {\n                return 503;\n            }\n",
+   "old": "            error_page 403 500 = @unhealthy;\n",
    "new": "",
    "tests": "CONFIG"
   },
@@ -278,8 +278,8 @@
   {
    "id": "HEALTHZ-IF-ADD-HEADER",
    "file": "website/nginx.conf",
-   "old": "                return 503;\n            }\n",
-   "new": "                return 503;\n            }\n            add_header X-Test 1;\n",
+   "old": "            try_files /.healthz =204; # never a real file; runs after the access phase\n",
+   "new": "            try_files /.healthz =204; # never a real file; runs after the access phase\n            add_header X-Test 1;\n",
    "tests": "CONFIG"
   },
   {

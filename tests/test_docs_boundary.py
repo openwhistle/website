@@ -6,6 +6,7 @@ import re
 from pathlib import Path
 
 import yaml
+from build_site import split_front_matter
 
 from tests.built_site import built, page, pages
 
@@ -60,22 +61,41 @@ def test_the_image_build_checks_out_the_full_history() -> None:
         assert checkout.get("with", {}).get("fetch-depth") == 0, name
 
 
-def test_no_built_file_comes_from_docs_tech() -> None:
-    """Neither by name nor by content."""
+def _from_docs_tech(src: Path, out: Path) -> list[str]:
+    """Files of `out` (the build) or pages of `src` (docs/) that are a docs-tech/ file."""
     tech_files = [p for p in (ROOT / "docs-tech").rglob("*") if p.is_file()]
-    tech_names = {p.name for p in tech_files}
+    tech_names = {p.name for p in tech_files if p.suffix == ".md"}
     # An empty file says nothing; any empty built file would collide with it.
     tech_hashes = {
         hashlib.sha256(p.read_bytes()).hexdigest() for p in tech_files if p.stat().st_size
     }
+    tech_texts = {p.read_text(encoding="utf-8").strip() for p in tech_files if p.suffix == ".md"}
+    leaked = [
+        str(p) for p in out.rglob("*") if p.is_file()
+        and hashlib.sha256(p.read_bytes()).hexdigest() in tech_hashes
+    ]  # fmt: skip
+    # The build renders a .md page to HTML, so neither its name nor its bytes reach the output:
+    # the source is where a copied docs-tech page shows. It used to be checked on the build
+    # only, where no .md exists, and a docs-tech page given front matter was published.
+    for md in src.rglob("*.md"):
+        _meta, body = split_front_matter(md.relative_to(src), md.read_text(encoding="utf-8"))
+        if md.name in tech_names or body.strip() in tech_texts:
+            leaked.append(str(md))
+    return sorted(leaked)
 
-    leaked = sorted(
-        str(p)
-        for p in built().rglob("*")
-        if p.is_file()
-        and (
-            (p.suffix == ".md" and p.name in tech_names)
-            or hashlib.sha256(p.read_bytes()).hexdigest() in tech_hashes
-        )
-    )
+
+def test_no_built_file_comes_from_docs_tech() -> None:
+    """Neither by name nor by content."""
+    leaked = _from_docs_tech(ROOT / "docs", built())
     assert not leaked, leaked
+
+
+def test_a_docs_tech_page_given_front_matter_is_caught(tmp_path: Path) -> None:
+    tech = (ROOT / "docs-tech" / "invariants.md").read_text(encoding="utf-8")
+    (tmp_path / "en").mkdir()
+    (tmp_path / "en" / "rules.md").write_text(f"---\ntitle: x\n---\n{tech}", encoding="utf-8")
+    (tmp_path / "en" / "local-review.md").write_text("---\ntitle: x\n---\nother", encoding="utf-8")
+    assert _from_docs_tech(tmp_path, tmp_path / "out") == [
+        str(tmp_path / "en" / "local-review.md"),
+        str(tmp_path / "en" / "rules.md"),
+    ]

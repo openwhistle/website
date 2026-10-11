@@ -34,7 +34,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      # The image as it runs on openwhistle.net; website-image.yml scans every new build itself.
+      # The newest published image. openwhistle.net runs the digest wdk-ansible pins, which
+      # lags :latest until its Renovate PR is merged; website-image.yml's test job scans its own
+      # build of each commit, the publish job builds that commit again and does not scan.
       - uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: ghcr.io/openwhistle/website:latest

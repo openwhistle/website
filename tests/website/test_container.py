@@ -242,29 +242,20 @@ def test_the_private_fragment_is_not_fetchable() -> None:
     assert b"Mustermann" not in response.read()
 
 
-def test_without_the_fragment_the_health_check_fails() -> None:
-    port = "8086"
-    name = NAME + "-bare"
+def _sibling_health(port: str, *mount: str) -> int:
+    """/healthz of a second container from the same image, with `mount` as its private dir."""
+    name = f"{NAME}-health-{port}"
     image = subprocess.run(  # noqa: S603
         [CLI, "inspect", NAME, "--format", "{{.Config.Image}}"],
         capture_output=True,
         text=True,
         check=True,
     ).stdout.strip()
+    volume = ["-v", f"{mount[0]}:/usr/share/nginx/private:ro,z"] if mount else []
     subprocess.run(  # noqa: S603
-        [
-            CLI,
-            "run",
-            "-d",
-            "--name",
-            name,
-            "--read-only",
-            "--tmpfs",
-            "/tmp",  # noqa: S108
-            "-p",
-            f"{port}:8080",
-            image,
-        ],
+        [CLI, "run", "-d", "--name", name, "--read-only", "--tmpfs", "/tmp"]  # noqa: S108
+        + volume
+        + ["-p", f"{port}:8080", image],
         capture_output=True,
         check=True,
     )
@@ -277,12 +268,33 @@ def test_without_the_fragment_the_health_check_fails() -> None:
                 time.sleep(0.5)
         try:
             response = urllib.request.urlopen(f"http://127.0.0.1:{port}/healthz", timeout=5)  # noqa: S310
-            status = response.status
+            return int(response.status)
         except urllib.error.HTTPError as error:
-            status = error.code
-        assert status == 503
+            return error.code
     finally:
         subprocess.run([CLI, "rm", "-f", name], capture_output=True, check=False)  # noqa: S603
+
+
+def test_without_the_fragment_the_health_check_fails() -> None:
+    assert _sibling_health("8086") == 503
+
+
+@pytest.mark.parametrize(("mode", "status"), [(0o444, 204), (0o000, 503)])
+def test_the_health_check_reads_the_fragment_as_the_legal_pages_do(
+    tmp_path_factory: pytest.TempPathFactory, mode: int, status: int
+) -> None:
+    """A fragment nginx (UID 101) cannot read used to pass /healthz, which only tested that
+    the file existed, and the legal pages embedded the 404 page where the address belongs.
+    0444 is the control: it proves the mount itself is readable (SELinux, user namespaces)."""
+    private = tmp_path_factory.mktemp("private")
+    fragment = private / "address.html"
+    fragment.write_text("<p>Max Mustermann</p>\n", encoding="utf-8")
+    private.chmod(0o755)
+    fragment.chmod(mode)
+    try:
+        assert _sibling_health("8087" if mode else "8088", str(private)) == status
+    finally:
+        fragment.chmod(0o644)
 
 
 def test_the_health_check_answers_without_a_log_line() -> None:

@@ -1,0 +1,292 @@
+{
+ "timeout_seconds": 900,
+ "test_groups": {
+  "SEARCH_E2E": [
+   "tests/e2e/test_docs_search.py",
+   "-k",
+   "page_being_read",
+   "-m",
+   "e2e",
+   "--browser",
+   "chromium"
+  ],
+  "CITES": [
+   "tests/test_hinschg_citations.py"
+  ],
+  "AUDIT_SELF": [
+   "tests/test_mutation_specs.py",
+   "-k",
+   "audit_reports"
+  ],
+  "CHANGELOG_CODE": [
+   "tests/test_changelog_page.py",
+   "-k",
+   "inside_code"
+  ],
+  "CHANGELOG_SOURCE": [
+   "tests/test_changelog_page.py",
+   "-k",
+   "built_page_is_the_changelog"
+  ],
+  "PACKAGE": [
+   "tests/test_package_site.py"
+  ],
+  "STATS": [
+   "tests/test_site_stats.py"
+  ],
+  "SITEMAP": [
+   "tests/test_build_site.py",
+   "-k",
+   "settings_table"
+  ],
+  "PINS": [
+   "tests/test_build_pins.py",
+   "-k",
+   "python_version"
+  ],
+  "FONT_SOURCE": [
+   "tests/test_site_fonts.py",
+   "-k",
+   "upstream"
+  ],
+  "BOUNDARY": [
+   "tests/test_docs_boundary.py::test_no_built_file_comes_from_docs_tech"
+  ],
+  "NAV": [
+   "tests/test_docs_site.py",
+   "-k",
+   "only_the_page_itself"
+  ],
+  "THEME_E2E": [
+   "tests/e2e/test_docs_behaviour.py",
+   "-k",
+   "says_its_state",
+   "-m",
+   "e2e",
+   "--browser",
+   "chromium"
+  ],
+  "SPY_E2E": [
+   "tests/e2e/test_docs_behaviour.py",
+   "-k",
+   "clicked_section",
+   "-m",
+   "e2e",
+   "--browser",
+   "chromium"
+  ],
+  "SPLIT": [
+   "tests/test_docs_split.py"
+  ],
+  "CLAIMS": [
+   "tests/test_release_claims.py"
+  ],
+  "RENOVATE": [
+   "tests/test_renovate.py"
+  ],
+  "HEALTHZ": [
+   "tests/test_website_config.py",
+   "-k",
+   "reads_the_fragment"
+  ]
+ },
+ "mutations": [
+  {
+   "id": "SEARCH-NO-HASHCHANGE",
+   "file": "docs/assets/js/search.js",
+   "old": "  window.addEventListener('hashchange', highlight);\n",
+   "new": "",
+   "tests": "SEARCH_E2E"
+  },
+  {
+   "id": "SEARCH-DIALOG-STAYS-OPEN",
+   "file": "docs/assets/js/search.js",
+   "old": "    if (e.target.closest('a')) dialog.close();\n",
+   "new": "",
+   "tests": "SEARCH_E2E"
+  },
+  {
+   "id": "SEARCH-OLD-MARKS-STAY",
+   "file": "docs/assets/js/search.js",
+   "old": "        old.replaceWith.apply(old, old.childNodes);\n",
+   "new": "",
+   "tests": "SEARCH_E2E"
+  },
+  {
+   "id": "CITE-WRONG-WITH-ENTITIES",
+   "file": "docs/en/compliance/hinschg/index.html",
+   "old": "§&nbsp;32 Abs.&nbsp;2",
+   "new": "§&nbsp;32 Abs.&nbsp;3",
+   "tests": "CITES"
+  },
+  {
+   "id": "AUDIT-NO-BASELINE",
+   "file": "scripts/mutation_audit.py",
+   "old": "        if baseline[group]:\n",
+   "new": "        if False:\n",
+   "tests": "AUDIT_SELF"
+  },
+  {
+   "id": "CHANGELOG-ITALIC-IN-CODE",
+   "file": "scripts/render_changelog.py",
+   "old": "    escaped = _CODE_RE.sub(aside, esc(text))\n",
+   "new": "    escaped = _CODE_RE.sub(lambda m: f\"<code>{m.group(1)}</code>\", esc(text))\n",
+   "tests": "CHANGELOG_CODE"
+  },
+  {
+   "id": "CHANGELOG-SOURCE-MAIN",
+   "file": "scripts/render_changelog.py",
+   "old": "blob/{tag}/CHANGELOG.md",
+   "new": "blob/main/CHANGELOG.md",
+   "tests": "CHANGELOG_SOURCE"
+  },
+  {
+   "id": "REDIRECT-NO-VARIANTS",
+   "file": "scripts/package_site.py",
+   "old": "    return [old, old[:-1], old + \"index.html\"]\n",
+   "new": "    return [old]\n",
+   "tests": "PACKAGE"
+  },
+  {
+   "id": "REDIRECT-PERCENT-KEY",
+   "file": "scripts/package_site.py",
+   "old": "\\\\$%?#",
+   "new": "\\\\$?#",
+   "tests": "PACKAGE"
+  },
+  {
+   "id": "STATS-200-ONLY",
+   "file": "scripts/site_stats.py",
+   "old": "parts[2] not in {\"200\", \"304\"}",
+   "new": "parts[2] != \"200\"",
+   "tests": "STATS"
+  },
+  {
+   "id": "STATS-HOST-CASE",
+   "file": "scripts/site_stats.py",
+   "old": "refs[ref.lower()] += 1",
+   "new": "refs[ref] += 1",
+   "tests": "STATS"
+  },
+  {
+   "id": "SITEMAP-IGNORES-CONFIG",
+   "file": "scripts/build_site.py",
+   "old": "                date = max(date, lastmod(src / \"_data\" / \"config.yml\"))\n",
+   "new": "                pass\n",
+   "tests": "SITEMAP"
+  },
+  {
+   "id": "PIN-PYTHON-PATCH",
+   "file": "website/Dockerfile",
+   "old": "python:3.14-slim@",
+   "new": "python:3.15.1-slim@",
+   "tests": "PINS"
+  },
+  {
+   "id": "FONT-NOT-UPSTREAM",
+   "file": "docs/fonts/README",
+   "old": "sha256 84ff7096",
+   "new": "sha256 94ff7096",
+   "tests": "FONT_SOURCE"
+  },
+  {
+   "id": "NAV-SECTION-IS-PAGE",
+   "file": "docs/_includes/nav.html",
+   "old": "aria-current=\"{{ item.current }}\"",
+   "new": "aria-current=\"page\"",
+   "tests": "NAV"
+  },
+  {
+   "id": "THEME-NOT-PRESSED",
+   "file": "docs/assets/js/site.js",
+   "old": "  if (toggle) toggle.setAttribute('aria-pressed', String(theme === 'dark'));\n",
+   "new": "",
+   "tests": "THEME_E2E"
+  },
+  {
+   "id": "THEME-BAR-STAYS",
+   "file": "docs/assets/js/site.js",
+   "old": "    m.setAttribute('content', barColours[theme]);\n",
+   "new": "",
+   "tests": "THEME_E2E"
+  },
+  {
+   "id": "SPY-IGNORES-NAMED",
+   "file": "docs/assets/js/sidebar.js",
+   "old": "    if (top >= 0 && top < window.innerHeight) active = named.id;\n",
+   "new": "",
+   "tests": "SPY_E2E"
+  },
+  {
+   "id": "ANCHOR-RELOADS-SELF",
+   "file": "docs/_data/docs_anchors.yml",
+   "old": "overview-h2: /en/docs/\n",
+   "new": "overview: /en/docs/\noverview-h2: /en/docs/\n",
+   "tests": "SPLIT"
+  },
+  {
+   "id": "CLAIM-LANGUAGES",
+   "file": "docs/en/compare/index.html",
+   "old": "<th scope=\"row\">Interface languages</th>\n                <td>5</td>",
+   "new": "<th scope=\"row\">Interface languages</th>\n                <td>4</td>",
+   "tests": "CLAIMS"
+  },
+  {
+   "id": "CLAIM-CURRENT-RELEASE",
+   "file": "docs/de/blog/whistleblower-software-vergleich.html",
+   "old": "data-label=\"OpenWhistle\">2.2.0, 9. Oktober 2026",
+   "new": "data-label=\"OpenWhistle\">2.1.0, 27. September 2026",
+   "tests": "CLAIMS"
+  },
+  {
+   "id": "CLAIM-ACK-STARTS-CLOCK",
+   "file": "docs/en/docs/admin/index.html",
+   "old": "tells the whistleblower; the 3-month feedback deadline then runs from today",
+   "new": "tells the whistleblower and starts the 3-month feedback clock; it runs from today",
+   "tests": "CLAIMS"
+  },
+  {
+   "id": "CLAIM-SEARCH-BUDGET",
+   "file": "docs/en/docs/admin/index.html",
+   "old": "it reads the 5,000 newest reports",
+   "new": "it reads the newest reports",
+   "tests": "CLAIMS"
+  },
+  {
+   "id": "CLAIM-LOGO-CSP",
+   "file": "docs/_data/config.yml",
+   "old": "      (<code>img-src 'self' data:</code>) blocks",
+   "new": "      blocks",
+   "tests": "CLAIMS"
+  },
+  {
+   "id": "RENOVATE-PLATFORM-AUTOMERGE",
+   "file": "renovate.json",
+   "old": "\"platformAutomerge\": false,",
+   "new": "\"platformAutomerge\": true,",
+   "tests": "RENOVATE"
+  },
+  {
+   "id": "HEALTHZ-EXISTS-ONLY",
+   "file": "website/nginx.conf",
+   "old": "            auth_request /_private/address.html;\n",
+   "new": "",
+   "tests": "HEALTHZ"
+  },
+  {
+   "id": "BOUNDARY-COPIED-PAGE",
+   "file": "docs/en/local-review.md",
+   "create": "---\ntitle: x\ndescription: x\ntranslation_key: copied-review\n---\nA docs-tech page under its own name.\n",
+   "tests": "BOUNDARY"
+  }
+ ],
+ "manual": [
+  {
+   "id": "HEALTHZ-UNREADABLE",
+   "file": "website/nginx.conf",
+   "old": "            auth_request /_private/address.html;\n",
+   "new": "",
+   "red": "tests/website/test_container.py::test_the_health_check_reads_the_fragment_as_the_legal_pages_do"
+  }
+ ]
+}

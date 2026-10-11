@@ -307,7 +307,7 @@ _CURRENT_NAV_TARGET = {
 
 def test_current_nav_item_is_marked() -> None:
     """Every page in `_CURRENT_NAV_TARGET` marks its own nav item
-    `aria-current="page"`, on the anchor whose resolved target is that
+    `aria-current` ("page", or "true" for its section), on the anchor whose resolved target is that
     page's own target -- and no other nav item on that page is marked."""
     for page_str, own_target in _CURRENT_NAV_TARGET.items():
         path = builder().output_file(built(), page_str)
@@ -315,11 +315,26 @@ def test_current_nav_item_is_marked() -> None:
         m = re.search(r'<ul class="nav-links"[^>]*>(.*?)</ul>', html, re.DOTALL)
         assert m, page_str
         anchors = re.findall(r'<a\s+([^>]*href="[^"]+"[^>]*)>', m.group(1))
-        marked = [a for a in anchors if 'aria-current="page"' in a]
+        # The page itself is "page", the section a page lies in "true".
+        marked = [a for a in anchors if re.search(r'aria-current="(?:page|true)"', a)]
         assert len(marked) == 1, (page_str, marked)
         href_m = re.search(r'href="([^"]+)"', marked[0])
         assert href_m
         assert _resolve_nav_target(path, href_m.group(1)) == own_target, (page_str, href_m.group(1))
+
+
+def test_only_the_page_itself_is_the_current_page() -> None:
+    """A section's link is aria-current="true"; "page" names only the page being read."""
+    wrong = {}
+    for path in pages():
+        url = "/" + str(path.parent.relative_to(built())).removeprefix(".") + "/"
+        url = url.replace("//", "/")
+        marked = re.findall(r'<a href="([^"]+)"[^>]*aria-current="page"', path.read_text())
+        if any(href != url for href in marked):
+            wrong[url] = marked
+    install = (built() / "en/docs/install/index.html").read_text()
+    assert not wrong, wrong
+    assert '<a href="/en/docs/" class="active" aria-current="true">' in install
 
 
 def _footer_targets(page: Path) -> set[str]:

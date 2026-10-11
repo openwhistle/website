@@ -53,6 +53,34 @@ def test_slash_opens_search_and_a_result_highlights_the_term(
     assert below_fold and 0 <= top and bottom <= height, (top, bottom, height)
 
 
+def test_a_result_on_the_page_being_read_closes_the_search_and_marks_the_term(
+    browser: Browser, docs_server_url: str
+) -> None:
+    """Only the fragment changes, so nothing reloads: search.js must mark on hashchange too.
+    It used to mark only at load, and the dialog stayed open over an unmarked page."""
+    ctx = browser.new_context(base_url=docs_server_url, reduced_motion="reduce")
+    page = ctx.new_page()
+    page.goto("/en/docs/onion/#highlight=onion")
+    page.locator("mark.pagefind-highlight").first.wait_for()
+    page.keyboard.press("/")
+    page.locator("#docs-search-input").fill(TERM)
+    first = page.locator(".docs-search-results a").first
+    first.wait_for()
+    assert first.get_attribute("href").startswith("/en/docs/onion/#highlight=")
+    first.click()
+    page.wait_for_function(
+        "[...document.querySelectorAll('mark.pagefind-highlight')]"
+        f".some(m => m.textContent === {TERM!r})"
+    )
+    marked = page.eval_on_selector_all(
+        "mark.pagefind-highlight", "ms => [...new Set(ms.map(m => m.textContent))]"
+    )
+    still_open = page.locator("#docs-search").evaluate("d => d.open")
+    ctx.close()
+    # The earlier term's marks are gone: only the new term is marked.
+    assert not still_open and marked == [TERM], (still_open, marked)
+
+
 def test_the_term_never_leaves_the_browser(browser: Browser, docs_server_url: str) -> None:
     """Search, then open a result: every request goes to this site and none carries the term."""
     ctx = browser.new_context(base_url=docs_server_url)

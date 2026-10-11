@@ -30,6 +30,18 @@ def test_pages_are_html_answers_only_and_referrers_skip_dashes() -> None:
     assert refs == {"www.google.com": 1}
 
 
+def test_a_revisit_answered_304_is_a_page_view_and_hosts_ignore_case() -> None:
+    """Cache-Control: no-cache and etag on: every revisit is a 304. Counting 200 only dropped
+    them; Google.COM and google.com were two rows."""
+    pages, refs = S.count(
+        [
+            "2026-10-09T10:00:00+00:00 /en/index.html 304 Google.COM",
+            "2026-10-09T10:00:01+00:00 /en/ 200 google.com",
+        ]
+    )
+    assert pages == {"/en/": 2} and refs == {"google.com": 2}
+
+
 # Written out, not read from _ASSET_SUFFIXES: a suffix dropped there must turn this red.
 @pytest.mark.parametrize(
     "suffix",

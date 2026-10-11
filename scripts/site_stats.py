@@ -37,7 +37,8 @@ def count(lines: Iterable[str]) -> tuple[Counter[str], Counter[str]]:
     refs: Counter[str] = Counter()
     for line in lines:
         parts = line.split()
-        if len(parts) != 4 or parts[2] != "200":
+        # 304 too: Cache-Control no-cache revalidates, so a revisit is a 304, not a 200.
+        if len(parts) != 4 or parts[2] not in {"200", "304"}:
             continue
         _time, uri, _status, ref = parts
         # Skip assets and pagefind; only count pages and their referrers
@@ -48,7 +49,7 @@ def count(lines: Iterable[str]) -> tuple[Counter[str], Counter[str]]:
             uri = uri.removesuffix("index.html")
         pages[uri] += 1
         if ref != "-":
-            refs[ref] += 1
+            refs[ref.lower()] += 1  # nginx logs the Referer's host as sent
     return pages, refs
 
 

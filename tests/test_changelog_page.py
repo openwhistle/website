@@ -36,16 +36,22 @@ RENDER_CHANGELOG = _load_renderer()
 
 def test_the_built_page_is_the_changelog() -> None:
     versions, link_defs = RENDER_CHANGELOG.parse(release_source.read("CHANGELOG.md"))
-    content = RENDER_CHANGELOG.render_content(versions, link_defs)
-    assert content in _page().read_text(encoding="utf-8")
+    content = RENDER_CHANGELOG.render_content(versions, link_defs, tag=release_source.tag())
+    page = _page().read_text(encoding="utf-8")
+    assert content in page
+    # Its source is the release it renders; main also holds changes not released yet.
+    source = f"https://github.com/openwhistle/OpenWhistle/blob/{release_source.tag()}/CHANGELOG.md"
+    assert source in page and "blob/main/CHANGELOG.md" not in page
 
 
 def test_the_older_page_holds_the_rest_and_no_release_is_on_both() -> None:
     versions, link_defs = RENDER_CHANGELOG.parse(release_source.read("CHANGELOG.md"))
-    older = RENDER_CHANGELOG.render_content(versions, link_defs, older=True)
+    older = RENDER_CHANGELOG.render_content(
+        versions, link_defs, tag=release_source.tag(), older=True
+    )
     assert older in (built() / "en/changelog/older/index.html").read_text(encoding="utf-8")
     ids = lambda page: set(re.findall(r'<section class="docs-section" id="([^"]+)"', page))  # noqa: E731
-    current = ids(RENDER_CHANGELOG.render_content(versions, link_defs))
+    current = ids(RENDER_CHANGELOG.render_content(versions, link_defs, tag="v9.9.9"))
     assert current and ids(older) and not current & ids(older)
     # A release's CHANGELOG.md may carry an empty [Unreleased] or none at all.
     assert "v1-0-0" in ids(older) and "unreleased" not in ids(older)
@@ -54,7 +60,7 @@ def test_the_older_page_holds_the_rest_and_no_release_is_on_both() -> None:
 
 
 def test_render_content_holds_no_site_chrome() -> None:
-    content = RENDER_CHANGELOG.render_content(*RENDER_CHANGELOG.parse(_FIXTURE))
+    content = RENDER_CHANGELOG.render_content(*RENDER_CHANGELOG.parse(_FIXTURE), tag="v9.9.9")
     assert "<footer" not in content and "site-nav" not in content and "<head" not in content
 
 
@@ -93,7 +99,7 @@ A paragraph with a [link](https://example.com/x?a=1&b=2) and `inline code`.
 def test_renderer_escapes_and_nests_correctly_on_a_fixture() -> None:
     versions, link_defs = RENDER_CHANGELOG.parse(_FIXTURE)
     assert [v.name for v in versions] == ["9.9.9"]
-    html = RENDER_CHANGELOG.render_content(versions, link_defs)
+    html = RENDER_CHANGELOG.render_content(versions, link_defs, tag="v9.9.9")
 
     # The literal <script> tag from the source must never appear unescaped.
     assert "<script>alert(1)</script>" not in html
@@ -122,11 +128,30 @@ def test_renderer_escapes_and_nests_correctly_on_a_fixture() -> None:
     assert 'id="v9-9-9"' in html
 
 
+@pytest.mark.parametrize(
+    ("source", "expected"),
+    [
+        # 0.2.0's line: the italic pass ran over code and paired the two stars.
+        (
+            "`NOTIFY_EMAIL_*` and `NOTIFY_WEBHOOK_*` variables",
+            "<code>NOTIFY_EMAIL_*</code> and <code>NOTIFY_WEBHOOK_*</code> variables",
+        ),
+        ("`[a](b)` is code", "<code>[a](b)</code> is code"),
+        (
+            "**`latest` moves** *only* up",
+            "<strong><code>latest</code> moves</strong> <em>only</em> up",
+        ),
+    ],
+)
+def test_markup_inside_code_stays_code(source: str, expected: str) -> None:
+    assert RENDER_CHANGELOG.render_inline(source) == expected
+
+
 def test_the_older_page_refuses_to_render_empty() -> None:
     few = "\n".join(
         f"## [1.0.{i}] — 2026-01-01\n\n- x\n\n[1.0.{i}]: https://example.test\n" for i in range(5)
     )
     versions, link_defs = RENDER_CHANGELOG.parse(few)
-    assert RENDER_CHANGELOG.render_content(versions, link_defs)
+    assert RENDER_CHANGELOG.render_content(versions, link_defs, tag="v9.9.9")
     with pytest.raises(ValueError, match="would be empty"):
-        RENDER_CHANGELOG.render_content(versions, link_defs, older=True)
+        RENDER_CHANGELOG.render_content(versions, link_defs, tag="v9.9.9", older=True)

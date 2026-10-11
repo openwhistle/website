@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import base64
+import hashlib
 import io
+import os
 import re
 from html.parser import HTMLParser
 from pathlib import Path
@@ -145,6 +147,30 @@ def test_the_weight_axis_is_kept_in_the_range_the_css_uses(face: str) -> None:
     )
     wanted = FACES[face][1]
     assert axes.get("wght") == (None if wanted is None else (float(wanted[0]), float(wanted[1])))
+
+
+def test_each_shipped_font_is_the_upstream_file_its_readme_names() -> None:
+    """docs/fonts/README records each original's sha256; nothing compared them, while the
+    byte-identity guard (tests/test_release_assets.py) covers only docs/fonts/, which is not
+    what openwhistle.net ships."""
+    readme = (ROOT / "docs" / "fonts" / "README").read_text(encoding="utf-8")
+    recorded = dict(
+        re.findall(r"^\s*(\S+\[wght\]\.ttf)\s.*?sha256 ([0-9a-f]{64})", readme, re.M | re.S)
+    )
+    shipped = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in SOURCES.glob("*.ttf")}
+    assert shipped and shipped == recorded, (shipped, recorded)
+
+
+def test_the_operators_address_has_every_glyph_in_sora() -> None:
+    """The address reaches the legal pages by SSI at runtime, after the build cut Sora to the
+    drawn text: a letter only the address uses falls back to a system font, silently. Armed
+    by OW_PRIVATE_STRINGS, as the leak guard in tests/test_legal_pages.py is."""
+    strings = os.environ.get("OW_PRIVATE_STRINGS", "").split()
+    if not strings:
+        pytest.skip("OW_PRIVATE_STRINGS is not set")
+    cmap = {chr(c) for c in _built("sora-variable.woff2").getBestCmap()}
+    missing = {c for s in strings for c in s} - cmap
+    assert not missing, f"{len(missing)} letters of the address are not in Sora's subset"
 
 
 def test_the_source_fonts_stay_full() -> None:

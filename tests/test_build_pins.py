@@ -27,10 +27,16 @@ def _all(pattern: str, *globs: str) -> set[str]:
 
 
 def test_python_version_is_the_same_everywhere() -> None:
-    found = _all(r"python:(\d+\.\d+)-slim", "website/Dockerfile")
-    found |= _all(r'python-version: "(\d+\.\d+)"', ".github/workflows/*.yml")
-    found |= _all(r'requires-python = ">=(\d+\.\d+)"', "pyproject.toml")
-    assert len(found) == 1, f"Python versions disagree: {found}"
+    # Each source must still name a version: one whose pattern stopped matching (python:3.15.1
+    # has no "-slim" right after the minor) dropped out of the set, and the rest agreed.
+    sources = {
+        "website/Dockerfile": _all(r"python:(\d+\.\d+)(?:\.\d+)?-slim", "website/Dockerfile"),
+        "workflows": _all(r'python-version: "(\d+\.\d+)"', ".github/workflows/*.yml"),
+        "pyproject.toml": _all(r'requires-python = ">=(\d+\.\d+)"', "pyproject.toml"),
+    }
+    assert all(sources.values()), f"a source names no Python version: {sources}"
+    found = set().union(*sources.values())
+    assert len(found) == 1, f"Python versions disagree: {sources}"
 
 
 @pytest.mark.parametrize("dockerfile", ["website/Dockerfile"])

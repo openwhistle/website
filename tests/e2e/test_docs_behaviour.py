@@ -54,6 +54,34 @@ def test_theme_toggle_switches_data_theme(browser: Browser, docs_server_url: str
     assert after == "dark"
 
 
+@pytest.mark.parametrize("color_scheme", ["light", "dark"])
+def test_the_toggle_says_its_state_and_the_browser_bar_follows_it(
+    browser: Browser, docs_server_url: str, color_scheme: str
+) -> None:
+    """aria-pressed tells a screen reader whether dark mode is on; the theme-color metas
+    followed the system scheme only, so a light choice on a dark system kept a dark bar."""
+    ctx, page = _new_page(browser, docs_server_url, color_scheme=color_scheme)
+    page.goto("/en/docs/")
+    states = []
+    for _ in range(2):
+        states.append(
+            page.evaluate(
+                """() => [document.documentElement.getAttribute('data-theme'),
+                    document.getElementById('theme-toggle').getAttribute('aria-pressed'),
+                    [...document.querySelectorAll('meta[name="theme-color"]')]
+                      .map(m => m.content)]"""
+            )
+        )
+        page.click("#theme-toggle")
+    ctx.close()
+    other = "light" if color_scheme == "dark" else "dark"
+    bar = {"light": "#ffffff", "dark": "#08080a"}
+    assert states == [
+        [color_scheme, str(color_scheme == "dark").lower(), [bar[color_scheme]] * 2],
+        [other, str(other == "dark").lower(), [bar[other]] * 2],
+    ]
+
+
 def test_theme_choice_persists_across_reload(browser: Browser, docs_server_url: str) -> None:
     ctx, page = _new_page(browser, docs_server_url, color_scheme="light")
     page.goto("/en/docs/")
@@ -122,6 +150,30 @@ def test_scroll_spy_marks_the_section_whose_heading_tops_the_view(
     active = page.evaluate("document.querySelector('.sidebar-links a.active')?.hash")
     ctx.close()
     assert active == f"#{target}", (url, below_nav, active)
+
+
+@pytest.mark.parametrize("url", ["/en/privacy/", "/de/datenschutz/"])
+def test_a_clicked_section_is_the_one_marked_even_when_it_is_short(
+    browser: Browser, docs_server_url: str, url: str
+) -> None:
+    """A short section ends above the line a third down the window, so the section after it
+    was marked (Chrome: a click on "Controller" lit "Short version"). The section the link
+    named is the one being read while its heading is in view."""
+    ctx = browser.new_context(
+        base_url=docs_server_url, viewport={"width": 1920, "height": 1080}, reduced_motion="reduce"
+    )
+    page = ctx.new_page()
+    page.goto(url)
+    wrong = {}
+    for link in page.locator(".sidebar-links a[href^='#']").all():
+        href = link.get_attribute("href")
+        link.click()
+        page.wait_for_timeout(150)
+        active = page.evaluate("document.querySelector('.sidebar-links a.active')?.hash")
+        if active != href:
+            wrong[href] = active
+    ctx.close()
+    assert not wrong, wrong
 
 
 # ── No JavaScript ─────────────────────────────────────────────────────────

@@ -611,10 +611,30 @@ def test_the_changelog_page_is_dated_by_the_releases_changelog_md(
     generated = {"generated": "changelog"}
     changelog = B.Page(Path("en/changelog.html"), "/en/changelog/", "en", generated, "")
     roadmap = B.Page(Path("en/roadmap.html"), "/en/roadmap/", "en", {}, "")
+    (tmp_path / "en").mkdir()
+    (tmp_path / "en/roadmap.html").write_text("<p>plans</p>", encoding="utf-8")
     B.write_sitemap(tmp_path, tmp_path, [changelog, roadmap], site)
     sitemap = (tmp_path / "sitemap.xml").read_text(encoding="utf-8")
     assert "/en/changelog/</loc>\n    <lastmod>release CHANGELOG.md</lastmod>" in sitemap
     assert "/en/roadmap/</loc>\n    <lastmod>roadmap.html</lastmod>" in sitemap
+
+
+def test_a_page_with_a_settings_table_is_dated_by_config_yml_too(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """fill_config writes _data/config.yml into the page: a change there changes the page."""
+    dates = {"ldap.html": "2026-10-01", "config.yml": "2026-10-09", "roadmap.html": "2026-10-02"}
+    monkeypatch.setattr(B, "lastmod", lambda path: dates[path.name])
+    (tmp_path / "en").mkdir()
+    (tmp_path / "en/ldap.html").write_text('<div data-config="ldap"></div>', encoding="utf-8")
+    (tmp_path / "en/roadmap.html").write_text("<p>plans</p>", encoding="utf-8")
+    site = {"base_url": "https://e.test", "languages": {"en": {}}, "default_language": "en"}
+    ldap = B.Page(Path("en/ldap.html"), "/en/docs/ldap/", "en", {}, "")
+    roadmap = B.Page(Path("en/roadmap.html"), "/en/roadmap/", "en", {}, "")
+    B.write_sitemap(tmp_path, tmp_path, [ldap, roadmap], site)
+    sitemap = (tmp_path / "sitemap.xml").read_text(encoding="utf-8")
+    assert "/en/docs/ldap/</loc>\n    <lastmod>2026-10-09</lastmod>" in sitemap
+    assert "/en/roadmap/</loc>\n    <lastmod>2026-10-02</lastmod>" in sitemap
 
 
 def test_a_redirect_from_a_page_fails(src: Path, tmp_path: Path) -> None:

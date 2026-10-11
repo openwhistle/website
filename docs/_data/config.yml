@@ -155,7 +155,9 @@ groups:
   - name: BRAND_LOGO_URL
     need: optional
     description: URL to a company logo image. When set, the logo is shown in the navigation bar instead
-      of the default OpenWhistle shield icon.
+      of the default OpenWhistle shield icon. It must come from this instance's own origin (e.g. a path
+      your reverse proxy serves) or be a <code>data:</code> URL; the Content-Security-Policy
+      (<code>img-src 'self' data:</code>) blocks an image from another host without an error.
     default: —
   - name: APP_PUBLIC_URL
     need: optional
@@ -165,7 +167,7 @@ groups:
   - name: ONION_LOCATION
     need: optional
     description: Tor onion (v3) address of this instance, e.g. <code>http://&lt;56 chars&gt;.onion</code>,
-      no path or query string. When set, every response carries an <code>Onion-Location</code> header
+      no path or query string. When set, every HTML response carries an <code>Onion-Location</code> header
       (Tor Browser offers to switch) and the submit page shows the address to reporters on a monitored
       network. Never sent to a visitor already on the onion service itself. See <a href="/en/docs/onion/">Offering
       an onion address</a>.

@@ -127,3 +127,12 @@ def test_every_digest_pinned_image_in_a_workflow_is_managed() -> None:
         *(_inline_pins(wf.read_text()) for wf in (ROOT / ".github/workflows").glob("*.yml"))
     )
     assert pinned <= captured, pinned - captured
+
+
+def test_automerge_waits_for_every_check_not_only_the_required_ones() -> None:
+    """main requires Lint, Tests and CodeQL only: the path-filtered "Website container" job
+    cannot be required (a PR it skips would wait forever). GitHub's own auto-merge, Renovate's
+    default, merged a digest bump that broke the container once those three passed; with
+    platformAutomerge off, Renovate merges itself and waits for every check on the PR."""
+    automerging = [r for r in CONFIG["packageRules"] if r.get("automerge")]
+    assert automerging and CONFIG.get("platformAutomerge") is False

@@ -230,6 +230,7 @@ def test_a_second_fetch_asks_only_for_the_tag(github: _Fake, tmp_path: Path) -> 
 
 def test_a_truncated_tree_is_refused(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     monkeypatch.setattr(urllib.request, "urlopen", _Fake(truncated=True))
+    monkeypatch.delenv("OW_RELEASE_TAG", raising=False)  # set in the shell, it failed here
     with pytest.raises(release_source.ReleaseError, match="truncated"):
         release_source.fetch(tmp_path)
     assert not (tmp_path / TAG).exists()
@@ -253,6 +254,7 @@ def test_a_network_error_is_a_release_error(
         raise OSError("offline")
 
     monkeypatch.setattr(urllib.request, "urlopen", offline)
+    monkeypatch.delenv("OW_RELEASE_TAG", raising=False)
     with pytest.raises(release_source.ReleaseError, match="releases/latest: offline"):
         release_source.fetch(tmp_path)
 
