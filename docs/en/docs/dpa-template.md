@@ -115,7 +115,7 @@ The Processor implements the following technical and organisational measures:
 | Anonymity | No IP addresses logged at any layer |
 | Data minimisation | Anonymous submissions require no personal data |
 | Availability | Regular PostgreSQL backups with point-in-time recovery |
-| Audit | Immutable audit log of all admin actions |
+| Audit | Audit log of all admin actions; no page edits it, a deleted report's entries go with it |
 | Deletion | Automatic deletion after retention period; 4-eyes deletion for manual removal |
 | Patch management | Dependencies scanned by GitHub Dependabot; OS patching per Processor's policy |
 

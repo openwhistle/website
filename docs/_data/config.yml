@@ -154,10 +154,9 @@ groups:
     default: <code>#0c7253</code>
   - name: BRAND_LOGO_URL
     need: optional
-    description: URL to a company logo image. When set, the logo is shown in the navigation bar instead
-      of the default OpenWhistle shield icon. It must come from this instance's own origin (e.g. a path
-      your reverse proxy serves) or be a <code>data:</code> URL; the Content-Security-Policy
-      (<code>img-src 'self' data:</code>) blocks an image from another host without an error.
+    description: A company logo, shown in the navigation bar instead of the OpenWhistle shield. A path this
+      server serves (<code>/static/...</code>) or a <code>data:image/</code> URI; anything else is ignored with a
+      warning, because the whistleblower's browser would fetch it from another host.
     default: —
   - name: APP_PUBLIC_URL
     need: optional
@@ -304,8 +303,8 @@ groups:
     default: <code>true</code>
   - name: RETENTION_DAYS
     need: optional
-    description: 'Days after a report is closed before it is automatically deleted. Default matches HinSchG
-      §11 Abs. 5: documentation is deleted 3 years after the procedure ends. Change only on legal advice.'
+    description: 'Days after a report is closed before it is automatically deleted, at least 1. Default matches
+      HinSchG §11 Abs. 5: documentation is deleted 3 years after the procedure ends. Change only on legal advice.'
     default: <code>1095</code>
 - id: multi-tenancy
   title: Organisations (multi-tenancy)
@@ -374,10 +373,6 @@ groups:
     need: optional
     description: LDAP attribute to use as the username in the provisioned admin record.
     default: <code>uid</code>
-  - name: LDAP_ATTR_EMAIL
-    need: optional
-    description: LDAP attribute to read the user's email address from.
-    default: <code>mail</code>
 - id: s3
   title: S3-compatible storage
   page: /en/docs/s3/
