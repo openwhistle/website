@@ -113,7 +113,7 @@ jsonld:
           <li><strong>Outbound webhooks</strong>
             <ul>
               <li>Events <code>report.created</code>, <code>report.status_changed</code>, <code>report.reply_added</code>, <code>report.deleted</code>, each switchable.</li>
-              <li>Payload: event type, case number, new status, timestamp. No message, attachment or identifying metadata.</li>
+              <li>Payload: event type and count, sent with the notification digest (<code>NOTIFICATION_BATCH_MINUTES</code>), never at the moment of the event. No case number, no time, no message, attachment or identifying metadata: the rule webhook notifications already follow, as a third party must not learn which case moved or when (<a href="/en/docs/notifications/">Notifications</a>).</li>
               <li>Signed with HMAC-SHA256 in <code>X-OpenWhistle-Signature</code>; retried up to 3&times; with exponential back-off.</li>
               <li>Delivery log in the admin UI; <code>WebhookEndpoint</code> model (<code>url</code>, <code>secret</code>, <code>enabled_events[]</code>, <code>last_delivery_at</code>, <code>last_status_code</code>).</li>
             </ul>
@@ -127,7 +127,7 @@ jsonld:
             <ul>
               <li><code>ADMIN_IP_ALLOWLIST</code> takes CIDR ranges (<code>192.168.1.0/24,10.0.0.0/8</code>); outside them, 403.</li>
               <li>Unset or empty: no restriction, as today.</li>
-              <li>FastAPI middleware before routing; a new <code>TRUSTED_PROXY_DEPTH</code> setting finds the client address behind load balancers.</li>
+              <li>Enforced by the bundled nginx on <code>/admin</code> only, never in the app. The app keeps never seeing a client address (<a href="/en/docs/anonymity/">anonymity layer 2</a>), and the whistleblower routes stay open to everyone. Behind a load balancer, nginx's <code>set_real_ip_from</code> names the trusted proxies; the address is checked, never logged or passed on.</li>
             </ul>
           </li>
         </ul>

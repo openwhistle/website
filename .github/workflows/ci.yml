@@ -94,4 +94,7 @@ jobs:
       - name: Run tests
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          # Arms the personal-data leak guard (docs-tech/website-image.md); a fork's PR has no
+          # secrets, and the guard skips. The tests print an index, never a string.
+          OW_PRIVATE_STRINGS: ${{ secrets.OW_PRIVATE_STRINGS }}
         run: pytest

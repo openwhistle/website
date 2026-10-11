@@ -85,3 +85,14 @@ def test_the_logo_setting_names_the_image_policy_that_limits_it() -> None:
     config = yaml.safe_load((ROOT / "docs/_data/config.yml").read_text(encoding="utf-8"))
     logo = next(s for g in config["groups"] for s in g["settings"] if s["name"] == "BRAND_LOGO_URL")
     assert f"<code>{img_src.group(1)}</code>" in logo["description"], img_src.group(1)
+
+
+def test_the_roadmap_plans_nothing_its_anonymity_rules_forbid() -> None:
+    """Planned webhooks carried case number and timestamp, the planned IP allowlist read the
+    client address in the app: both against what the docs promise (counts, never case numbers;
+    no handler can read the address)."""
+    roadmap = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", page("/en/roadmap/")))
+    payload = re.search(r"Payload: ([^.]*\.[^.]*\.)", roadmap)
+    assert payload and "No case number, no time" in payload.group(1), payload
+    assert "TRUSTED_PROXY_DEPTH" not in roadmap
+    assert "never in the app" in roadmap
