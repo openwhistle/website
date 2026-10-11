@@ -169,8 +169,11 @@ def test_the_operators_address_has_every_glyph_in_sora() -> None:
     if not strings:
         pytest.skip("OW_PRIVATE_STRINGS is not set")
     cmap = {chr(c) for c in _built("sora-variable.woff2").getBestCmap()}
-    missing = {c for s in strings for c in s} - cmap
-    assert not missing, f"{len(missing)} letters of the address are not in Sora's subset"
+    missing = len({c for s in strings for c in s} - cmap)
+    # A count, never the letters: pytest's assert rewriting would print them into the CI log,
+    # and GitHub masks the whole secret, not single characters of it.
+    if missing:
+        pytest.fail(f"{missing} letters of the address are not in Sora's subset", pytrace=False)
 
 
 def test_the_source_fonts_stay_full() -> None:
