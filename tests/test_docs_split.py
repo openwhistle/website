@@ -27,7 +27,7 @@ demo-mode demo-mode-h2 upgrading upgrading-h2 upgrading-2-0 key-rotation key-rot
 
 # Every <h3> of the one-pager. Each is now a heading (h1–h3) on exactly one docs page.
 OLD_H3 = [
-    "Key design principles",
+    "Design principles of self-hosted whistleblowing",
     "Supported platforms",
     "Current version",
     "Registries",
