@@ -28,4 +28,5 @@ test-results/
 .serena/
 /.claude/
 /.superpowers/
+# tools/seo: npm ci
 tools/seo/node_modules/
