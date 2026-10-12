@@ -15,6 +15,7 @@ belongs in [openwhistle/OpenWhistle](https://github.com/openwhistle/OpenWhistle)
 | Workflows | `uvx zizmor --offline .github/workflows` (zero findings) |
 | Markdown | `npx --yes markdownlint-cli2 <files>` (rules in `.markdownlint.json`, lines ≤ 120) |
 | Tests | `uv run pytest` (reads the latest app release; `OW_APP_SOURCE=<checkout>` works offline) |
+| SEO tool (once) | `npm --prefix tools/seo ci --omit=optional --ignore-scripts`; the suite needs Node ≥ 20 |
 | Browser tests | `uv run pytest tests/e2e -m e2e --browser chromium` |
 
 Coverage below 90 % of `scripts/` fails the run. Dependencies are locked in `uv.lock`: after editing

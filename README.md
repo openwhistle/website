@@ -36,7 +36,8 @@ python -m http.server -d _site 8901
 ```
 
 Tests: `uv run pytest` (coverage floor 90 % on `scripts/`); browser tests: `uv run pytest tests/e2e -m e2e
---browser chromium`. More in [CONTRIBUTING.md](CONTRIBUTING.md).
+--browser chromium`. The suite also runs `tools/seo` (Node ≥ 20): `npm --prefix tools/seo ci --omit=optional
+--ignore-scripts` first. More in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
