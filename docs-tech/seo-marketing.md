@@ -106,6 +106,9 @@ Install: `npm --prefix tools/seo ci` (add `--omit=optional` to skip Lighthouse; 
 | `-- --compare before.json` | prints the change per row against a saved run |
 | `-- --lighthouse` | adds Lighthouse's SEO score; needs Chromium, `CHROME_PATH` names it (Playwright's works) |
 
+`--json` and `--compare` paths are relative to where you run npm. Exit 0 whatever the scores; exit 1 when a page
+cannot be fetched (30 s timeout), has no `<main>`, or the flags are invalid.
+
 Limits:
 
 - German matches exact word forms only; word-form data is Yoast Premium.
