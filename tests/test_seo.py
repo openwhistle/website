@@ -364,3 +364,10 @@ def test_docs_pages_carry_a_breadcrumb(page: Path) -> None:
     items = crumbs[0]["itemListElement"]
     assert [i["position"] for i in items] == list(range(1, len(items) + 1))
     assert items[-1]["item"] == _head(page).rel("canonical")[0]["href"]
+
+
+@pytest.mark.parametrize("page", PAGES, ids=IDS)
+def test_a_label_is_not_a_paragraph(page: Path) -> None:
+    """Search engines and SEO tools read a label `<p>` as the first paragraph."""
+    html = page.read_text(encoding="utf-8")
+    assert not re.search(r'<p\b[^>]*class="[^"]*(?:eyebrow|article-tag|kicker)', html), page
