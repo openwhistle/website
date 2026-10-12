@@ -14,4 +14,8 @@ js:
           <code>STORAGE_BACKEND=s3</code> stores new ones in an S3-compatible bucket. Existing ones stay
           in the database and keep working.
         </p>
+        <p>
+          The bucket records each file's exact upload time (<code>LastModified</code>). The database keeps only
+          the day of an upload; whoever can list the bucket sees the time.
+        </p>
 <div data-config="s3"></div>

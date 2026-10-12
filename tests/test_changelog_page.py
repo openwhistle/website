@@ -54,7 +54,20 @@ def test_the_older_page_holds_the_rest_and_no_release_is_on_both() -> None:
     current = ids(RENDER_CHANGELOG.render_content(versions, link_defs, tag="v9.9.9"))
     assert current and ids(older) and not current & ids(older)
     # A release's CHANGELOG.md may carry an empty [Unreleased] or none at all.
-    assert "v1-0-0" in ids(older) and "unreleased" not in ids(older)
+    assert "unreleased" not in ids(older)
+    # Each closed series has a page of its own, so /older/ does not grow with every release.
+    archives = {
+        major: RENDER_CHANGELOG.render_content(
+            versions, link_defs, tag=release_source.tag(), major=major
+        )
+        for major in RENDER_CHANGELOG.ARCHIVED
+    }
+    for major, archive in archives.items():
+        assert archive in (built() / f"en/changelog/{major}.x/index.html").read_text("utf-8")
+        assert ids(archive) and all(i.startswith(f"v{major}-") for i in ids(archive)), major
+        assert not ids(archive) & (current | ids(older)), major
+    assert "v1-0-0" in ids(archives["1"]) and "v0-1-0" in ids(archives["0"])
+    assert not any(i.startswith(("v0-", "v1-")) for i in ids(older))
     # Unreleased plus the newest NEWEST releases: a count, so a release never breaks the budget.
     assert len(current - {"unreleased"}) <= 5 == RENDER_CHANGELOG.NEWEST
 
