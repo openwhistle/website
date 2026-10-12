@@ -27,7 +27,7 @@ export function paperFields(html, url) {
   const lang = pick(html, /<html[^>]*\blang="([a-z]{2})/);
   const title = pick(html, /<title>([^<]*)<\/title>/);
   return {
-    text: main[1].trim(),
+    text: main[1].split(/<\/h1>/)[1]?.trim() ?? main[1].trim(), // WordPress analyses the content, not title or label
     title,
     description: pick(html, /<meta name="description" content="([^"]*)"/),
     slug: new URL(url).pathname,

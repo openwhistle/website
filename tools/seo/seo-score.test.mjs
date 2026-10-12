@@ -15,7 +15,17 @@ test("paperFields reads main, title, description, slug and locale", () => {
   assert.match(f.description, /^Hinweisgebersystem Software, kostenlos/);
   assert.equal(f.slug, "/de/");
   assert.equal(f.locale, "de_DE");
-  assert.ok(f.text.startsWith("<h1>") && !f.text.includes("Menü"), "only <main> is the text");
+  assert.ok(f.text.startsWith("<p>Hinweisgebersystem") && !f.text.includes("Menü"), "the text is <main> below the H1");
+});
+
+const labelled = (lead) => `<html lang="en"><head><title>T</title></head><body><main><div class="hero-eyebrow">Label</div><h1>Title</h1>${lead}<h2>More</h2><p>Body.</p></main></body></html>`;
+
+test("the text starts at the lead: label and H1 are not content", () => {
+  const f = paperFields(labelled("<p>Lead with whistleblowing software.</p>"), url);
+  assert.ok(f.text.startsWith("<p>Lead") && !f.text.includes("Label") && !f.text.includes("<h1>"), f.text);
+  const r = scorePage(labelled("<p>Lead with whistleblowing software.</p>"), url, "whistleblowing software");
+  assert.equal(r.findings.find((x) => x.id === "introductionKeyword").score, 9);
+  assert.match(r.findings.find((x) => x.id === "singleH1").text, /don.t have multiple H1/);
 });
 
 test("a page without <main> is an error, not a score", () => {
