@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import base64
 import datetime
+import functools
 import html
 import importlib.util
 import io
@@ -171,11 +172,13 @@ def _load_script(name: str) -> ModuleType:
     return module
 
 
-def _changelog(src: Path, *, older: bool = False) -> str:
+def _changelog(src: Path, *, older: bool = False, major: str = "") -> str:
     changelog = _load_script("render_changelog")
     source = release_source.read("CHANGELOG.md")
     return str(
-        changelog.render_content(*changelog.parse(source), tag=release_source.tag(), older=older)
+        changelog.render_content(
+            *changelog.parse(source), tag=release_source.tag(), older=older, major=major
+        )
     )
 
 
@@ -280,6 +283,13 @@ class Origin:
 GENERATORS: dict[str, tuple[Callable[[Path], str], Origin]] = {
     "changelog": (_changelog, Origin("github_url", "CHANGELOG.md")),
     "changelog_older": (_changelog_older, Origin("github_url", "CHANGELOG.md")),
+    **{
+        f"changelog_{major}": (
+            functools.partial(_changelog, major=major),
+            Origin("github_url", "CHANGELOG.md"),
+        )
+        for major in _load_script("render_changelog").ARCHIVED
+    },
     "configuration": (_configuration, Origin("site_repo_url", "docs/_data/config.yml")),
 }
 

@@ -231,23 +231,46 @@ CONTENT_FOOT = """    </main>
 # new release never pushes the page over the 100 KB first-view budget by itself.
 NEWEST = 5
 
+# Closed release series with a page of their own, /en/changelog/<major>.x/: one page of every
+# older release outgrew the budget at 2.2.1 (107 KB first view), and a closed series never grows.
+ARCHIVED = ("1", "0")
+
+
+def _major(version: Version) -> str:
+    return version.name.split(".", 1)[0]
+
 
 def render_content(
-    versions: list[Version], link_defs: dict[str, str], *, tag: str, older: bool = False
+    versions: list[Version],
+    link_defs: dict[str, str],
+    *,
+    tag: str,
+    older: bool = False,
+    major: str = "",
 ) -> str:
     """The page body between the site navigation and the footer; the layout adds the rest.
 
-    Two pages, because one page of every release is 43 KB of HTML and the first view of a
-    page stays within 100 KB: /en/changelog/ holds what is not yet released and the NEWEST
-    releases, /en/changelog/older/ the rest.
+    Several pages, because the first view of a page stays within 100 KB: /en/changelog/ holds
+    what is not yet released and the NEWEST releases, /en/changelog/<major>.x/ the rest of each
+    ARCHIVED series, /en/changelog/older/ the rest of the others.
     """
     shown = [v for v in versions if any(line.strip() for line in v.lines)]
     released = [v for v in shown if v.name.lower() != "unreleased"]
     on_main = {v.name for v in released[:NEWEST]}
-    shown = [v for v in shown if (v.name in on_main or v.name.lower() == "unreleased") != older]
-    if older and len(released) <= NEWEST:
+    if major:
+        shown = [v for v in released if v.name not in on_main and _major(v) == major]
+    else:
+        shown = [
+            v
+            for v in shown
+            if (v.name in on_main or v.name.lower() == "unreleased") != older
+            and not (older and _major(v) in ARCHIVED)
+        ]
+    if major and not shown:
+        raise ValueError(f"CHANGELOG.md has no {major}.x release older than the newest {NEWEST}")
+    if older and not shown:
         raise ValueError(
-            f"CHANGELOG.md has {len(released)} releases, none older than the newest {NEWEST}: "
+            f"CHANGELOG.md has no release older than the newest {NEWEST} outside {ARCHIVED}: "
             "docs/en/changelog/older/ would be empty; remove that page and the link to it"
         )
     oldest_shown = released[NEWEST - 1].name if len(released) >= NEWEST else ""
@@ -268,14 +291,26 @@ def render_content(
             f"      </section>\n"
         )
 
-    if older:
+    archives = ", ".join(f'<a href="/en/changelog/{m}.x/">{m}.x</a>' for m in ARCHIVED)
+    if major:
+        crumb = (
+            '        <a href="/en/changelog/">Changelog</a>\n        <span>/</span>\n'
+            f"        <span>{major}.x</span>"
+        )
+        title = f"{major}.x releases"
+        lead = (
+            f"Every {major}.x release, newest first. Other series: {archives}; "
+            '<a href="/en/changelog/">back to the current releases</a>.'
+        )
+    elif older:
         crumb = (
             '        <a href="/en/changelog/">Changelog</a>\n        <span>/</span>\n'
             "        <span>Older releases</span>"
         )
         title = "Older releases"
         lead = (
-            f"Every release before {oldest_shown}, newest first. "
+            f"Every release before {oldest_shown} back to {shown[-1].name}, newest first; "
+            f"before that: {archives}. "
             '<a href="/en/changelog/">Back to the current releases</a>.'
         )
     else:

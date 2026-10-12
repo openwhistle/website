@@ -1,0 +1,29 @@
+{
+ "timeout_seconds": 900,
+ "test_groups": {
+  "SPLIT": ["tests/test_changelog_page.py", "-k", "older_page_holds_the_rest"]
+ },
+ "mutations": [
+  {
+   "id": "OLDER-KEEPS-ARCHIVED",
+   "file": "scripts/render_changelog.py",
+   "old": "            and not (older and _major(v) in ARCHIVED)\n",
+   "new": "",
+   "tests": "SPLIT"
+  },
+  {
+   "id": "ARCHIVE-ANY-MAJOR",
+   "file": "scripts/render_changelog.py",
+   "old": "v.name not in on_main and _major(v) == major]",
+   "new": "v.name not in on_main]",
+   "tests": "SPLIT"
+  },
+  {
+   "id": "ARCHIVE-PAGE-NOT-GENERATED",
+   "file": "docs/en/changelog/1.x/index.html",
+   "old": "generated: changelog_1\n",
+   "new": "generated: changelog_older\n",
+   "tests": "SPLIT"
+  }
+ ]
+}

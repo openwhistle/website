@@ -552,7 +552,7 @@
   {
    "id": "OLDER-PAGE-EMPTY",
    "file": "scripts/render_changelog.py",
-   "old": "    if older and len(released) <= NEWEST:",
+   "old": "    if older and not shown:",
    "new": "    if False:",
    "red": "tests/test_changelog_page.py::test_the_older_page_refuses_to_render_empty"
   },

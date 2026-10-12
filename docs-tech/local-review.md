@@ -83,7 +83,8 @@ the build reads the latest app release (`scripts/release_source.py`); with it, t
 | `/en/compare/` | Comparison with GlobaLeaks, SecureDrop, Hush Line — the table scrolls inside its box at 390 px. |
 | `/404.html` | Not-found page (noindex); open any missing path on the served site. |
 | `/en/changelog/` | Changelog, rendered from the release's `CHANGELOG.md` — check the version nav in the sidebar. |
-| `/en/changelog/older/` | The releases before the newest five — the version nav, the link back. |
+| `/en/changelog/older/` | The releases before the newest five, from the series without a page of their own — the version nav, the link back. |
+| `/en/changelog/1.x/`, `/en/changelog/0.x/` | One page per closed series — the version nav, the links to the other series and back. |
 | `/de/blog/` | Blog index. |
 | `/de/blog/hinschg-compliance-leitfaden/` | Article. |
 | `/de/blog/hinweisgebersystem-dsgvo-eu-hosting/` | Article. |
