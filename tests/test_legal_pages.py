@@ -79,6 +79,21 @@ def _leaks(forbidden: list[str]) -> list[str]:
     return leaks
 
 
+def test_every_page_with_the_address_is_kept_out_of_search_engines() -> None:
+    """The operator's address must not land in a search index: a page that includes it says
+    noindex and is not in the sitemap. robots.txt stays open, or no crawler sees the noindex."""
+    sitemap = (built() / "sitemap.xml").read_text(encoding="utf-8")
+    with_address = [p for p in built().rglob("*.html") if INCLUDE in p.read_text(encoding="utf-8")]
+    assert len(with_address) == 3, with_address
+    for path in with_address:
+        html = path.read_text(encoding="utf-8")
+        url = f"/{path.parent.relative_to(built()).as_posix()}/"
+        assert '<meta name="robots" content="noindex, follow">' in html, path
+        assert f"https://openwhistle.net{url}<" not in sitemap, path
+    robots = (built() / "robots.txt").read_text(encoding="utf-8")
+    assert "Disallow" not in robots, robots
+
+
 def test_the_real_data_scan_finds_the_fixture_person() -> None:
     assert "tests/website/fixtures/private/address.html: string 1" in _leaks(["Erika Mustermann"])
 
