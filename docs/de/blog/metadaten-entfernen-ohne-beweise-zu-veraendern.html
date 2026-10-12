@@ -1,5 +1,5 @@
 ---
-title: Metadaten entfernen im Hinweisgebersystem ohne Pixeländerung
+title: Metadaten entfernen im Hinweisgebersystem | OpenWhistle
 description: 'Metadaten entfernen im Hinweisgebersystem: Wie OpenWhistle GPS-Daten und Windows-Benutzernamen aus Anhängen löscht, ohne ein Pixel zu ändern.'
 translation_key: removing-metadata-without-altering-evidence
 og_type: article
@@ -13,7 +13,7 @@ js:
 jsonld:
 - '@context': https://schema.org
   '@type': BlogPosting
-  headline: Metadaten entfernen im Hinweisgebersystem ohne Pixeländerung
+  headline: Metadaten entfernen, ohne das Beweisfoto zu verändern
   description: 'Metadaten entfernen im Hinweisgebersystem: Wie OpenWhistle GPS-Daten und Windows-Benutzernamen aus Anhängen löscht, ohne ein Pixel zu ändern.'
   url: https://openwhistle.net/de/blog/metadaten-entfernen-ohne-beweise-zu-veraendern/
   mainEntityOfPage:
@@ -66,9 +66,9 @@ jsonld:
 
         <div class="article-body">
 
-          <p>Ein Hinweisgebersystem muss Metadaten entfernen, bevor es einen Anhang speichert. Wer einen Missstand meldet, hängt oft einen Beleg an: ein Foto, einen Screenshot, eine Tabelle. Jede dieser Dateien trägt Daten, die niemand sieht. Ein Handyfoto enthält GPS-Koordinaten und die Seriennummer der Kamera. Eine Office-Datei enthält den Autor. Eine anonyme Meldung ist nur so anonym wie ihr Anhang.</p>
+          <p>Wer einen Missstand meldet, hängt oft einen Beleg an: ein Foto, einen Screenshot, eine Tabelle. Jede dieser Dateien trägt Daten, die niemand sieht. Ein Handyfoto enthält GPS-Koordinaten und die Seriennummer der Kamera. Eine Office-Datei enthält den Autor. Eine anonyme Meldung ist nur so anonym wie ihr Anhang. Ein Hinweisgebersystem sollte Metadaten deshalb entfernen, bevor es einen Anhang speichert.</p>
 
-          <p>OpenWhistle entfernt diese Daten deshalb beim Hochladen, bevor irgendetwas gespeichert wird. Eine Datei, die sich nicht säubern lässt, wird abgelehnt, nie ungesäubert abgelegt.</p>
+          <p>OpenWhistle tut das beim Hochladen, bevor irgendetwas gespeichert wird. Eine Datei, die sich nicht säubern lässt, wird abgelehnt, nie ungesäubert abgelegt.</p>
 
           <h2>Der alte Weg: das Bild neu malen</h2>
           <p>Bis Version 2.0 las OpenWhistle ein Bild ein und schrieb nur die Pixel in eine neue Datei. Metadaten kamen so garantiert nicht mit. Die Pixel aber auch nicht immer. Ein Bug-Bounty-Durchlauf hat nachgemessen:</p>
