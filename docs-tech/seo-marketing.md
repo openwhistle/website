@@ -110,6 +110,7 @@ openwhistle.pro, `Artaeon/openwhistle`). Maintainer actions, prepared, not run:
 | `FAQPage` only where the FAQ is visible, entry for entry | Held by `test_faqpage_jsonld_matches_visible_faq_one_to_one` |
 | Nothing in a head loads from another host; fonts come from `docs/fonts/` | A visit must not reach a third party |
 | `404.html` is `noindex`, has no canonical, links root-relative | nginx serves it at every missing path |
+| Imprint and both privacy policies are `noindex`, out of the sitemap, without hreflang; `robots.txt` stays open | They carry the operator's address; a `Disallow` would hide the `noindex` and keep the URL indexed |
 
 When a page changes:
 
