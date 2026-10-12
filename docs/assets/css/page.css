@@ -62,7 +62,8 @@
       color: var(--ink);
       margin-bottom: var(--space-4);
     }
-    .page-header p {
+    .page-header p,
+    .page-header-eyebrow {
       font-size: 1.05rem;
       font-weight: 300;
       color: var(--body);

@@ -1,10 +1,10 @@
 ---
-title: Metadaten entfernen, ohne das Beweisfoto zu verändern
-description: Wie OpenWhistle GPS-Daten und Windows-Benutzernamen aus Anhängen entfernt, ohne ein Pixel zu ändern, und warum der alte Weg Beweisfotos schwarz färbte.
+title: Metadaten entfernen im Hinweisgebersystem | OpenWhistle
+description: 'Metadaten entfernen im Hinweisgebersystem: Wie OpenWhistle GPS-Daten und Windows-Benutzernamen aus Anhängen löscht, ohne ein Pixel zu ändern.'
 translation_key: removing-metadata-without-altering-evidence
 og_type: article
 published: '2026-09-27'
-modified: '2026-09-27'
+modified: '2026-10-12'
 section: Datenschutz
 css:
 - post
@@ -14,13 +14,13 @@ jsonld:
 - '@context': https://schema.org
   '@type': BlogPosting
   headline: Metadaten entfernen, ohne das Beweisfoto zu verändern
-  description: Wie OpenWhistle GPS-Daten und Windows-Benutzernamen aus Anhängen entfernt, ohne ein Pixel zu ändern, und warum der alte Weg Beweisfotos schwarz färbte.
+  description: 'Metadaten entfernen im Hinweisgebersystem: Wie OpenWhistle GPS-Daten und Windows-Benutzernamen aus Anhängen löscht, ohne ein Pixel zu ändern.'
   url: https://openwhistle.net/de/blog/metadaten-entfernen-ohne-beweise-zu-veraendern/
   mainEntityOfPage:
     '@type': WebPage
     '@id': https://openwhistle.net/de/blog/metadaten-entfernen-ohne-beweise-zu-veraendern/
   datePublished: '2026-09-27'
-  dateModified: '2026-09-27'
+  dateModified: '2026-10-12'
   author:
     '@type': Organization
     name: OpenWhistle Contributors
@@ -54,7 +54,7 @@ jsonld:
     <div class="article-wrap">
       <article>
         <header class="article-header">
-          <p class="article-tag">Datenschutz · Anhänge · v2.1</p>
+          <div class="article-tag">Datenschutz · Anhänge · v2.1</div>
           <h1 class="article-title">Metadaten entfernen, ohne das Beweisfoto zu verändern</h1>
           <p class="article-subtitle">Ein Foto vom Diensthandy verrät, wo es entstand. Eine Excel-Datei nennt den Windows-Benutzernamen. OpenWhistle entfernt beides. Bis Version 2.0 veränderte es dabei auch das Beweisstück selbst.</p>
           <div class="article-meta">
@@ -66,9 +66,9 @@ jsonld:
 
         <div class="article-body">
 
-          <p>Wer einen Missstand meldet, hängt oft einen Beleg an: ein Foto, einen Screenshot, eine Tabelle. Jede dieser Dateien trägt Daten, die niemand sieht. Ein Handyfoto enthält GPS-Koordinaten und die Seriennummer der Kamera. Eine Office-Datei enthält den Autor. Eine anonyme Meldung ist nur so anonym wie ihr Anhang.</p>
+          <p>Wer einen Missstand meldet, hängt oft einen Beleg an: ein Foto, einen Screenshot, eine Tabelle. Jede dieser Dateien trägt Daten, die niemand sieht. Ein Handyfoto enthält GPS-Koordinaten und die Seriennummer der Kamera. Eine Office-Datei enthält den Autor. Eine anonyme Meldung ist nur so anonym wie ihr Anhang. Ein Hinweisgebersystem sollte Metadaten deshalb entfernen, bevor es einen Anhang speichert.</p>
 
-          <p>OpenWhistle entfernt diese Daten deshalb beim Hochladen, bevor irgendetwas gespeichert wird. Eine Datei, die sich nicht säubern lässt, wird abgelehnt, nie ungesäubert abgelegt.</p>
+          <p>OpenWhistle tut das beim Hochladen, bevor irgendetwas gespeichert wird. Eine Datei, die sich nicht säubern lässt, wird abgelehnt, nie ungesäubert abgelegt.</p>
 
           <h2>Der alte Weg: das Bild neu malen</h2>
           <p>Bis Version 2.0 las OpenWhistle ein Bild ein und schrieb nur die Pixel in eine neue Datei. Metadaten kamen so garantiert nicht mit. Die Pixel aber auch nicht immer. Ein Bug-Bounty-Durchlauf hat nachgemessen:</p>

@@ -1,0 +1,22 @@
+{
+  "timeout_seconds": 600,
+  "test_groups": {
+    "SEO": ["tests/test_seo.py"]
+  },
+  "mutations": [
+    {
+      "id": "LANDING-LABEL-AS-P",
+      "file": "docs/en/index.html",
+      "old": "<div class=\"hero-eyebrow\">",
+      "new": "<p class=\"hero-eyebrow\">",
+      "tests": "SEO"
+    },
+    {
+      "id": "ARTICLE-LABEL-AS-P",
+      "file": "docs/en/blog/hinschg-compliance-guide.html",
+      "old": "<div class=\"article-tag\">HinSchG · Compliance · Guide</div>",
+      "new": "<p class=\"article-tag\">HinSchG · Compliance · Guide</p>",
+      "tests": "SEO"
+    }
+  ]
+}

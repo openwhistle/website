@@ -46,7 +46,7 @@ keywords are the comma-separated cell, without the trailing prose ("as different
 
 | Paper field | From |
 | --- | --- |
-| text | the HTML inside `<main>` |
+| text | the HTML inside `<main>` after its `<h1>`; WordPress analyses content without the title |
 | `title`, `description` | `<title>`, `<meta name="description">` |
 | `slug`, `permalink` | the URL |
 | `locale` | `<html lang>`: `de_DE` or `en_US`, with the matching Yoast researcher |

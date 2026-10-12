@@ -16,7 +16,7 @@
     {
       "id": "WHOLE-PAGE-AS-TEXT",
       "file": "tools/seo/seo-score.mjs",
-      "old": "    text: main[1].trim(),",
+      "old": "    text: main[1].split(/<\\/h1>/)[1]?.trim() ?? main[1].trim(), // WordPress analyses the content, not title or label",
       "new": "    text: html,",
       "tests": "SEO_TOOL"
     },
@@ -88,6 +88,13 @@
       "file": "tools/seo/seo-score.mjs",
       "old": "if (o.secondary && o.keyword) throw",
       "new": "if (false) throw",
+      "tests": "SEO_TOOL"
+    },
+    {
+      "id": "TEXT-INCLUDES-LABEL-AND-H1",
+      "file": "tools/seo/seo-score.mjs",
+      "old": "    text: main[1].split(/<\\/h1>/)[1]?.trim() ?? main[1].trim(), // WordPress analyses the content, not title or label",
+      "new": "    text: main[1].trim(),",
       "tests": "SEO_TOOL"
     }
   ]

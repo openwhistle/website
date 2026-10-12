@@ -317,7 +317,7 @@ def render_content(
         crumb = "        <span>Changelog</span>"
         title = "Changelog"
         lead = (
-            f"The unreleased changes and the newest {NEWEST} releases. "
+            f"The OpenWhistle changelog: the unreleased changes and the newest {NEWEST} releases. "
             'Before that: <a href="/en/changelog/older/">older releases</a>.'
         )
     shell_tail = (
