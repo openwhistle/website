@@ -78,6 +78,7 @@ jobs:
       - name: The documentation matches the release (unit suite)
         env:
           OW_APP_SOURCE: ${{ steps.release.outputs.dir }}
+          OW_PRIVATE_STRINGS: ${{ secrets.OW_PRIVATE_STRINGS }} # the leak guard, as in ci.yml
         run: pytest -q -p no:cacheprovider
 
       - name: Browser tests against the built site

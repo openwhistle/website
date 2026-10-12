@@ -4,6 +4,7 @@ which is about external reporting offices. A new citation of a section missing b
 here until someone has checked it against https://www.gesetze-im-internet.de/hinschg/ and
 added its shape. The README and the interface: the same guard in openwhistle/OpenWhistle."""
 
+import html
 import re
 from pathlib import Path
 
@@ -23,6 +24,7 @@ SHAPE: dict[int, tuple[int, dict[int, int]]] = {
     16: (3, {}),
     17: (2, {1: 6}),
     26: (3, {}),
+    32: (2, {}),
     40: (6, {2: 3}),
     42: (2, {}),
 }
@@ -43,21 +45,38 @@ def _files() -> list[Path]:
     return docs
 
 
-def test_every_cited_absatz_exists() -> None:
+def _wrong(name: str, text: str) -> list[str]:
+    # Unescaped: most citations are written "§&nbsp;17&nbsp;Abs.&nbsp;1", which \s never matched,
+    # so about a third of them went unchecked.
+    text = html.unescape(text)
     wrong = []
-    for path in _files():
-        text = path.read_text(encoding="utf-8")
-        for m in _CITE.finditer(text):
-            section, absatz = int(m.group(1)), int(m.group(2))
-            if _OTHER_LAW.match(text[m.end() : m.end() + 16]):
-                continue  # § 87 BetrVG, § 201 StGB, § 30 OWiG ...
-            shape = SHAPE.get(section)
-            if shape is None:
-                wrong.append(f"{path.relative_to(ROOT)}: {m.group(0)} (section not checked yet)")
-            elif absatz > shape[0]:
-                wrong.append(f"{path.relative_to(ROOT)}: {m.group(0)} (§ {section} has {shape[0]})")
-            elif m.group(3) and "Nr" in m.group(0):
-                limit = shape[1].get(absatz)
-                if limit is None or int(m.group(3)) > limit:
-                    wrong.append(f"{path.relative_to(ROOT)}: {m.group(0)} (no such Nr.)")
+    for m in _CITE.finditer(text):
+        section, absatz = int(m.group(1)), int(m.group(2))
+        if _OTHER_LAW.match(text[m.end() : m.end() + 16]):
+            continue  # § 87 BetrVG, § 201 StGB, § 30 OWiG ...
+        shape = SHAPE.get(section)
+        if shape is None:
+            wrong.append(f"{name}: {m.group(0)} (section not checked yet)")
+        elif absatz > shape[0]:
+            wrong.append(f"{name}: {m.group(0)} (§ {section} has {shape[0]})")
+        elif m.group(3) and "Nr" in m.group(0):
+            limit = shape[1].get(absatz)
+            if limit is None or int(m.group(3)) > limit:
+                wrong.append(f"{name}: {m.group(0)} (no such Nr.)")
+    return wrong
+
+
+def test_every_cited_absatz_exists() -> None:
+    wrong = [
+        line
+        for path in _files()
+        for line in _wrong(str(path.relative_to(ROOT)), path.read_text(encoding="utf-8"))
+    ]
     assert not wrong, wrong
+
+
+def test_a_citation_written_with_entities_is_checked() -> None:
+    assert _wrong("p", "§&nbsp;40&nbsp;Abs.&nbsp;9 und §&nbsp;99&nbsp;Abs.&nbsp;7") == [
+        "p: §\xa040\xa0Abs.\xa09 (§ 40 has 6)",
+        "p: §\xa099\xa0Abs.\xa07 (section not checked yet)",
+    ]

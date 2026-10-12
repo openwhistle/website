@@ -20,6 +20,17 @@ ROOT = Path(__file__).resolve().parents[1]
 TEXT_SUFFIXES = {".html", ".css", ".js", ".svg", ".xml", ".txt", ".json"}
 # A path nginx reads back exactly: absolute, no quote, no backslash, no $, no control character.
 _SAFE = re.compile(r'/[^"\\$\x00-\x1f\x7f]*')
+# An old URL is compared with $uri, which nginx has decoded and normalised: a key with %, ? or #,
+# a // or a . or .. segment can never match it.
+_KEY = re.compile(r'(?!.*//)(?!.*/\.\.?(?:/|$))/[^"\\$%?#\x00-\x1f\x7f]*')
+
+
+def _variants(old: str) -> list[str]:
+    """An old directory URL also as GitHub Pages answered it: without the slash, and with
+    index.html. The map matches exactly, so /blog was a 404 where /blog/ redirected."""
+    if old == "/" or not old.endswith("/"):
+        return [old]
+    return [old, old[:-1], old + "index.html"]
 
 
 def package(site: Path, redirects: dict[str, str], map_out: Path) -> None:
@@ -29,14 +40,18 @@ def package(site: Path, redirects: dict[str, str], map_out: Path) -> None:
             path.with_name(path.name + ".gz").write_bytes(
                 gzip.compress(path.read_bytes(), compresslevel=9, mtime=0)
             )
-    lines = []
-    for old, new in sorted(redirects.items()):
+    moved: dict[str, str] = {}
+    for old, new in redirects.items():
         if not isinstance(old, str) or not isinstance(new, str):
             raise ValueError(f"redirect keys and values must be strings, got {old!r} -> {new!r}")
-        for part in (old, new):
-            if not _SAFE.fullmatch(part):
-                raise ValueError(f"redirect {old!r} -> {new!r}: {part!r} is no plain absolute path")
-        lines.append(f'"{old}" "{new}";')
+        if not _KEY.fullmatch(old) or not _SAFE.fullmatch(new):
+            bad = new if _KEY.fullmatch(old) else old
+            raise ValueError(f"redirect {old!r} -> {new!r}: {bad!r} is no plain absolute path")
+        for variant in _variants(old):
+            moved.setdefault(variant, new)
+    for old in redirects:  # an explicit entry wins over a variant of another one
+        moved[old] = redirects[old]
+    lines = [f'"{old}" "{new}";' for old, new in sorted(moved.items())]
     map_out.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 

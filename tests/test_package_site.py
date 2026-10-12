@@ -53,8 +53,8 @@ def test_a_second_run_writes_no_gz_of_a_gz(tmp_path: Path) -> None:
 
 def test_the_map_has_one_quoted_line_per_redirect(tmp_path: Path) -> None:
     out = tmp_path / "redirects.map"
-    P.package(_site(tmp_path), {"/blog/": "/de/blog/", "/a b.html": "/en/"}, out)
-    assert out.read_text().splitlines() == ['"/a b.html" "/en/";', '"/blog/" "/de/blog/";']
+    P.package(_site(tmp_path), {"/blog.html": "/de/blog/", "/a b.html": "/en/"}, out)
+    assert out.read_text().splitlines() == ['"/a b.html" "/en/";', '"/blog.html" "/de/blog/";']
 
 
 @pytest.mark.parametrize(
@@ -65,6 +65,12 @@ def test_the_map_has_one_quoted_line_per_redirect(tmp_path: Path) -> None:
         ("relative", "old"),
         ("/x$y", "old"),
         ("/x$y", "new"),
+        # $uri is decoded and normalised: these keys could never match it.
+        ("/caf%C3%A9.html", "old"),
+        ("/old//x.html", "old"),
+        ("/a/../b.html", "old"),
+        ("/a/./b.html", "old"),
+        ("/x.html?a=1", "old"),
     ],
 )
 def test_a_path_nginx_could_misread_is_refused(tmp_path: Path, bad: str, side: str) -> None:
@@ -79,7 +85,23 @@ def test_the_real_redirects_all_reach_the_map(tmp_path: Path) -> None:
     redirects = yaml.safe_load((ROOT / "docs/_data/redirects.yml").read_text())
     out = tmp_path / "redirects.map"
     P.package(_site(tmp_path), redirects, out)
-    assert len(out.read_text().splitlines()) == len(redirects)
+    keys = {line.split('"')[1] for line in out.read_text().splitlines()}
+    assert set(redirects) <= keys
+
+
+def test_an_old_directory_also_redirects_without_its_slash_and_as_index_html(
+    tmp_path: Path,
+) -> None:
+    """GitHub Pages answered /blog and /blog/index.html as /blog/; the exact map 404ed both."""
+    out = tmp_path / "redirects.map"
+    redirects = {"/blog/": "/de/blog/", "/blog/index.html": "/elsewhere/", "/x.html": "/en/"}
+    P.package(_site(tmp_path), redirects, out)
+    assert out.read_text().splitlines() == [
+        '"/blog" "/de/blog/";',
+        '"/blog/" "/de/blog/";',
+        '"/blog/index.html" "/elsewhere/";',
+        '"/x.html" "/en/";',
+    ]
 
 
 def test_the_gz_bytes_do_not_depend_on_the_clock(tmp_path: Path) -> None:

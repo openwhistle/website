@@ -65,9 +65,9 @@ def esc(text: str) -> str:
     return html.escape(text, quote=False)
 
 
-# Inline spans, applied in this order so `code` is escaped before **bold** or
-# [links] could mangle punctuation inside it. Applied left-to-right over the
-# escaped text with non-overlapping regex substitution.
+# Inline spans. Code spans are set aside first and put back last: **bold**, *italic* and
+# [links] apply to the text between them only. The italic pass used to run over code too,
+# and `NOTIFY_EMAIL_*` and `NOTIFY_WEBHOOK_*` became an <em> across two <code> elements.
 _CODE_RE = re.compile(r"`([^`]+)`")
 _LINK_RE = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
 _BOLD_RE = re.compile(r"\*\*([^*]+)\*\*")
@@ -78,12 +78,17 @@ def render_inline(text: str) -> str:
     # Escape once, up front; every substitution below operates on text that
     # is already entity-escaped, so captured groups are reused verbatim —
     # escaping them again would turn "&lt;" into "&amp;lt;".
-    escaped = esc(text)
-    escaped = _CODE_RE.sub(lambda m: f"<code>{m.group(1)}</code>", escaped)
+    codes: list[str] = []
+
+    def aside(m: re.Match[str]) -> str:
+        codes.append(m.group(1))
+        return f"\0{len(codes) - 1}\0"  # no Markdown punctuation for the passes below to match
+
+    escaped = _CODE_RE.sub(aside, esc(text))
     escaped = _LINK_RE.sub(lambda m: f'<a href="{m.group(2)}">{m.group(1)}</a>', escaped)
     escaped = _BOLD_RE.sub(lambda m: f"<strong>{m.group(1)}</strong>", escaped)
     escaped = _ITALIC_RE.sub(lambda m: f"<em>{m.group(1)}</em>", escaped)
-    return escaped
+    return re.sub("\0(\\d+)\0", lambda m: f"<code>{codes[int(m.group(1))]}</code>", escaped)
 
 
 class _Item:
@@ -190,7 +195,7 @@ SHELL_TAIL = """        </nav>
           <a href="/en/">&#8592; Landing Page</a>
           <a href="/en/docs/">Documentation</a>
           <a href="/en/roadmap/">Roadmap</a>
-          <a href="https://github.com/openwhistle/OpenWhistle/blob/main/CHANGELOG.md" rel="noopener noreferrer" target="_blank">CHANGELOG.md source</a>
+          <a href="{source}" rel="noopener noreferrer" target="_blank">CHANGELOG.md source</a>
           <a href="https://github.com/openwhistle/OpenWhistle" rel="noopener noreferrer" target="_blank">GitHub Repository</a>
         </nav>
       </div>
@@ -209,7 +214,7 @@ SHELL_TAIL = """        </nav>
       <h1>{title}</h1>
       <p class="docs-lead">
         {lead} Rendered from
-        <a href="https://github.com/openwhistle/OpenWhistle/blob/main/CHANGELOG.md" rel="noopener noreferrer" target="_blank">CHANGELOG.md</a>,
+        <a href="{source}" rel="noopener noreferrer" target="_blank">CHANGELOG.md</a>,
         the file GitHub and the release tooling read.
       </p>
 
@@ -228,7 +233,7 @@ NEWEST = 5
 
 
 def render_content(
-    versions: list[Version], link_defs: dict[str, str], *, older: bool = False
+    versions: list[Version], link_defs: dict[str, str], *, tag: str, older: bool = False
 ) -> str:
     """The page body between the site navigation and the footer; the layout adds the rest.
 
@@ -281,6 +286,10 @@ def render_content(
             'Before that: <a href="/en/changelog/older/">older releases</a>.'
         )
     shell_tail = (
-        SHELL_TAIL.replace("{title}", title).replace("{lead}", lead).replace("{crumb}", crumb)
+        SHELL_TAIL.replace("{title}", title)
+        .replace("{lead}", lead)
+        .replace("{crumb}", crumb)
+        # The release the page renders, not main: main also holds what is not released yet.
+        .replace("{source}", f"https://github.com/openwhistle/OpenWhistle/blob/{tag}/CHANGELOG.md")
     )
     return CONTENT_HEAD + nav_links + "\n" + shell_tail + "\n".join(sections) + CONTENT_FOOT

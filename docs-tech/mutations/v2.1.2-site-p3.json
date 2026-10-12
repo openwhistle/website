@@ -455,8 +455,8 @@
   {
    "id": "HIGHLIGHT-URIERROR",
    "file": "docs/assets/js/search.js",
-   "old": "  try {\n    if (hash) terms = decodeURIComponent(hash[1]).split(/\\s+/).filter(Boolean);\n  } catch (e) {}",
-   "new": "  if (hash) terms = decodeURIComponent(hash[1]).split(/\\s+/).filter(Boolean);",
+   "old": "    try {\n      if (hash) terms = decodeURIComponent(hash[1]).split(/\\s+/).filter(Boolean);\n    } catch (e) {}",
+   "new": "    if (hash) terms = decodeURIComponent(hash[1]).split(/\\s+/).filter(Boolean);",
    "tests": "SEARCH_E2E"
   },
   {

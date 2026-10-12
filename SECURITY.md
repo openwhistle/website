@@ -1,5 +1,10 @@
 # Security Policy
 
+This repository builds openwhistle.net and its image `ghcr.io/openwhistle/website`; the policy below is
+OpenWhistle's. Report a weakness of the website or its image the same way, through OpenWhistle's private
+vulnerability reporting (this repository has none of its own). For the website, only its `main` branch, as
+deployed, is supported.
+
 ## Supported versions
 
 Security fixes are released for the latest published version. Always run the most

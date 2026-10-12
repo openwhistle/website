@@ -76,14 +76,26 @@
       : n + (n === 1 ? ' result' : ' results');
   });
 
-  var hash = location.hash.match(/^#highlight=(.+)/);
-  var terms = [];
-  // One mark per word, as Pagefind does; a malformed fragment (#highlight=%E0) marks nothing.
-  try {
-    if (hash) terms = decodeURIComponent(hash[1]).split(/\s+/).filter(Boolean);
-  } catch (e) {}
-  if (terms.length) {
+  // A result on the page being read changes only the fragment: no reload, so mark on
+  // hashchange too, and close the dialog that would otherwise stay open over the page.
+  list.addEventListener('click', function (e) {
+    if (e.target.closest('a')) dialog.close();
+  });
+  function highlight() {
+    var hash = location.hash.match(/^#highlight=(.+)/);
+    var terms = [];
+    // One mark per word, as Pagefind does; a malformed fragment (#highlight=%E0) marks nothing.
+    try {
+      if (hash) terms = decodeURIComponent(hash[1]).split(/\s+/).filter(Boolean);
+    } catch (e) {}
+    if (!terms.length) return;
     import('/pagefind/pagefind-highlight.js').then(function (m) {
+      // The previous search's marks go first: only the term just searched is marked.
+      document.querySelectorAll('mark.pagefind-highlight').forEach(function (old) {
+        var parent = old.parentNode;
+        old.replaceWith.apply(old, old.childNodes);
+        parent.normalize();
+      });
       // Pagefind reads its terms from location.search only; ours come from the fragment.
       // addStyles: false, as its inline <style> breaks the CSP; docs.css colours the marks.
       // Relies on Pagefind 1.5.2 internals: the constructor calls getHighlightParams()
@@ -96,4 +108,6 @@
       if (first) first.scrollIntoView({ block: 'center' });
     });
   }
+  highlight();
+  window.addEventListener('hashchange', highlight);
 })();

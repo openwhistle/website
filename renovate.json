@@ -23,6 +23,7 @@
     "jp1337"
   ],
   "rebaseWhen": "behind-base-branch",
+  "platformAutomerge": false,
   "lockFileMaintenance": {
     "enabled": true,
     "schedule": [
@@ -44,7 +45,7 @@
   },
   "packageRules": [
     {
-      "description": "Patch, pin and digest updates merge themselves once the required checks pass (main is protected). Everything else waits for a person.",
+      "description": "Patch, pin and digest updates merge themselves once every check on the pull request passes: Renovate merges, not GitHub's auto-merge, which waits for the required checks only, and the path-filtered website container test cannot be one. Everything else waits for a person.",
       "matchUpdateTypes": [
         "patch",
         "pin",

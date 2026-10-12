@@ -1,10 +1,24 @@
 // Theme toggle — detection already handled by inline head script
 var toggle = document.getElementById('theme-toggle');
+var barColours = { light: '#ffffff', dark: '#08080a' };  // head.html's theme-color metas
+// The button says whether dark mode is on (aria-pressed); the browser bar takes the theme in
+// use. Both used to stay as the page loaded: a light choice on a dark system kept a dark bar.
+function showTheme(theme) {
+  if (toggle) toggle.setAttribute('aria-pressed', String(theme === 'dark'));
+  document.querySelectorAll('meta[name="theme-color"]').forEach(function(m) {
+    m.setAttribute('content', barColours[theme]);
+  });
+}
+function setTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  showTheme(theme);
+}
+showTheme(document.documentElement.getAttribute('data-theme'));
 if (toggle) {
   toggle.addEventListener('click', function() {
     var current = document.documentElement.getAttribute('data-theme');
     var next = current === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', next);
+    setTheme(next);
     try { localStorage.setItem('ow-theme', next); } catch(e) {}
   });
 }
@@ -14,7 +28,7 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', fun
   var stored;
   try { stored = localStorage.getItem('ow-theme'); } catch(e2) {}
   if (!stored) {
-    document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+    setTheme(e.matches ? 'dark' : 'light');
   }
 });
 

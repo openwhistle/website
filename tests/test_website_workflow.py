@@ -1,4 +1,8 @@
-"""website-image.yml publishes only what its own test job passed, only from main, signed."""
+"""website-image.yml publishes only after its own test job passed, only from main, signed.
+
+The publish job builds the image again, from the same commit and the release the test job
+pinned: the tests and Trivy ran on that sibling build, not on the pushed bytes (security.txt's
+Expires, written at build time, differs by the minutes between the two)."""
 
 from pathlib import Path
 

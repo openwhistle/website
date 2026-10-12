@@ -174,7 +174,9 @@ def _load_script(name: str) -> ModuleType:
 def _changelog(src: Path, *, older: bool = False) -> str:
     changelog = _load_script("render_changelog")
     source = release_source.read("CHANGELOG.md")
-    return str(changelog.render_content(*changelog.parse(source), older=older))
+    return str(
+        changelog.render_content(*changelog.parse(source), tag=release_source.tag(), older=older)
+    )
 
 
 def _changelog_older(src: Path) -> str:
@@ -401,10 +403,17 @@ def nav_context(
                 or next(iter(group.values()))
             )
             fragment = entry.get("fragment")
-            current = not fragment and (
-                page.url == target.url
-                or (target.url not in roots and page.url.startswith(target.url))
-            )
+            # "page" for the page itself, "true" for the section it lies in: the section's link
+            # used to say "page" too, so /en/docs/install/ had two links to two pages that both
+            # claimed to be the current page.
+            current = (
+                not fragment
+                and (
+                    "page"
+                    if page.url == target.url
+                    else target.url not in roots and page.url.startswith(target.url) and "true"
+                )
+            ) or None
             out.append(
                 {
                     "label": lookup(t, entry["label"]),
@@ -802,7 +811,13 @@ def write_sitemap(out: Path, src: Path, pages: list[Page], site: dict[str, Any])
         if page.meta.get("noindex"):
             continue
         generator = page.meta.get("generated")
-        date = GENERATORS[generator][1].lastmod() if generator else lastmod(src / page.source)
+        if generator:
+            date = GENERATORS[generator][1].lastmod()
+        else:
+            date = lastmod(src / page.source)
+            # A settings table comes from _data/config.yml (fill_config): its edits date the page.
+            if _CONFIG_MARKER.search((src / page.source).read_text(encoding="utf-8")):
+                date = max(date, lastmod(src / "_data" / "config.yml"))
         lines = [f"    <loc>{html.escape(site['base_url'] + page.url)}</loc>"]
         lines += [
             f'    <xhtml:link rel="alternate" hreflang="{lang}" href="{html.escape(href)}"/>'

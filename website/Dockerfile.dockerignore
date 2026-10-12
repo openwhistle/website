@@ -9,3 +9,7 @@ node_modules
 .ruff_cache
 htmlcov
 test-results
+.serena
+.coverage
+coverage.json
+coverage.xml

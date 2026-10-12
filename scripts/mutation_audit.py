@@ -27,12 +27,44 @@ def inside_root(name: str) -> bool:
     return (ROOT / name).resolve().is_relative_to(ROOT)
 
 
+def _pytest(args: list[str], limit: int) -> subprocess.CompletedProcess[str]:
+    # A fresh bytecode cache per run: Python trusts a .pyc whose source has the same size
+    # and mtime second, so a same-length mutation written within a second of the last one
+    # ran the last one's code (out-inside-src was GREEN that way).
+    pycache = tempfile.mkdtemp(prefix="mutation-pyc-")
+    try:
+        return subprocess.run(  # noqa: S603 — pytest on test paths from a repo file
+            [
+                sys.executable,
+                "-m",
+                "pytest",
+                "-x",
+                "-q",
+                "--no-cov",
+                "-p",
+                "no:cacheprovider",
+                *args,
+            ],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=limit,
+            env={**os.environ, "PYTHONPYCACHEPREFIX": pycache},
+        )
+    finally:
+        shutil.rmtree(pycache, ignore_errors=True)
+
+
 def main() -> int:
     spec = json.loads(Path(sys.argv[1]).read_text())
     only = set(sys.argv[2:])
     # A mutation that removes a timeout hangs its test; a spec can bound the wait.
     limit = spec.get("timeout_seconds", 900)
     green = 0
+    # Exit code of each test group on the unmutated tree. Any exit code but 0 used to count
+    # as RED, so a group whose tests were renamed away (pytest exit 4 or 5) or that failed
+    # anyway "caught" every mutation pointed at it.
+    baseline: dict[str, int] = {}
     for m in spec["mutations"]:
         if only and m["id"] not in only:
             continue
@@ -55,40 +87,25 @@ def main() -> int:
             print(f"{m['id']:28} STALE  snippet matches {original.count(m['old'])}x in {m['file']}")
             green += 1
             continue
+        group = m["tests"]
+        if group not in baseline:
+            baseline[group] = _pytest(spec["test_groups"][group], limit).returncode
+        if baseline[group]:
+            print(f"{m['id']:28} STALE  group {group} exits {baseline[group]} unmutated")
+            green += 1
+            continue
         made = []  # directories this mutation creates; removed again with the file
         if original is None:
             made = [p for p in reversed(path.parents) if not p.exists() and p != ROOT]
             path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(m["create"] if original is None else original.replace(m["old"], m["new"]))
-        # A fresh bytecode cache per run: Python trusts a .pyc whose source has the same size
-        # and mtime second, so a same-length mutation written within a second of the last one
-        # ran the last one's code (out-inside-src was GREEN that way).
-        pycache = tempfile.mkdtemp(prefix="mutation-pyc-")
         try:
-            run = subprocess.run(  # noqa: S603 — pytest on test paths from a repo file
-                [
-                    sys.executable,
-                    "-m",
-                    "pytest",
-                    "-x",
-                    "-q",
-                    "--no-cov",
-                    "-p",
-                    "no:cacheprovider",
-                    *spec["test_groups"][m["tests"]],
-                ],
-                cwd=ROOT,
-                capture_output=True,
-                text=True,
-                timeout=limit,
-                env={**os.environ, "PYTHONPYCACHEPREFIX": pycache},
-            )
+            run = _pytest(spec["test_groups"][group], limit)
         except subprocess.TimeoutExpired:
             # A mutation that hangs the tests is caught: CI would time out too.
             print(f"{m['id']:28} RED    TIMEOUT after {limit} s", flush=True)
             continue
         finally:
-            shutil.rmtree(pycache, ignore_errors=True)
             if original is None:
                 path.unlink()
                 for directory in reversed(made):

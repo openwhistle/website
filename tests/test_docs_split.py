@@ -93,8 +93,12 @@ def _headings(html: str) -> list[str]:
     ]
 
 
-def test_every_old_id_is_mapped() -> None:
-    assert sorted(ANCHORS) == sorted(OLD_IDS)
+def test_every_old_id_is_mapped_unless_the_page_still_has_it() -> None:
+    """The script on /en/docs/ calls location.replace for a mapped id: mapping an id the page
+    still carries (#overview, its h1) reloaded the page and dropped the fragment."""
+    kept = set(re.findall(r'\bid="([^"]+)"', page("/en/docs/")))
+    assert not kept & set(ANCHORS), kept & set(ANCHORS)
+    assert sorted(ANCHORS) == sorted(set(OLD_IDS) - kept)
 
 
 def test_every_mapped_target_exists() -> None:
