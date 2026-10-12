@@ -6,8 +6,9 @@
   "mutations": [
     {
       "id": "SCREENS-FROM-AN-OLDER-RELEASE",
-      "file": "docs/img/screens/_release",
-      "create": "2.2.0\n",
+      "file": "tests/test_screenshots.py",
+      "old": "    marker = MARKER.read_text(encoding=\"utf-8\") if MARKER.exists() else None\n",
+      "new": "    marker = \"0.0.1\\n\"\n",
       "tests": "SCREENS"
     },
     {
