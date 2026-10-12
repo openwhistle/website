@@ -89,6 +89,38 @@ openwhistle.pro, `Artaeon/openwhistle`). Maintainer actions, prepared, not run:
 | `openwhistle-dev/OpenWhistle` | a separate, unrelated repository (not a fork, no admin rights; checked 2026-09-27): no action |
 | `zbridges-valid8/OpenWhistle`, same-name products | a fork, and products that are not the maintainer's: no action; the homepage field and backlinks are the answer |
 
+## Measure a page: seo-score
+
+`tools/seo/seo-score.mjs` runs Yoast's SEO analysis per page and keyword (on-page only).
+Install: `npm --prefix tools/seo ci` (add `--omit=optional` to skip Lighthouse; pins in
+[`tools/seo/package.json`](../tools/seo/package.json)).
+
+| Call, after `npm --prefix tools/seo run score` | Does |
+| --- | --- |
+| *(nothing)* | every row of the keyword map: page and primary keyword, live site |
+| `-- --secondary` | adds the secondary keywords of each row |
+| `-- --url /de/ --keyword "…"` | one ad-hoc pair |
+| `-- --keyword "…"` | that keyword against every page of `sitemap.xml`, best page first |
+| `-- --base http://127.0.0.1:8901` | the local build (`local-review.md`) instead of the live site |
+| `-- --json before.json` | saves the run |
+| `-- --compare before.json` | prints the change per row against a saved run |
+| `-- --lighthouse` | adds Lighthouse's SEO score; needs Chromium, `CHROME_PATH` names it (Playwright's works) |
+
+Limits:
+
+- German matches exact word forms only; word-form data is Yoast Premium.
+- Keyphrase in slug is not scored: URLs stay stable, a changed URL costs ranking even with a redirect.
+- Title width is estimated at 9 px per character.
+- Scores are advice, not a CI gate.
+- A keyword-map row whose Page cell is not one backticked path is skipped and named.
+
+The site walk:
+
+1. Run against live, save `before.json`.
+2. Per page, worst first: change title, first paragraph, one H2, alt text; check with `--base` on the local build.
+3. Merge, release; run live with `--compare before.json`.
+4. Four weeks later: Search Console positions against the keyword map.
+
 ## The head contract
 
 `tests/test_seo.py` holds every `docs/**/*.html` page, found by glob, so a new page is covered the day it lands.
