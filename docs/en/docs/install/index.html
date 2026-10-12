@@ -39,8 +39,8 @@ js:
 <span class="t-comment"># The production stack (TLS, nginx); every docker compose command below uses it:</span>
 <span class="t-str">COMPOSE_FILE</span>=docker-compose.prod.yml
 
-<span class="t-comment"># Minimum required values. The production Redis requires REDIS_PASSWORD,</span>
-<span class="t-comment"># so it goes into REDIS_URL too, as POSTGRES_PASSWORD goes into DATABASE_URL:</span>
+<span class="t-comment"># Minimum required values. The production stack refuses to start without POSTGRES_PASSWORD and REDIS_PASSWORD;</span>
+<span class="t-comment"># the Redis one goes into REDIS_URL too, as POSTGRES_PASSWORD goes into DATABASE_URL:</span>
 <span class="t-comment"># openssl rand -hex 32 — a new value for each key:</span>
 <span class="t-str">SECRET_KEY</span>=&lt;64 hex characters&gt;
 <span class="t-str">ENCRYPTION_KEY</span>=&lt;64 hex characters&gt;

@@ -25,9 +25,8 @@ js:
               <div class="security-layer-title">nginx — Strip the client-IP headers</div>
               <div class="security-layer-desc">
                 <code>X-Forwarded-For</code>, <code>X-Real-IP</code>, <code>Forwarded</code>,
-                <code>X-Client-IP</code>, <code>X-Cluster-Client-IP</code>, <code>True-Client-IP</code>
-                and <code>CF-Connecting-IP</code> are cleared before a request reaches the app, even
-                when a CDN added them. <code>access_log off</code>: request URIs never reach the disk.
+                <code>CF-Connecting-IP</code> and 19 more CDN and proxy variants are cleared before a
+                request reaches the app, even when a CDN added them. The app strips the same list. <code>access_log off</code>: request URIs never reach the disk.
                 A reverse proxy of your own in front must not log them either.
               </div>
             </div>

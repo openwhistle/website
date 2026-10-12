@@ -21,7 +21,7 @@ js:
             <tr><td>Size</td><td>10 MB per attachment, before and after cleaning</td></tr>
             <tr><td>GIF size</td><td>50 megapixels, all frames together</td></tr>
             <tr><td>Number</td><td>5 per report</td></tr>
-            <tr><td>Allowed</td><td>PDF, JPEG, PNG, GIF, WebP, TXT, CSV, DOCX, XLSX, checked by both MIME type and file extension</td></tr>
+            <tr><td>Allowed</td><td>PDF, JPEG, PNG, GIF, WebP, TXT, CSV, DOCX, XLSX, checked by file extension and, except TXT and CSV, by the file's first bytes. The browser's declared type is ignored</td></tr>
             <tr><td>Refused</td><td>SVG, executables, archives and every other type. Legacy <code>.doc</code>/<code>.xls</code> too: their author cannot be removed, so save them as <code>.docx</code>/<code>.xlsx</code> and attach again</td></tr>
           </tbody>
         </table>

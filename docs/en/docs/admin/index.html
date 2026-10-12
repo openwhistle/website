@@ -33,8 +33,8 @@ js:
 
         <h2 id="dashboard-overview">Dashboard overview</h2>
         <figure class="doc-shot">
-          <picture><source media="(max-width: 600px)" srcset="/img/screens/admin-dashboard-light-m.webp"><img class="shot-light" src="/img/screens/admin-dashboard-light.png" alt="The reports dashboard: status and location filters, a search field, and the report table with case number, category, status, submitted day, assignee, 7-day SLA and 3-month SLA." width="1440" height="1009" loading="lazy"></picture>
-          <picture><source media="(max-width: 600px)" srcset="/img/screens/admin-dashboard-dark-m.webp"><img class="shot-dark" src="/img/screens/admin-dashboard-dark.png" alt="The reports dashboard: status and location filters, a search field, and the report table with case number, category, status, submitted day, assignee, 7-day SLA and 3-month SLA." width="1440" height="1009" loading="lazy"></picture>
+          <picture><source media="(max-width: 600px)" srcset="/img/screens/admin-dashboard-light-m.webp"><img class="shot-light" src="/img/screens/admin-dashboard-light.png" alt="The reports dashboard: status and location filters, a search field, and the report table with case number, category, status, submitted day, assignee, 7-day SLA and 3-month SLA." width="1440" height="1105" loading="lazy"></picture>
+          <picture><source media="(max-width: 600px)" srcset="/img/screens/admin-dashboard-dark-m.webp"><img class="shot-dark" src="/img/screens/admin-dashboard-dark.png" alt="The reports dashboard: status and location filters, a search field, and the report table with case number, category, status, submitted day, assignee, 7-day SLA and 3-month SLA." width="1440" height="1105" loading="lazy"></picture>
         </figure>
         <p>
           <code>/admin/dashboard</code> lists every report you may see, with sortable columns,
@@ -93,12 +93,12 @@ js:
           <li>A word search decrypts the description and messages of the reports you may see, in memory, for that request only. Nothing searchable is ever stored. It needs at least 3 characters, and it reads the 5,000 newest reports of the current view (status and location filter): an older report is not found by its words.</li>
           <li>The confidential name is never matched: a hit would confirm an identity guess without an audited reveal.</li>
           <li>The search is sent as a form (POST), so the term never appears in a URL, the browser history or a proxy's access log. Paging keeps it that way.</li>
-          <li>Every word search is audited (<code>report.content_searched</code>): the term, stored encrypted, and the number of matching reports.</li>
+          <li>Every word search is audited (<code>report.content_searched</code>): the term, stored encrypted, and the number of reports whose text matched (a case found by its number is not counted). With multi-tenancy, each organisation's entry counts its own hits.</li>
         </ul>
         <p>Click a report to open its case page, <code>/admin/reports/{report_id}</code>:</p>
         <figure class="doc-shot">
-          <picture><source media="(max-width: 600px)" srcset="/img/screens/admin-report-light-m.webp"><img class="shot-light" src="/img/screens/admin-report-light.png" alt="A case page: the report, the communication thread, a reply box and internal notes; beside them the submission details and the actions acknowledge, assign, update status, export PDF and delete." width="1440" height="1888" loading="lazy"></picture>
-          <picture><source media="(max-width: 600px)" srcset="/img/screens/admin-report-dark-m.webp"><img class="shot-dark" src="/img/screens/admin-report-dark.png" alt="A case page: the report, the communication thread, a reply box and internal notes; beside them the submission details and the actions acknowledge, assign, update status, export PDF and delete." width="1440" height="1888" loading="lazy"></picture>
+          <picture><source media="(max-width: 600px)" srcset="/img/screens/admin-report-light-m.webp"><img class="shot-light" src="/img/screens/admin-report-light.png" alt="A case page: the report, the communication thread, a reply box and internal notes; beside them the submission details and the actions acknowledge, assign, update status, export PDF and delete." width="1440" height="1829" loading="lazy"></picture>
+          <picture><source media="(max-width: 600px)" srcset="/img/screens/admin-report-dark-m.webp"><img class="shot-dark" src="/img/screens/admin-report-dark.png" alt="A case page: the report, the communication thread, a reply box and internal notes; beside them the submission details and the actions acknowledge, assign, update status, export PDF and delete." width="1440" height="1829" loading="lazy"></picture>
         </figure>
         <ul>
           <li>Read the report and its submission mode (anonymous / confidential).</li>
@@ -134,7 +134,9 @@ js:
           <li><code>/admin/audit-log</code>: every admin action, filterable, shown as readable labels. No page edits or deletes an entry.</li>
           <li>Deleting a report deletes its entries with it. One entry stays, with the case number: <em>Deletion confirmed</em> (who requested, who confirmed) or <code>report.auto_deleted</code>.</li>
           <li>CSV export at any time: the machine action codes plus a label column; the detail column is a JSON object. It holds every row the page's filters select, and taking it is itself recorded.</li>
-          <li>Downloading an attachment is recorded, as opening the case and exporting its PDF are.</li>
+          <li>Downloading an attachment is recorded, as opening the case is. A PDF export is <code>report.exported</code>, not a case view.</li>
+          <li>Every sign-in is <code>auth.login</code>. Dismissing the address-header warning is <code>system.ip_warning_dismissed</code>.</li>
+          <li>The case filter takes a case number (<code>OW-2026-00001</code>). An unknown one lists nothing.</li>
           <li>Case views (<em>Report opened</em>) are hidden in the log and the export unless you tick <em>Show case views</em> (<code>?views=1</code>).</li>
           <li>With multi-tenancy on, each organisation sees only its own entries. Instance-wide security events, such as a password-spraying alert, go to superadmins only.</li>
         </ul>
@@ -155,12 +157,12 @@ js:
 
         <h2 id="system-updates">System &amp; updates</h2>
         <figure class="doc-shot">
-          <picture><source media="(max-width: 600px)" srcset="/img/screens/admin-system-light-m.webp"><img class="shot-light" src="/img/screens/admin-system-light.png" alt="System and updates: installed version and update status, the file integrity check, the installation count card and the two settings behind them." width="1440" height="1784" loading="lazy"></picture>
-          <picture><source media="(max-width: 600px)" srcset="/img/screens/admin-system-dark-m.webp"><img class="shot-dark" src="/img/screens/admin-system-dark.png" alt="System and updates: installed version and update status, the file integrity check, the installation count card and the two settings behind them." width="1440" height="1784" loading="lazy"></picture>
+          <picture><source media="(max-width: 600px)" srcset="/img/screens/admin-system-light-m.webp"><img class="shot-light" src="/img/screens/admin-system-light.png" alt="System and updates: installed version and update status, the file integrity check, the installation count card and the two settings behind them." width="1440" height="1867" loading="lazy"></picture>
+          <picture><source media="(max-width: 600px)" srcset="/img/screens/admin-system-dark-m.webp"><img class="shot-dark" src="/img/screens/admin-system-dark.png" alt="System and updates: installed version and update status, the file integrity check, the installation count card and the two settings behind them." width="1440" height="1867" loading="lazy"></picture>
         </figure>
         <ul>
-          <li><code>/admin/system</code> shows the installed version. With <code>UPDATE_CHECK_ENABLED=true</code> (opt-in, off by default) it also says whether GitHub has a newer release: checked once a day, cached, no instance data sent.</li>
-          <li><strong>Installation count</strong>: whether this installation is counted, the exact request, its identifier and the last successful report. An admin switches it (one audit entry per change) and resets the identifier; see <a href="/en/docs/install-count/">Counting installations</a>.</li>
+          <li><code>/admin/system</code> (with multi-tenancy: superadmin only) shows the installed version. With <code>UPDATE_CHECK_ENABLED=true</code> (opt-in, off by default) it also says whether GitHub has a newer release: checked once a day, cached, no instance data sent.</li>
+          <li><strong>Installation count</strong>: whether this installation is counted, the exact request, its identifier and the last successful report. While it is off and the switch decides, the dashboard asks each admin who may switch it, once per release. An admin switches it (one audit entry per change) and resets the identifier; see <a href="/en/docs/install-count/">Counting installations</a>.</li>
           <li><strong>File integrity</strong>: the application files against a SHA-256 manifest baked into the image at build time. It reports missing, modified or unexpected files, which catches accidental changes, incomplete deployments and corruption. <em>Re-check now</em> refreshes it.</li>
         </ul>
         <p>

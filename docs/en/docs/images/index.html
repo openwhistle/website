@@ -83,7 +83,12 @@ js:
           <div class="code-block-header">
             <span class="code-block-lang">bash</span>
           </div>
-          <pre><code><span class="t-prompt">$ </span><span class="t-cmd">cosign verify ghcr.io/openwhistle/openwhistle:latest \
-    --certificate-identity-regexp="https://github.com/openwhistle/OpenWhistle" \
+          <pre><code><span class="t-prompt">$ </span><span class="t-cmd">cosign verify ghcr.io/openwhistle/openwhistle:X.Y.Z \
+    --certificate-identity="https://github.com/openwhistle/OpenWhistle/.github/workflows/docker-publish.yml@refs/tags/vX.Y.Z" \
     --certificate-oidc-issuer="https://token.actions.githubusercontent.com"</span></code></pre>
         </div>
+        <p>
+          The identity is exact: the publish workflow at that release tag. A prefix match would also
+          accept an <code>:edge</code> image built from <code>main</code>. Every image is scanned with
+          grype before it is tagged; a fixable vulnerability fails the build.
+        </p>
