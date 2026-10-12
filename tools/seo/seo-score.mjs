@@ -1,6 +1,6 @@
 // Yoast's SEO analysis per page and keyword (spec: docs-tech/specs/2026-10-12-seo-score-design.md).
 import { createRequire } from "node:module";
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, realpathSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 
@@ -97,6 +97,25 @@ async function sitemapPages(base) {
   return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname);
 }
 
+export function compare(before, after) {
+  const old = new Map(before.map((r) => [`${r.page}\0${r.keyword}`, r.score]));
+  return after.map((r) => ({
+    page: r.page, keyword: r.keyword, before: old.get(`${r.page}\0${r.keyword}`) ?? null, after: r.score,
+  }));
+}
+
+async function lighthouseSeo(url) {
+  const { default: lighthouse } = await import("lighthouse"); // optional dependency
+  const chromeLauncher = await import("chrome-launcher");
+  const chrome = await chromeLauncher.launch({ chromeFlags: ["--headless=new"] });
+  try {
+    const r = await lighthouse(url, { port: chrome.port, onlyCategories: ["seo"], logLevel: "error" });
+    return Math.round(r.lhr.categories.seo.score * 100);
+  } finally {
+    await chrome.kill();
+  }
+}
+
 function print(results, skipped) {
   for (const r of results) {
     console.log(`${String(r.score).padStart(3)}  ${r.page}  "${r.keyword}"`);
@@ -135,11 +154,21 @@ export async function main(argv) {
   const results = await run(pairs, o.base);
   if (o.keyword && !o.url) results.sort((a, b) => b.score - a.score);
   print(results, skipped);
+  if (o.compare) {
+    for (const c of compare(JSON.parse(readFileSync(o.compare, "utf8")), results)) {
+      const delta = c.before === null ? "new" : `${c.after - c.before >= 0 ? "+" : ""}${c.after - c.before}`;
+      console.log(`${String(c.after).padStart(3)} ${delta.padStart(4)}  ${c.page}  "${c.keyword}"`);
+    }
+  }
+  if (o.lighthouse) {
+    for (const page of [...new Set(results.map((r) => r.page))])
+      console.log(`Lighthouse SEO ${String(await lighthouseSeo(new URL(page, o.base).href)).padStart(3)}  ${page}`);
+  }
   if (o.json) writeFileSync(o.json, JSON.stringify(results, null, 1));
   return 0;
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)) {
   main(process.argv.slice(2)).then(
     (code) => process.exit(code),
     (err) => { console.error(`error: ${err.message}`); process.exit(1); },

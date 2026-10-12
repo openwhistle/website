@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { createServer } from "node:http";
-import { main, paperFields, parseKeywordMap, scorePage } from "./seo-score.mjs";
+import { compare, main, paperFields, parseKeywordMap, scorePage } from "./seo-score.mjs";
 
 const html = readFileSync(new URL("./fixtures/page.html", import.meta.url), "utf8");
 const url = "https://openwhistle.net/de/";
@@ -67,15 +67,26 @@ test("a page that is not 200 is an error naming its URL", async () => {
     if (req.url === "/sitemap.xml") {
       res.end("<urlset><url><loc>https://openwhistle.net/de/</loc></url></urlset>"); return;
     }
+    if (req.url === "/moved/") { res.statusCode = 301; res.setHeader("Location", "/de/"); res.end(); return; }
     res.statusCode = 404; res.end();
   });
   await new Promise((r) => server.listen(0, "127.0.0.1", r));
   const base = `http://127.0.0.1:${server.address().port}`;
   try {
     await assert.rejects(main(["--base", base, "--url", "/gone/", "--keyword", "x"]), /\/gone\/ answered 404/);
+    await assert.rejects(main(["--base", base, "--url", "/moved/", "--keyword", "x"]), /\/moved\/ answered 301/);
     // --keyword alone: sitemap URLs are rewritten onto --base, never fetched live
     assert.equal(await main(["--base", base, "--keyword", "Hinweisgebersystem Software"]), 0);
   } finally {
     server.close();
   }
+});
+
+test("compare gives the change per row; a row new since the old run has no before", () => {
+  const before = [{ page: "/de/", keyword: "a", score: 70 }];
+  const after = [{ page: "/de/", keyword: "a", score: 83 }, { page: "/en/", keyword: "b", score: 60 }];
+  assert.deepEqual(compare(before, after), [
+    { page: "/de/", keyword: "a", before: 70, after: 83 },
+    { page: "/en/", keyword: "b", before: null, after: 60 },
+  ]);
 });
