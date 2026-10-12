@@ -1,0 +1,19 @@
+{
+  "timeout_seconds": 600,
+  "test_groups": { "SEO_TOOL": ["tests/test_seo_tool.py"] },
+  "mutations": [
+    { "id": "SLUG-SCORED", "file": "tools/seo/seo-score.mjs",
+      "old": "const IGNORED = [\"slugKeyword\"];", "new": "const IGNORED = [];", "tests": "SEO_TOOL" },
+    { "id": "WHOLE-PAGE-AS-TEXT", "file": "tools/seo/seo-score.mjs",
+      "old": "    text: main[1].trim(),", "new": "    text: html,", "tests": "SEO_TOOL" },
+    { "id": "PROSE-AS-KEYWORD", "file": "tools/seo/seo-score.mjs",
+      "old": ".replace(/\\bas differentiator\\b.*$/, \"\")", "new": "", "tests": "SEO_TOOL" },
+    { "id": "BAD-ROW-GUESSED", "file": "tools/seo/seo-score.mjs",
+      "old": "if (!path) { skipped.push(page); continue; }", "new": "if (!path) { continue; }",
+      "tests": "SEO_TOOL" },
+    { "id": "REDIRECT-SCORED", "file": "tools/seo/seo-score.mjs",
+      "old": "if (res.status !== 200)", "new": "if (res.status >= 400)", "tests": "SEO_TOOL" },
+    { "id": "COMPARE-NEW-AS-ZERO", "file": "tools/seo/seo-score.mjs",
+      "old": "?? null, after", "new": "?? 0, after", "tests": "SEO_TOOL" }
+  ]
+}
