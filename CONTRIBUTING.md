@@ -78,8 +78,9 @@ abbreviations (`z. B.`, `d. h.`, `bzw.`, `Abs.`) and dates (`2. Juli`) do not en
 Rules and roles: `docs-tech/diagrams.md`.
 
 **Screenshots are documentation.** They live in `docs/img/screens/<name>-light.png` and `-dark.png`. OpenWhistle's
-`scripts/take_screenshots.py` takes them and writes them into a checkout of this repository; they are re-taken in
-the change that alters the interface.
+`scripts/take_screenshots.py` takes them and writes them into a checkout of this repository, with the app version
+it ran against in `docs/img/screens/_release`. They are re-taken for every release: `tests/test_screenshots.py`
+fails while `_release` names an older one.
 
 ### Technical pages: the rule and the incident behind it
 

@@ -1,0 +1,28 @@
+{
+  "timeout_seconds": 300,
+  "test_groups": {
+    "SCREENS": ["tests/test_screenshots.py"]
+  },
+  "mutations": [
+    {
+      "id": "SCREENS-FROM-AN-OLDER-RELEASE",
+      "file": "docs/img/screens/_release",
+      "create": "2.2.0\n",
+      "tests": "SCREENS"
+    },
+    {
+      "id": "SCREENS-UNMARKED-FOREVER",
+      "file": "tests/test_screenshots.py",
+      "old": "        if tuple(int(p) for p in version.split(\".\")) <= _LAST_UNMARKED:\n",
+      "new": "        if True:\n",
+      "tests": "SCREENS"
+    },
+    {
+      "id": "SCREENS-MARKER-NOT-COMPARED",
+      "file": "tests/test_screenshots.py",
+      "old": "    if marker.strip() != version:\n",
+      "new": "    if False:\n",
+      "tests": "SCREENS"
+    }
+  ]
+}

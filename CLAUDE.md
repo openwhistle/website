@@ -33,6 +33,7 @@ documentation here — never pin the site to an older release to make it green.
 | `app_version` | footer, docs start page, JSON-LD: `tests/test_v100.py`, `tests/test_seo.py` |
 | `ReportStatus`, `STATUS_TRANSITIONS`, routes | `tests/test_release_assets.py`, `tests/test_diagrams.py`, `tests/test_every_page_is_documented.py` |
 | fonts, favicons, mark, `DESIGN.md` | `tests/test_release_assets.py` (byte-identical) |
+| screenshots, re-taken every release | `tests/test_screenshots.py` (`docs/img/screens/_release`) |
 
 ## Before a change is merged
 
