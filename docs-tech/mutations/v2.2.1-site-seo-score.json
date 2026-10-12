@@ -1,19 +1,94 @@
 {
   "timeout_seconds": 600,
-  "test_groups": { "SEO_TOOL": ["tests/test_seo_tool.py"] },
+  "test_groups": {
+    "SEO_TOOL": [
+      "tests/test_seo_tool.py"
+    ]
+  },
   "mutations": [
-    { "id": "SLUG-SCORED", "file": "tools/seo/seo-score.mjs",
-      "old": "const IGNORED = [\"slugKeyword\"];", "new": "const IGNORED = [];", "tests": "SEO_TOOL" },
-    { "id": "WHOLE-PAGE-AS-TEXT", "file": "tools/seo/seo-score.mjs",
-      "old": "    text: main[1].trim(),", "new": "    text: html,", "tests": "SEO_TOOL" },
-    { "id": "PROSE-AS-KEYWORD", "file": "tools/seo/seo-score.mjs",
-      "old": ".replace(/\\bas differentiator\\b.*$/, \"\")", "new": "", "tests": "SEO_TOOL" },
-    { "id": "BAD-ROW-GUESSED", "file": "tools/seo/seo-score.mjs",
-      "old": "if (!path) { skipped.push(page); continue; }", "new": "if (!path) { continue; }",
-      "tests": "SEO_TOOL" },
-    { "id": "REDIRECT-SCORED", "file": "tools/seo/seo-score.mjs",
-      "old": "if (res.status !== 200)", "new": "if (res.status >= 400)", "tests": "SEO_TOOL" },
-    { "id": "COMPARE-NEW-AS-ZERO", "file": "tools/seo/seo-score.mjs",
-      "old": "?? null, after", "new": "?? 0, after", "tests": "SEO_TOOL" }
+    {
+      "id": "SLUG-SCORED",
+      "file": "tools/seo/seo-score.mjs",
+      "old": "const IGNORED = [\"slugKeyword\"];",
+      "new": "const IGNORED = [];",
+      "tests": "SEO_TOOL"
+    },
+    {
+      "id": "WHOLE-PAGE-AS-TEXT",
+      "file": "tools/seo/seo-score.mjs",
+      "old": "    text: main[1].trim(),",
+      "new": "    text: html,",
+      "tests": "SEO_TOOL"
+    },
+    {
+      "id": "PROSE-AS-KEYWORD",
+      "file": "tools/seo/seo-score.mjs",
+      "old": ".replace(/\\bas differentiator\\b.*$/, \"\")",
+      "new": "",
+      "tests": "SEO_TOOL"
+    },
+    {
+      "id": "BAD-ROW-GUESSED",
+      "file": "tools/seo/seo-score.mjs",
+      "old": "if (!path) { skipped.push(page); continue; }",
+      "new": "if (!path) { continue; }",
+      "tests": "SEO_TOOL"
+    },
+    {
+      "id": "REDIRECT-SCORED",
+      "file": "tools/seo/seo-score.mjs",
+      "old": "if (res.status !== 200)",
+      "new": "if (res.status >= 400)",
+      "tests": "SEO_TOOL"
+    },
+    {
+      "id": "COMPARE-NEW-AS-ZERO",
+      "file": "tools/seo/seo-score.mjs",
+      "old": "?? null, after",
+      "new": "?? 0, after",
+      "tests": "SEO_TOOL"
+    },
+    {
+      "id": "JSON-AFTER-COMPARE",
+      "file": "tools/seo/seo-score.mjs",
+      "old": "  if (o.json) writeFileSync(here(o.json), JSON.stringify(results, null, 1)); // before anything that can fail",
+      "new": "  if (o.json) process.on(\"exit\", () => writeFileSync(here(o.json), JSON.stringify(results, null, 1)));",
+      "tests": "SEO_TOOL"
+    },
+    {
+      "id": "NO-FETCH-TIMEOUT",
+      "file": "tools/seo/seo-score.mjs",
+      "old": ", signal: AbortSignal.timeout(Number(process.env.SEO_FETCH_TIMEOUT_MS) || 30_000)",
+      "new": "",
+      "tests": "SEO_TOOL"
+    },
+    {
+      "id": "FETCH-ERROR-ANONYMOUS",
+      "file": "tools/seo/seo-score.mjs",
+      "old": "throw new Error(`${url}: ${err.cause?.code ?? err.name ?? err.message}`);",
+      "new": "throw err;",
+      "tests": "SEO_TOOL"
+    },
+    {
+      "id": "PATHS-RELATIVE-TO-PACKAGE",
+      "file": "tools/seo/seo-score.mjs",
+      "old": "resolve(process.env.INIT_CWD ?? process.cwd(), f)",
+      "new": "resolve(f)",
+      "tests": "SEO_TOOL"
+    },
+    {
+      "id": "URL-WITHOUT-KEYWORD-IGNORED",
+      "file": "tools/seo/seo-score.mjs",
+      "old": "if (o.url && !o.keyword) throw new Error(\"--url needs --keyword\");",
+      "new": "",
+      "tests": "SEO_TOOL"
+    },
+    {
+      "id": "SECONDARY-WITH-KEYWORD-IGNORED",
+      "file": "tools/seo/seo-score.mjs",
+      "old": "if (o.secondary && o.keyword) throw",
+      "new": "if (false) throw",
+      "tests": "SEO_TOOL"
+    }
   ]
 }

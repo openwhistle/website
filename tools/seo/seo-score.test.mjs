@@ -112,3 +112,51 @@ test("--json is written before --compare, so a bad compare file does not lose th
     server.close();
   }
 });
+
+test("an unreachable base is an error naming its URL", async () => {
+  const server = createServer();
+  await new Promise((r) => server.listen(0, "127.0.0.1", r));
+  const base = `http://127.0.0.1:${server.address().port}`;
+  await new Promise((r) => server.close(r));
+  await assert.rejects(main(["--base", base, "--url", "/de/", "--keyword", "x"]), (err) => {
+    assert.ok(err.message.startsWith(`${base}/de/: `), err.message);
+    return true;
+  });
+});
+
+test("--json and --compare are relative to where npm was run (INIT_CWD)", async () => {
+  const server = createServer((req, res) => { res.statusCode = req.url === "/de/" ? 200 : 404; res.end(html); });
+  await new Promise((r) => server.listen(0, "127.0.0.1", r));
+  const base = `http://127.0.0.1:${server.address().port}`;
+  const dir = mkdtempSync(join(tmpdir(), "seo-"));
+  const saved = process.env.INIT_CWD;
+  process.env.INIT_CWD = dir;
+  try {
+    const args = ["--base", base, "--url", "/de/", "--keyword", "Hinweisgebersystem Software"];
+    await main([...args, "--json", "out.json"]);
+    assert.ok(existsSync(join(dir, "out.json")), "written into INIT_CWD");
+    assert.equal(await main([...args, "--compare", "out.json"]), 0, "read from INIT_CWD");
+  } finally {
+    if (saved === undefined) delete process.env.INIT_CWD; else process.env.INIT_CWD = saved;
+    server.close();
+  }
+});
+
+test("flags that would be silently ignored are rejected", async () => {
+  await assert.rejects(main(["--url", "/de/"]), /--url needs --keyword/);
+  await assert.rejects(main(["--keyword", "x", "--secondary"]), /--secondary works with the keyword map only/);
+});
+
+test("a page that never answers times out and names its URL", { timeout: 10_000 }, async () => {
+  const server = createServer(() => {}); // accepts, never answers
+  await new Promise((r) => server.listen(0, "127.0.0.1", r));
+  const base = `http://127.0.0.1:${server.address().port}`;
+  process.env.SEO_FETCH_TIMEOUT_MS = "200"; // the tool's own override; default 30 s
+  try {
+    await assert.rejects(main(["--base", base, "--url", "/hang/", "--keyword", "x"]), /\/hang\/: TimeoutError/);
+  } finally {
+    delete process.env.SEO_FETCH_TIMEOUT_MS;
+    server.closeAllConnections();
+    server.close();
+  }
+});

@@ -1,6 +1,7 @@
 // Yoast's SEO analysis per page and keyword (spec: docs-tech/specs/2026-10-12-seo-score-design.md).
 import { createRequire } from "node:module";
 import { readFileSync, realpathSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 
@@ -76,7 +77,12 @@ export function parseKeywordMap(markdown) {
 }
 
 async function fetchPage(url) {
-  const res = await fetch(url, { redirect: "manual" });
+  let res;
+  try {
+    res = await fetch(url, { redirect: "manual", signal: AbortSignal.timeout(Number(process.env.SEO_FETCH_TIMEOUT_MS) || 30_000) });
+  } catch (err) {
+    throw new Error(`${url}: ${err.cause?.code ?? err.name ?? err.message}`);
+  }
   if (res.status !== 200) throw new Error(`${url} answered ${res.status}`);
   return res.text();
 }
@@ -111,7 +117,7 @@ async function lighthouseSeo(url) {
     chromeLauncher = await import("chrome-launcher");
   } catch (err) {
     if (err.code !== "ERR_MODULE_NOT_FOUND") throw err;
-    throw new Error("lighthouse is not installed: run npm --prefix tools/seo install (it is an optional dependency)");
+    throw new Error("lighthouse is not installed: run npm --prefix tools/seo ci (it is an optional dependency)");
   }
   const chrome = await chromeLauncher.launch({ chromeFlags: ["--headless=new"] });
   try {
@@ -147,6 +153,10 @@ export async function main(argv) {
       lighthouse: { type: "boolean", default: false },
     },
   });
+  if (o.url && !o.keyword) throw new Error("--url needs --keyword");
+  if (o.secondary && o.keyword) throw new Error("--secondary works with the keyword map only, not with --keyword");
+  // npm runs in tools/seo; INIT_CWD is where the user ran it
+  const here = (f) => resolve(process.env.INIT_CWD ?? process.cwd(), f);
   let pairs;
   let skipped = [];
   if (o.keyword && o.url) pairs = [{ page: o.url, keyword: o.keyword }];
@@ -160,9 +170,9 @@ export async function main(argv) {
   const results = await run(pairs, o.base);
   if (o.keyword && !o.url) results.sort((a, b) => b.score - a.score);
   print(results, skipped);
-  if (o.json) writeFileSync(o.json, JSON.stringify(results, null, 1)); // before anything that can fail
+  if (o.json) writeFileSync(here(o.json), JSON.stringify(results, null, 1)); // before anything that can fail
   if (o.compare) {
-    for (const c of compare(JSON.parse(readFileSync(o.compare, "utf8")), results)) {
+    for (const c of compare(JSON.parse(readFileSync(here(o.compare), "utf8")), results)) {
       const delta = c.before === null ? "new" : `${c.after - c.before >= 0 ? "+" : ""}${c.after - c.before}`;
       console.log(`${String(c.after).padStart(3)} ${delta.padStart(4)}  ${c.page}  "${c.keyword}"`);
     }
