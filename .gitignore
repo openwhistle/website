@@ -28,3 +28,4 @@ test-results/
 .serena/
 /.claude/
 /.superpowers/
+tools/seo/node_modules/

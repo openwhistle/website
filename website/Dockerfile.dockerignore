@@ -1,6 +1,6 @@
 .venv
 _site
-node_modules
+**/node_modules
 .superpowers
 .claude
 **/__pycache__
