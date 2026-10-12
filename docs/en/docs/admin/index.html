@@ -93,7 +93,7 @@ js:
           <li>A word search decrypts the description and messages of the reports you may see, in memory, for that request only. Nothing searchable is ever stored. It needs at least 3 characters, and it reads the 5,000 newest reports of the current view (status and location filter): an older report is not found by its words.</li>
           <li>The confidential name is never matched: a hit would confirm an identity guess without an audited reveal.</li>
           <li>The search is sent as a form (POST), so the term never appears in a URL, the browser history or a proxy's access log. Paging keeps it that way.</li>
-          <li>Every word search is audited (<code>report.content_searched</code>): the term, stored encrypted, and the number of matching reports. With multi-tenancy, each organisation's entry counts its own hits.</li>
+          <li>Every word search is audited (<code>report.content_searched</code>): the term, stored encrypted, and the number of reports whose text matched (a case found by its number is not counted). With multi-tenancy, each organisation's entry counts its own hits.</li>
         </ul>
         <p>Click a report to open its case page, <code>/admin/reports/{report_id}</code>:</p>
         <figure class="doc-shot">
