@@ -105,8 +105,14 @@ export function compare(before, after) {
 }
 
 async function lighthouseSeo(url) {
-  const { default: lighthouse } = await import("lighthouse"); // optional dependency
-  const chromeLauncher = await import("chrome-launcher");
+  let lighthouse, chromeLauncher;
+  try {
+    ({ default: lighthouse } = await import("lighthouse")); // optional dependency
+    chromeLauncher = await import("chrome-launcher");
+  } catch (err) {
+    if (err.code !== "ERR_MODULE_NOT_FOUND") throw err;
+    throw new Error("lighthouse is not installed: run npm --prefix tools/seo install (it is an optional dependency)");
+  }
   const chrome = await chromeLauncher.launch({ chromeFlags: ["--headless=new"] });
   try {
     const r = await lighthouse(url, { port: chrome.port, onlyCategories: ["seo"], logLevel: "error" });
@@ -154,6 +160,7 @@ export async function main(argv) {
   const results = await run(pairs, o.base);
   if (o.keyword && !o.url) results.sort((a, b) => b.score - a.score);
   print(results, skipped);
+  if (o.json) writeFileSync(o.json, JSON.stringify(results, null, 1)); // before anything that can fail
   if (o.compare) {
     for (const c of compare(JSON.parse(readFileSync(o.compare, "utf8")), results)) {
       const delta = c.before === null ? "new" : `${c.after - c.before >= 0 ? "+" : ""}${c.after - c.before}`;
@@ -164,7 +171,6 @@ export async function main(argv) {
     for (const page of [...new Set(results.map((r) => r.page))])
       console.log(`Lighthouse SEO ${String(await lighthouseSeo(new URL(page, o.base).href)).padStart(3)}  ${page}`);
   }
-  if (o.json) writeFileSync(o.json, JSON.stringify(results, null, 1));
   return 0;
 }
 

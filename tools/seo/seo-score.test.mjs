@@ -1,6 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { createServer } from "node:http";
 import { compare, main, paperFields, parseKeywordMap, scorePage } from "./seo-score.mjs";
 
@@ -89,4 +91,24 @@ test("compare gives the change per row; a row new since the old run has no befor
     { page: "/de/", keyword: "a", before: 70, after: 83 },
     { page: "/en/", keyword: "b", before: null, after: 60 },
   ]);
+});
+
+test("--json is written before --compare, so a bad compare file does not lose the run", async () => {
+  const server = createServer((req, res) => { res.statusCode = req.url === "/de/" ? 200 : 404; res.end(html); });
+  await new Promise((r) => server.listen(0, "127.0.0.1", r));
+  const base = `http://127.0.0.1:${server.address().port}`;
+  const file = join(mkdtempSync(join(tmpdir(), "seo-")), "run.json");
+  try {
+    await assert.rejects(
+      main(["--base", base, "--url", "/de/", "--keyword", "Hinweisgebersystem Software", "--json", file,
+        "--compare", join(tmpdir(), "missing-seo-run.json")]),
+      /ENOENT/,
+    );
+    assert.ok(existsSync(file), "the run is saved");
+    const rows = JSON.parse(readFileSync(file, "utf8"));
+    assert.equal(rows.length, 1);
+    assert.equal(rows[0].page, "/de/");
+  } finally {
+    server.close();
+  }
 });
