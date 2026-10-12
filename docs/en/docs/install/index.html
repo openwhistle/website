@@ -56,11 +56,15 @@ js:
             <span class="code-block-lang">bash</span>
           </div>
           <pre><code><span class="t-prompt">$ </span><span class="t-cmd">docker compose up -d</span>
-<span class="t-out">&#x25BA; Network openwhistle_default      Created</span>
-<span class="t-out">&#x25BA; Container openwhistle-db-1        Started</span>
-<span class="t-out">&#x25BA; Container openwhistle-redis-1     Started</span>
-<span class="t-out">&#x25BA; Container openwhistle-app-1       Started</span>
-<span class="t-out">&#x25BA; Container openwhistle-nginx-1     Started</span></code></pre>
+<span class="t-out">&#x25BA; Network openwhistle_internal         Created</span>
+<span class="t-out">&#x25BA; Network openwhistle_proxy            Created</span>
+<span class="t-out">&#x25BA; Volume openwhistle_tls                Created</span>
+<span class="t-out">&#x25BA; Volume openwhistle_postgres_data      Created</span>
+<span class="t-out">&#x25BA; Container openwhistle-redis-1        Healthy</span>
+<span class="t-out">&#x25BA; Container openwhistle-db-1           Healthy</span>
+<span class="t-out">&#x25BA; Container openwhistle-tls-init-1     Exited</span>
+<span class="t-out">&#x25BA; Container openwhistle-app-1          Started</span>
+<span class="t-out">&#x25BA; Container openwhistle-nginx-1        Started</span></code></pre>
         </div>
 
         <div class="callout callout-note">
