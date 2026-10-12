@@ -89,6 +89,16 @@ jobs:
           uv export --frozen --extra dev --group site --no-emit-project -o /tmp/requirements.txt
           uv pip install --system -r /tmp/requirements.txt
 
+      - name: Set up Node 24
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+          package-manager-cache: false
+
+      # tools/seo: yoastseo only; lighthouse is optional and not needed by the tests.
+      - name: Install the SEO tool
+        run: npm --prefix tools/seo ci --omit=optional --ignore-scripts
+
       # The guards compare the docs with the latest release of openwhistle/OpenWhistle
       # (scripts/release_source.py); the token lifts the API's 60-an-hour limit per runner IP.
       - name: Run tests

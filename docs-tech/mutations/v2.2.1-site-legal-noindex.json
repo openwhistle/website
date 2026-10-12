@@ -1,0 +1,37 @@
+{
+  "timeout_seconds": 600,
+  "test_groups": {
+    "LEGAL": ["tests/test_legal_pages.py", "-k", "search_engines"],
+    "HREFLANG": ["tests/test_seo.py", "-k", "hreflang_is_reciprocal"]
+  },
+  "mutations": [
+    {
+      "id": "IMPRINT-INDEXED",
+      "file": "docs/impressum/index.html",
+      "old": "noindex: true\n",
+      "new": "",
+      "tests": "LEGAL"
+    },
+    {
+      "id": "PRIVACY-EN-INDEXED",
+      "file": "docs/en/privacy/index.html",
+      "old": "noindex: true\n",
+      "new": "",
+      "tests": "LEGAL"
+    },
+    {
+      "id": "ROBOTS-HIDES-THE-NOINDEX",
+      "file": "docs/robots.txt",
+      "old": "Allow: /\n",
+      "new": "Allow: /\nDisallow: /impressum/\n",
+      "tests": "LEGAL"
+    },
+    {
+      "id": "HREFLANG-ON-A-NOINDEX-PAGE",
+      "file": "scripts/build_site.py",
+      "old": "    if page.meta.get(\"noindex\") or len(page.alternates) < 2:\n",
+      "new": "    if len(page.alternates) < 2:\n",
+      "tests": "HREFLANG"
+    }
+  ]
+}

@@ -381,7 +381,8 @@ def language_roots(site: dict[str, Any]) -> set[str]:
 
 def hreflang(page: Page, site: dict[str, Any]) -> list[tuple[str, str]]:
     """The <link rel=alternate> set, shared by the head and the sitemap."""
-    if len(page.alternates) < 2:
+    # A noindex page has no canonical for its own hreflang to name; search engines skip it anyway.
+    if page.meta.get("noindex") or len(page.alternates) < 2:
         return []
     base = site["base_url"]
     links = [(lang, base + url) for lang, url in sorted(page.alternates.items())]

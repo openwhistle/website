@@ -1,5 +1,5 @@
 [codespell]
-skip = .git,./tests/e2e/vendor,.venv,.ruff_cache,.mypy_cache,.pytest_cache,uv.lock,htmlcov,*.woff2,*.ttf,*.png,*.ico,*.svg,*.webp,.superpowers,.serena,.claude,CLAUDE.md,./.release,./_site,./docs/de,./docs-tech/plans,./docs-tech/legal
+skip = .git,./tests/e2e/vendor,.venv,.ruff_cache,.mypy_cache,.pytest_cache,uv.lock,package-lock.json,node_modules,htmlcov,*.woff2,*.ttf,*.png,*.ico,*.svg,*.webp,.superpowers,.serena,.claude,CLAUDE.md,./.release,./_site,./docs/de,./docs-tech/plans,./docs-tech/legal
 check-hidden = false
 # ist — German text in meta description, docs/de/index.html
 # unter — German text in meta description, docs/de/index.html

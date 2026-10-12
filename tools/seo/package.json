@@ -1,0 +1,22 @@
+{
+  "name": "openwhistle-seo-score",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "score": "node seo-score.mjs",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "yoastseo": "3.6.0"
+  },
+  "optionalDependencies": {
+    "lighthouse": "13.5.0",
+    "chrome-launcher": "1.2.2"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "overrides": {
+    "@babel/runtime": "7.29.10"
+  }
+}
