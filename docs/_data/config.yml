@@ -121,7 +121,7 @@ groups:
   - name: SUBMISSION_MODE_ENABLED
     need: optional
     description: Set to <code>false</code> to hide the anonymous/confidential mode selection step from
-      the submission wizard. When disabled, all reports are treated as anonymous.
+      the submission wizard. When disabled, the form offers no confidential option and all reports are anonymous.
     default: <code>true</code>
   - name: OIDC_ENABLED
     need: optional
@@ -213,7 +213,7 @@ groups:
   settings:
   - name: NOTIFY_EMAIL_ENABLED
     need: optional
-    description: Set to <code>true</code> to send an email notification when a new report arrives.
+    description: Set to <code>true</code> to send an email notification when a new report arrives. While off, the form shows no e-mail field and no address is stored.
     default: <code>false</code>
   - name: NOTIFY_EMAIL_TO
     need: optional

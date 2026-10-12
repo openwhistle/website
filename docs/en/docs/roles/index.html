@@ -24,5 +24,15 @@ js:
           another role is chosen; an unknown role is refused. The last active admin cannot be
           deactivated, so nobody is locked out. Only a superadmin creates, changes, deactivates or
           reactivates a superadmin. In <code>DEMO_MODE</code> the demo accounts cannot be changed.
-          Only admins may dismiss the IP-header warning.
+          Only admins may dismiss the IP-header warning; the dismissal is audited.
+        </p>
+        <p>
+          With <code>MULTI_TENANCY_ENABLED</code>, <code>/admin/system</code>, the installation-count
+          switch and the dismissal belong to the superadmin. An organisation's admin gets no menu
+          entry and a 403.
+        </p>
+        <p>
+          The four-eyes rule has a limit. Whoever creates two accounts knows both first passwords,
+          so one person can still act as both. The rule only refuses the maker of an account, and
+          whoever reset it, as that account's second pair of eyes.
         </p>
