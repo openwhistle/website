@@ -96,17 +96,6 @@ def _clean_text(s: str) -> str:
     return re.sub(r"\s+", " ", html_lib.unescape(re.sub(r"<[^>]+>", "", s))).strip()
 
 
-def _word_set(s: str) -> set[str]:
-    return set(re.findall(r"[a-zA-ZäöüÄÖÜß]+", s.lower()))
-
-
-def _word_overlap(a: str, b: str) -> float:
-    wa, wb = _word_set(a), _word_set(b)
-    if not wa or not wb:
-        return 0.0
-    return len(wa & wb) / max(len(wa), len(wb))
-
-
 def _faqpage_jsonld(html: str) -> list[tuple[str, str]]:
     for block in re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.DOTALL):
         data = json.loads(block)
@@ -130,24 +119,16 @@ def _visible_faq(html: str) -> list[tuple[str, str]]:
 
 
 def test_faqpage_jsonld_matches_visible_faq_one_to_one() -> None:
-    """Regression guard: docs/de/index.html's FAQPage
-    JSON-LD used to carry a question ("Was ist ein Hinweisgebersystem nach
-    HinSchG?") that doesn't appear anywhere in the visible FAQ list, and was
-    missing several visible questions outright (5 JSON-LD entries vs. 8
-    visible). Search engines index the JSON-LD, so a mismatch there is
-    effectively lying to search results. Pin same count, same order, and a
-    substantial word overlap per question/answer pair (not byte-for-byte:
-    docs/en/index.html's own JSON-LD already paraphrases its visible answers
-    slightly, e.g. "Does OpenWhistle comply" vs. "Does it comply" -- this
-    guard would otherwise be RED on the English page too)."""
+    """Same count, same order, and the same words: the JSON-LD answer equals the visible one
+    after tags, entities and whitespace are normalised. Search engines index the JSON-LD; a
+    paraphrase there, or a dropped quote mark, is a claim the page does not make."""
     for url in ("/en/", "/de/"):
         html = page(url)
         jsonld_pairs = _faqpage_jsonld(html)
         visible_pairs = _visible_faq(html)
         assert len(jsonld_pairs) == len(visible_pairs), (url, len(jsonld_pairs), len(visible_pairs))
         for i, ((jq, ja), (vq, va)) in enumerate(zip(jsonld_pairs, visible_pairs, strict=True)):
-            assert _word_overlap(jq, vq) >= 0.6, (url, i, "question", jq, vq)
-            assert _word_overlap(ja, va) >= 0.6, (url, i, "answer", ja, va)
+            assert jq == vq and ja == va, (url, i, jq, vq, ja, va)
 
 
 def _resolve_nav_target(page: Path, href: str) -> str:

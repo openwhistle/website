@@ -1,0 +1,43 @@
+{
+  "timeout_seconds": 600,
+  "test_groups": {
+    "FAQ": ["tests/test_docs_site.py::test_faqpage_jsonld_matches_visible_faq_one_to_one"]
+  },
+  "mutations": [
+    {
+      "id": "VISIBLE-ANSWER-ONE-WORD",
+      "file": "docs/en/index.html",
+      "old": "What remains is a server, time for updates and backups, and the work of the reporting office itself. The law also requires an oral channel, by telephone or another form of voice transmission, and a meeting in person on request (§&nbsp;",
+      "new": "What remains is a machine, time for updates and backups, and the work of the reporting office itself. The law also requires an oral channel, by telephone or another form of voice transmission, and a meeting in person on request (§&nbsp;",
+      "tests": "FAQ"
+    },
+    {
+      "id": "JSONLD-QUOTES-DROPPED",
+      "file": "docs/en/index.html",
+      "old": "sources in “Whistleblowing software providers compared 2026”.'",
+      "new": "sources in Whistleblowing software providers compared 2026.'",
+      "tests": "FAQ"
+    },
+    {
+      "id": "JSONLD-QUOTES-DROPPED-DE",
+      "file": "docs/de/index.html",
+      "old": "Quellen im Artikel „Hinweisgebersystem-Anbieter im Vergleich 2026“.'",
+      "new": "Quellen im Artikel Hinweisgebersystem-Anbieter im Vergleich 2026.'",
+      "tests": "FAQ"
+    },
+    {
+      "id": "DE-EU-HOSTING-ENDING-DROPPED",
+      "file": "docs/de/index.html",
+      "old": "Stand 27. September 2026 (Hinweisgebersystem mit EU-Hosting).'",
+      "new": "Stand 27. September 2026.'",
+      "tests": "FAQ"
+    },
+    {
+      "id": "VISIBLE-QUESTION-CHANGED",
+      "file": "docs/en/index.html",
+      "old": "<summary>Who is OpenWhistle not the right choice for?</summary>",
+      "new": "<summary>Who is OpenWhistle not the best choice for?</summary>",
+      "tests": "FAQ"
+    }
+  ]
+}
