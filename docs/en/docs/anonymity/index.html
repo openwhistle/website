@@ -39,7 +39,8 @@ js:
                 The first middleware removes those headers again and clears the peer address, before
                 any route handler runs. No handler can read the real address, even if it tried. If
                 such a header arrives anyway, the admin dashboard warns that a proxy in front knows the
-                addresses.
+                addresses, and the reporter's submit and status pages say that this proxy may log
+                theirs (not over the onion address).
               </div>
             </div>
           </div>
