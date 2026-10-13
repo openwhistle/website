@@ -26,7 +26,10 @@ test-results/
 
 # Local agent tooling and agent settings (settings.local.json)
 .serena/
-/.claude/
+/.claude/*
+!/.claude/settings.json
+!/.claude/skills/
 /.superpowers/
 # tools/seo: npm ci
 tools/seo/node_modules/
+tools/search-console/node_modules/

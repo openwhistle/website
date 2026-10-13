@@ -75,6 +75,27 @@ OMR Reviews, die-hinweisgeber-meldestelle.de and Capterra, all in the backlink t
 Re-check the positions in Search Console four weeks after the merge; a query that has not moved is a signal for
 the page, not for more keywords.
 
+### Evidence 2026-10-11 (baseline for the AI-answer change)
+
+Search Console, three months to 2026-10-11 (the site walk and noindex shipped 2026-10-12: not in it). Bing AI
+Performance export, 2026-10-09 to 10-11.
+
+| Query or metric | Impressions | Position | Since 2026-09-27 |
+| --- | --- | --- | --- |
+| hinweisgebersystem software | 606 | 27.3 | 25.8 → 27.3 |
+| hinweisgebersystem anbieter | 348 | 18.5 | 18.1 → 18.5 |
+| hinweisgebersystem anbieter vergleich | 154 | 18.7 | 18.5 → 18.7 |
+| hinweisgeberschutzgesetz software | 149 | 23.1 | 20.7 → 23.1 |
+| hinschg software | 116 | 19.2 | 19.4 → 19.2 |
+| wer bietet dsgvo-konforme hinweisgebersysteme mit eu-hosting an? | 81 | 6.7 | 10.2 → 6.7 |
+| welche anbieter sind auf richtlinienkonformes hosting … in der eu spezialisiert? | 64 | 7.2 | 9.3 → 7.2 |
+| Bing AI citations per day | 67–90 | — | first export |
+| Bing AI cited pages per day | 2–3 | — | first export |
+
+The question queries (AI fan-out) moved onto page one; the head terms stayed on page two to three, where on-page
+work is done and links decide. The answer-first FAQ, the at-a-glance block and the decision tables (2026-10-13)
+target the question queries; measure with the `search-performance` skill four weeks after the rollout.
+
 ### Brand query
 
 "openwhistle" ranks 3.2. Above openwhistle.net stand GitHub forks and old paths (`openwhistle-dev/OpenWhistle`,
@@ -88,6 +109,23 @@ openwhistle.pro, `Artaeon/openwhistle`). Maintainer actions, prepared, not run:
 | `jp1337/OpenWhistle` | the old path of this repository: the API redirects it to `openwhistle/OpenWhistle` (checked 2026-09-27). Never create a new repository under that name: it would break the redirect |
 | `openwhistle-dev/OpenWhistle` | a separate, unrelated repository (not a fork, no admin rights; checked 2026-09-27): no action |
 | `zbridges-valid8/OpenWhistle`, same-name products | a fork, and products that are not the maintainer's: no action; the homepage field and backlinks are the answer |
+
+## Tell Bing: IndexNow
+
+After each verified rollout, so new text reaches Bing (and Copilot/ChatGPT search) the same day:
+
+```bash
+gh workflow run indexnow.yml
+```
+
+| Part | Where |
+| --- | --- |
+| Key (public by design) | `indexnow_key` in `docs/_data/site.yml`; the build writes `/<key>.txt` |
+| Ping | `scripts/indexnow.py`: live `sitemap.xml` to `api.indexnow.org`; exit 1 unless 200 or 202 |
+| Dry run | `python scripts/indexnow.py --dry-run` prints the payload, sends nothing |
+| Result | Bing Webmaster Tools, Sitemaps and URL submissions (shows after hours, not at once) |
+
+The job fails when the live key file is missing or wrong: run it after the rollout, not before.
 
 ## Measure a page: seo-score
 

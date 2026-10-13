@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "search-console": {
+      "command": "node",
+      "args": ["tools/search-console/node_modules/search-console-mcp/dist/index.js"],
+      "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "${GSC_SERVICE_ACCOUNT_FILE}",
+        "BING_API_KEY": "${BING_WEBMASTER_API_KEY}"
+      }
+    }
+  }
+}
