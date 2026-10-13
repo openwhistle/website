@@ -75,6 +75,27 @@ OMR Reviews, die-hinweisgeber-meldestelle.de and Capterra, all in the backlink t
 Re-check the positions in Search Console four weeks after the merge; a query that has not moved is a signal for
 the page, not for more keywords.
 
+### Evidence 2026-10-11 (baseline for the AI-answer change)
+
+Search Console, three months to 2026-10-11 (the site walk and noindex shipped 2026-10-12: not in it). Bing AI
+Performance export, 2026-10-09 to 10-11.
+
+| Query or metric | Impressions | Position | Since 2026-09-27 |
+| --- | --- | --- | --- |
+| hinweisgebersystem software | 606 | 27.3 | 25.8 → 27.3 |
+| hinweisgebersystem anbieter | 348 | 18.5 | 18.1 → 18.5 |
+| hinweisgebersystem anbieter vergleich | 154 | 18.7 | 18.5 → 18.7 |
+| hinweisgeberschutzgesetz software | 149 | 23.1 | 20.7 → 23.1 |
+| hinschg software | 116 | 19.2 | 19.4 → 19.2 |
+| wer bietet dsgvo-konforme hinweisgebersysteme mit eu-hosting an? | 81 | 6.7 | 10.2 → 6.7 |
+| welche anbieter sind auf richtlinienkonformes hosting … in der eu spezialisiert? | 64 | 7.2 | 9.3 → 7.2 |
+| Bing AI citations per day | 67–90 | — | first export |
+| Bing AI cited pages per day | 2–3 | — | first export |
+
+The question queries (AI fan-out) moved onto page one; the head terms stayed on page two to three, where on-page
+work is done and links decide. The answer-first FAQ, the at-a-glance block and the decision tables (2026-10-13)
+target the question queries; measure with the `search-performance` skill four weeks after the rollout.
+
 ### Brand query
 
 "openwhistle" ranks 3.2. Above openwhistle.net stand GitHub forks and old paths (`openwhistle-dev/OpenWhistle`,
