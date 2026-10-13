@@ -32,7 +32,9 @@ js:
             times are stored as the day only; the digest interval bounds how precisely a notice dates
             a report. An hourly digest would say which hour. The trade-off: case managers learn of a
             report up to a day late, well inside the 7-day acknowledgement deadline.
-            <code>0</code> sends each notice at once, only if you accept the timing risk.
+            <code>0</code> sends each notice at once, only if you accept the timing risk. The queue is
+            in Redis, which keeps nothing on disk: when the stack stops (deploy, reboot, certificate
+            renewal), the app sends what is queued before Redis goes down.
           </p>
         </div>
 

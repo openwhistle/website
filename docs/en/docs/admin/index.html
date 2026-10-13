@@ -122,7 +122,7 @@ js:
           hidden by default.
         </p>
         <ul>
-          <li>The case handler (while unassigned, an admin of the case's organisation) clicks <em>Show identity</em> (<code>POST /admin/reports/{id}/identity</code>). A reason is required: 10–500 characters, without the reporter's name.</li>
+          <li>The case handler (while unassigned, an admin of the case's organisation) clicks <em>Show identity</em> (<code>POST /admin/reports/{id}/identity</code>). A reason is required: 10–500 characters, without the reporter's name. On an unassigned case the click assigns the case to that admin; no other admin can reveal it after that.</li>
           <li>The identity shows on that page only; the audit log records who, when and why.</li>
           <li>The case page says only that a reason was recorded. The reason is on <code>/admin/audit-log</code> and in the CSV export.</li>
           <li><em>Export PDF with identity</em> (<code>POST /admin/reports/{id}/export.pdf</code>) asks for the same audited reason. The plain <em>Export PDF</em> never includes it.</li>
