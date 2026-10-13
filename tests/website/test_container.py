@@ -162,6 +162,15 @@ def test_types(path: str, kind: tuple[str, ...]) -> None:
     assert get(path).headers["content-type"].startswith(kind)
 
 
+def test_the_indexnow_key_file_answers_with_the_key() -> None:
+    site = yaml.safe_load((ROOT / "docs/_data/site.yml").read_text(encoding="utf-8"))
+    key = site["indexnow_key"]
+    response = get(f"/{key}.txt")
+    assert response.status == 200
+    assert response.headers["content-type"].startswith("text/plain")
+    assert response.read().decode() == key
+
+
 def test_the_process_is_not_root() -> None:
     argv = [CLI, "exec", NAME, "id", "-u"]
     run = subprocess.run(argv, capture_output=True, text=True, check=True)  # noqa: S603

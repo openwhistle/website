@@ -6,6 +6,8 @@ github_url: https://github.com/openwhistle/OpenWhistle
 site_repo_url: https://github.com/openwhistle/website
 demo_url: https://demo.openwhistle.net
 sponsor_url: https://github.com/sponsors/jp1337
+# IndexNow ownership key: public by design, served as /<key>.txt (scripts/indexnow.py pings with it).
+indexnow_key: 5e02f312ae543eed96057d450a3d7d2d
 security_contact: https://github.com/openwhistle/OpenWhistle/security/advisories/new
 languages:
   en: {name: English, locale: en_US}

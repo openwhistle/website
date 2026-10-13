@@ -1,0 +1,50 @@
+{
+  "timeout_seconds": 600,
+  "test_groups": {
+    "INDEXNOW": ["tests/test_indexnow.py"]
+  },
+  "mutations": [
+    {
+      "id": "KEY-FILE-NOT-WRITTEN",
+      "file": "scripts/build_site.py",
+      "old": "    write_indexnow_key(out, site)\n",
+      "new": "",
+      "tests": "INDEXNOW"
+    },
+    {
+      "id": "KEY-FILE-WRONG-BODY",
+      "file": "scripts/build_site.py",
+      "old": "write_text(key, encoding=\"utf-8\")",
+      "new": "write_text(key + \"x\", encoding=\"utf-8\")",
+      "tests": "INDEXNOW"
+    },
+    {
+      "id": "ACCEPT-ANY-STATUS",
+      "file": "scripts/indexnow.py",
+      "old": "return 0 if status in (200, 202) else 1",
+      "new": "return 0",
+      "tests": "INDEXNOW"
+    },
+    {
+      "id": "REJECT-202",
+      "file": "scripts/indexnow.py",
+      "old": "return 0 if status in (200, 202) else 1",
+      "new": "return 0 if status == 200 else 1",
+      "tests": "INDEXNOW"
+    },
+    {
+      "id": "SKIP-KEY-CHECK",
+      "file": "scripts/indexnow.py",
+      "old": "if fetch(f\"{base}/{key}.txt\").strip() != key:",
+      "new": "if False:",
+      "tests": "INDEXNOW"
+    },
+    {
+      "id": "PAYLOAD-KEY-LOCATION",
+      "file": "scripts/indexnow.py",
+      "old": "\"keyLocation\": f\"{base}/{key}.txt\"",
+      "new": "\"keyLocation\": f\"{base}/key.txt\"",
+      "tests": "INDEXNOW"
+    }
+  ]
+}

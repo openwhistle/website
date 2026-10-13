@@ -89,6 +89,23 @@ openwhistle.pro, `Artaeon/openwhistle`). Maintainer actions, prepared, not run:
 | `openwhistle-dev/OpenWhistle` | a separate, unrelated repository (not a fork, no admin rights; checked 2026-09-27): no action |
 | `zbridges-valid8/OpenWhistle`, same-name products | a fork, and products that are not the maintainer's: no action; the homepage field and backlinks are the answer |
 
+## Tell Bing: IndexNow
+
+After each verified rollout, so new text reaches Bing (and Copilot/ChatGPT search) the same day:
+
+```bash
+gh workflow run indexnow.yml
+```
+
+| Part | Where |
+| --- | --- |
+| Key (public by design) | `indexnow_key` in `docs/_data/site.yml`; the build writes `/<key>.txt` |
+| Ping | `scripts/indexnow.py`: live `sitemap.xml` to `api.indexnow.org`; exit 1 unless 200 or 202 |
+| Dry run | `python scripts/indexnow.py --dry-run` prints the payload, sends nothing |
+| Result | Bing Webmaster Tools, Sitemaps and URL submissions (shows after hours, not at once) |
+
+The job fails when the live key file is missing or wrong: run it after the rollout, not before.
+
 ## Measure a page: seo-score
 
 `tools/seo/seo-score.mjs` runs Yoast's SEO analysis per page and keyword (on-page only).

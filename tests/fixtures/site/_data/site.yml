@@ -4,6 +4,7 @@ github_url: https://github.com/openwhistle/OpenWhistle
 site_repo_url: https://github.com/openwhistle/website
 demo_url: https://demo.openwhistle.net
 sponsor_url: https://github.com/sponsors/jp1337
+indexnow_key: 0123456789abcdef0123456789abcdef
 security_contact: https://github.com/openwhistle/OpenWhistle/security/advisories/new
 languages:  # last, so a test can append a language
   en: {name: English, locale: en_US}

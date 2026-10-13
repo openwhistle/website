@@ -716,6 +716,12 @@ def write_security_txt(out: Path, site: dict[str, Any]) -> None:
     (out / ".well-known" / "security.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def write_indexnow_key(out: Path, site: dict[str, Any]) -> None:
+    """IndexNow proves ownership by /<key>.txt holding the key. Not a secret; not in the sitemap."""
+    key = str(site["indexnow_key"])
+    (out / f"{key}.txt").write_text(key, encoding="utf-8")
+
+
 def write_feeds(out: Path, pages: list[Page], site: dict[str, Any], i18n: dict[str, Any]) -> None:
     """One Atom feed per language: every post under /<lang>/blog/<slug>/."""
     base = site["base_url"]
@@ -1031,6 +1037,7 @@ def build(src: Path, out: Path) -> list[Page]:
         dest.write_text(render_page(env, page, data, by_key), encoding="utf-8")
     write_sitemap(out, src, pages, site)
     write_security_txt(out, site)
+    write_indexnow_key(out, site)
     write_feeds(out, pages, site, data["i18n"])
     write_og_images(out, src, pages, data["i18n"][site["default_language"]]["og_image_alt"])
     subset_fonts(out, src)  # writes the fonts the pages link
