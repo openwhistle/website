@@ -1,0 +1,36 @@
+{
+  "timeout_seconds": 120,
+  "test_groups": {
+    "MCP": ["tests/test_search_console_mcp.py"]
+  },
+  "mutations": [
+    {
+      "id": "MCP-RUNS-UNPINNED-NPX",
+      "file": ".mcp.json",
+      "old": "      \"command\": \"node\",\n",
+      "new": "      \"command\": \"npx\",\n",
+      "tests": "MCP"
+    },
+    {
+      "id": "MCP-VERSION-RANGE",
+      "file": "tools/search-console/package.json",
+      "old": "\"search-console-mcp\": \"2.1.3\"",
+      "new": "\"search-console-mcp\": \"^2.1.3\"",
+      "tests": "MCP"
+    },
+    {
+      "id": "MCP-LITERAL-KEY",
+      "file": ".mcp.json",
+      "old": "\"BING_API_KEY\": \"${BING_WEBMASTER_API_KEY}\"",
+      "new": "\"BING_API_KEY\": \"0123456789abcdef\"",
+      "tests": "MCP"
+    },
+    {
+      "id": "MCP-WRITE-TOOL-ALLOWED",
+      "file": ".claude/settings.json",
+      "old": "      \"mcp__search-console__sitemaps_delete\",\n",
+      "new": "",
+      "tests": "MCP"
+    }
+  ]
+}

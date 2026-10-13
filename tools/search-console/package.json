@@ -1,0 +1,11 @@
+{
+  "name": "openwhistle-search-console",
+  "private": true,
+  "description": "Pins the Search Console + Bing Webmaster MCP server and its whole dependency tree (.mcp.json runs it from here).",
+  "dependencies": {
+    "search-console-mcp": "2.1.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

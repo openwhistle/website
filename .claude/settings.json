@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "deny": [
+      "mcp__search-console__sites_manage",
+      "mcp__search-console__accounts_manage",
+      "mcp__search-console__sitemaps_submit",
+      "mcp__search-console__sitemaps_delete",
+      "mcp__search-console__indexing_submit"
+    ]
+  }
+}
