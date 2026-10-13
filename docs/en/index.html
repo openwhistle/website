@@ -89,6 +89,16 @@ jsonld:
       '@type': Answer
       text: Yes. It is licensed under the GNU General Public License v3.0. There is no paid tier, no paid feature and no subscription. You pay only for the server you run it on.
   - '@type': Question
+    name: 'What does a whistleblowing system cost?'
+    acceptedAnswer:
+      '@type': Answer
+      text: 'Open source software such as OpenWhistle and GlobaLeaks costs no licence fee; the compared services start at €39 a month according to their providers. A managed GlobaLeaks costs from €39 billed annually, WhistlePort €69, each per month plus VAT. EQS Integrity Line states no price. As of 27 September 2026, sources in “Whistleblowing software providers compared 2026”.'
+  - '@type': Question
+    name: 'What does a free whistleblowing system really cost?'
+    acceptedAnswer:
+      '@type': Answer
+      text: 'The licence costs €0. What remains is a server, time for updates and backups, and the work of the reporting office itself. The law also requires an oral channel by telephone (§ 16 Abs. 3 HinSchG).'
+  - '@type': Question
     name: Is OpenWhistle open source?
     acceptedAnswer:
       '@type': Answer
@@ -98,6 +108,26 @@ jsonld:
     acceptedAnswer:
       '@type': Answer
       text: 'Yes, and only that way: you run OpenWhistle on your own server with Docker Compose or Helm. The project offers no hosted service. Reports stay on that server, in the EU if you put it there.'
+  - '@type': Question
+    name: 'Which whistleblowing systems offer EU hosting?'
+    acceptedAnswer:
+      '@type': Answer
+      text: 'Any self-hosted system runs where your server is, so in the EU too. That applies to OpenWhistle and GlobaLeaks. Among the services, Hinweisgeberportal OpenSource and WhistlePort, for example, name data centres in Germany, as of 27 September 2026 (Whistleblowing system with EU hosting).'
+  - '@type': Question
+    name: 'Is OpenWhistle GDPR compliant?'
+    acceptedAnswer:
+      '@type': Answer
+      text: 'The software supports GDPR-compliant operation; whether your operation complies is your responsibility as the operator. OpenWhistle stores no IP addresses, encrypts reports and deletes closed cases automatically. The record of processing, the contract with your host and, where needed, a data protection impact assessment remain your task.'
+  - '@type': Question
+    name: 'Does OpenWhistle encrypt reports?'
+    acceptedAnswer:
+      '@type': Answer
+      text: 'Yes. Each report has its own data key, which encrypts its text, messages and attachments at rest. The master key is never in the database. The connection to the browser runs over TLS.'
+  - '@type': Question
+    name: 'Does OpenWhistle have an audit log?'
+    acceptedAnswer:
+      '@type': Answer
+      text: 'Yes. The audit log records every action in the admin area, and no page edits or deletes an entry. Whoever reveals an identity gives a reason; the log records who, when and why. A CSV export is available at any time.'
   - '@type': Question
     name: Does it meet the HinSchG?
     acceptedAnswer:
@@ -114,10 +144,20 @@ jsonld:
       '@type': Answer
       text: Yes. The GPL-3.0 permits commercial self-hosted use. One installation can serve several organisations, each with its own reporting link. It suits companies from 50 employees, public bodies and financial firms.
   - '@type': Question
+    name: 'When is OpenWhistle not the right choice?'
+    acceptedAnswer:
+      '@type': Answer
+      text: 'When you have no server of your own and nobody to run updates and backups: then a managed service or a SaaS provider fits better. We know of no managed service for OpenWhistle. If you need more than five languages, an external audit, an ombudsperson or paid support, other providers offer it.'
+  - '@type': Question
     name: What are the technical requirements?
     acceptedAnswer:
       '@type': Answer
       text: Docker 24 or newer, Docker Compose v2, 1 vCPU, 512 MB RAM (1 GB recommended), 5 GB disk, a domain and an HTTPS certificate. PostgreSQL 18 and Redis 8 are bundled in the Compose stack.
+  - '@type': Question
+    name: 'How quickly is OpenWhistle set up?'
+    acceptedAnswer:
+      '@type': Answer
+      text: 'Installation takes three commands and one edit of the .env file. The wizard at /setup then creates the first account. Before that you need a server with Docker, a domain and an HTTPS certificate (installation guide).'
   - '@type': Question
     name: Is there commercial support available?
     acceptedAnswer:
@@ -128,6 +168,11 @@ jsonld:
     acceptedAnswer:
       '@type': Answer
       text: GlobaLeaks is the mature general-purpose platform, SecureDrop serves newsrooms, and Hush Line is a hosted tip line. OpenWhistle is built around the HinSchG case workflow. The comparison lists the facts, each with its source.
+  - '@type': Question
+    name: 'How do companies evaluate whistleblowing software providers?'
+    acceptedAnswer:
+      '@type': Answer
+      text: 'Seven verifiable criteria separate the providers: hosting location, encryption, anonymity, HinSchG deadlines, languages, pricing model and ombudsperson service. Ask for a source per criterion, not a grade. The answers for OpenWhistle are in “Whistleblowing software providers compared 2026”.'
   - '@type': Question
     name: Which languages does it support?
     acceptedAnswer:
@@ -199,6 +244,42 @@ jsonld:
       </div>
     </section>
 
+    <!-- At a glance -->
+    <section class="section" id="facts" aria-labelledby="facts-heading">
+      <div class="section-inner">
+        <span class="section-eyebrow">At a glance</span>
+        <h2 class="section-heading" id="facts-heading">
+          OpenWhistle at a glance
+        </h2>
+        <div class="section-divider" aria-hidden="true"></div>
+
+        <p class="section-note">
+          OpenWhistle is free, open source whistleblower software under the GPL-3.0.
+          It suits employers with 50 or more workers, certain financial firms and public bodies
+          that need an internal reporting channel under the EU Directive or the HinSchG.
+          You run OpenWhistle with Docker on your own server, in the EU too; you pay for the server
+          and its operation, not for a licence.
+        </p>
+        <div class="figure-row">
+          <div class="table-scroll">
+            <table class="comparison-table">
+              <caption>OpenWhistle facts</caption>
+              <tbody>
+                <tr><td>Licence</td><td>GPL-3.0, source code public on GitHub</td></tr>
+                <tr><td>Price</td><td>&euro;0, no paid tier, no subscription</td></tr>
+                <tr><td>Hosting</td><td>Self-hosted only, with Docker Compose or Helm. You choose the location.</td></tr>
+                <tr><td>Languages</td><td>5 languages: English, German, French, Spanish, Brazilian Portuguese</td></tr>
+                <tr><td>HinSchG deadlines</td><td>Acknowledgement within 7 days and feedback within 3 months (§&nbsp;17), counted per case</td></tr>
+                <tr><td>Encryption</td><td>Each report has its own data key; the master key is never in the database</td></tr>
+                <tr><td>Reporter accounts</td><td>None: a case number and a UUID4 PIN, shown once, no email address</td></tr>
+                <tr><td>Audit log</td><td>Every action in the admin area; no page edits or deletes an entry</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- How it works -->
     <section class="section" id="how-it-works" aria-labelledby="how-it-works-heading">
       <div class="section-inner">
@@ -231,7 +312,6 @@ jsonld:
               <table class="comparison-table">
                 <caption>For the whistleblower</caption>
                 <tbody>
-                  <tr><td>Access</td><td>Case number and a UUID4 PIN, shown once. No account, no email address.</td></tr>
                   <tr><td>Mode</td><td>Anonymous, or confidential: name and contact encrypted, shown to the case handler only after an audited reason</td></tr>
                   <tr><td>Follow-up</td><td>Read replies and send messages at <code>/status</code> with case number and PIN</td></tr>
                 </tbody>
@@ -243,16 +323,7 @@ jsonld:
                 <tbody>
                   <tr><td>Case work</td><td>Statuses, assignment, internal notes, linked cases, PDF export</td></tr>
                   <tr><td>Alerts</td><td>Opt-in email and webhook digests and deadline reminders</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="table-scroll">
-              <table class="comparison-table">
-                <caption>For whoever runs it</caption>
-                <tbody>
                   <tr><td>Sign-in</td><td>Password, LDAP or OIDC, then always TOTP. Enrolment is mandatory.</td></tr>
-                  <tr><td>Encryption</td><td>Each report has its own data key; the master key is never in the database</td></tr>
-                  <tr><td>Languages</td><td>5 languages: English, German, French, Spanish, Brazilian Portuguese</td></tr>
                 </tbody>
               </table>
             </div>
@@ -390,6 +461,27 @@ jsonld:
           </details>
 
           <details class="faq-item">
+            <summary>What does a whistleblowing system cost?</summary>
+            <div class="faq-answer">
+              Open source software such as OpenWhistle and GlobaLeaks costs no licence fee; the compared
+              services start at €39 a month according to their providers. A managed GlobaLeaks costs
+              from €39 billed annually, WhistlePort €69, each per month plus VAT. EQS Integrity Line
+              states no price. As of 27&nbsp;September 2026, sources in <a
+              href="/en/blog/whistleblowing-software-comparison/" class="link-accent">Whistleblowing
+              software providers compared 2026</a>.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>What does a free whistleblowing system really cost?</summary>
+            <div class="faq-answer">
+              The licence costs €0. What remains is a server, time for updates and backups, and the work
+              of the reporting office itself. The law also requires an oral channel by telephone
+              (§&nbsp;16 Abs.&nbsp;3 HinSchG).
+            </div>
+          </details>
+
+          <details class="faq-item">
             <summary>Is OpenWhistle open source?</summary>
             <div class="faq-answer">
               Yes, OpenWhistle is open source under the GNU General Public License v3.0. The full source code is public on <a href="https://github.com/openwhistle/OpenWhistle" rel="noopener noreferrer" target="_blank" class="link-accent">GitHub</a>. You may audit it, change it and use it commercially.
@@ -400,6 +492,45 @@ jsonld:
             <summary>Can I host it myself?</summary>
             <div class="faq-answer">
               Yes, and only that way: you run OpenWhistle on your own server with <a href="/en/docs/install/" class="link-accent">Docker Compose or Helm</a>. The project offers no hosted service. Reports stay on that server, in the EU if you put it there.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>Which whistleblowing systems offer EU hosting?</summary>
+            <div class="faq-answer">
+              Any self-hosted system runs where your server is, so in the EU too. That applies to
+              OpenWhistle and GlobaLeaks. Among the services, Hinweisgeberportal OpenSource and
+              WhistlePort, for example, name data centres in Germany, as of 27&nbsp;September 2026 (<a
+              href="/en/blog/whistleblowing-system-gdpr-eu-hosting/" class="link-accent">Whistleblowing
+              system with EU hosting</a>).
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>Is OpenWhistle GDPR compliant?</summary>
+            <div class="faq-answer">
+              The software supports GDPR-compliant operation; whether your operation complies is your
+              responsibility as the operator. OpenWhistle stores no IP addresses, encrypts reports and
+              deletes closed cases automatically. The record of processing, the contract with your host
+              and, where needed, a data protection impact assessment remain your task.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>Does OpenWhistle encrypt reports?</summary>
+            <div class="faq-answer">
+              Yes. Each report has its own data key, which encrypts its text, messages and attachments
+              at rest. The master key is never in the database. The connection to the browser runs over
+              TLS.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>Does OpenWhistle have an audit log?</summary>
+            <div class="faq-answer">
+              Yes. The audit log records every action in the admin area, and no page edits or deletes an
+              entry. Whoever reveals an identity gives a reason; the log records who, when and why. A
+              CSV export is available at any time.
             </div>
           </details>
 
@@ -433,11 +564,31 @@ jsonld:
           </details>
 
           <details class="faq-item">
+            <summary>When is OpenWhistle not the right choice?</summary>
+            <div class="faq-answer">
+              When you have no server of your own and nobody to run updates and backups: then a managed
+              service or a SaaS provider fits better. We know of no managed service for OpenWhistle. If
+              you need more than five languages, an external audit, an ombudsperson or paid support,
+              other providers offer it.
+            </div>
+          </details>
+
+          <details class="faq-item">
             <summary>What are the technical requirements?</summary>
             <div class="faq-answer">
               Docker 24 or newer, Docker Compose v2, 1 vCPU, 512&nbsp;MB RAM (1&nbsp;GB recommended),
               5&nbsp;GB disk, a domain and an HTTPS certificate. PostgreSQL 18 and Redis 8 are
               bundled in the Compose stack.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>How quickly is OpenWhistle set up?</summary>
+            <div class="faq-answer">
+              Installation takes three commands and one edit of the <code>.env</code> file. The wizard
+              at <code>/setup</code> then creates the first account. Before that you need a server with
+              Docker, a domain and an HTTPS certificate (<a href="/en/docs/install/"
+              class="link-accent">installation guide</a>).
             </div>
           </details>
 
@@ -457,6 +608,17 @@ jsonld:
               Hush Line is a hosted tip line. OpenWhistle is built around the HinSchG case workflow.
               The <a href="/en/compare/" class="link-accent">comparison</a>
               lists the facts, each with its source.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>How do companies evaluate whistleblowing software providers?</summary>
+            <div class="faq-answer">
+              Seven verifiable criteria separate the providers: hosting location, encryption, anonymity,
+              HinSchG deadlines, languages, pricing model and ombudsperson service. Ask for a source per
+              criterion, not a grade. The answers for OpenWhistle are in <a
+              href="/en/blog/whistleblowing-software-comparison/" class="link-accent">Whistleblowing
+              software providers compared 2026</a>.
             </div>
           </details>
 

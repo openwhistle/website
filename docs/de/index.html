@@ -87,6 +87,11 @@ jsonld:
       '@type': Answer
       text: Ja. Jede Meldung hat einen eigenen Datenschlüssel, mit dem Text, Nachrichten und Anhänge verschlüsselt gespeichert werden. Der Hauptschlüssel liegt nie in der Datenbank. Zum Browser läuft die Verbindung über TLS.
   - '@type': Question
+    name: 'Hat OpenWhistle ein Audit-Log?'
+    acceptedAnswer:
+      '@type': Answer
+      text: 'Ja. Das Audit-Log verzeichnet jede Aktion im Admin-Bereich, und keine Seite ändert oder löscht einen Eintrag. Wer eine Identität aufdeckt, nennt einen Grund; das Log hält fest, wer, wann und warum. Ein CSV-Export ist jederzeit möglich.'
+  - '@type': Question
     name: In welchen Sprachen gibt es OpenWhistle?
     acceptedAnswer:
       '@type': Answer
@@ -96,6 +101,11 @@ jsonld:
     acceptedAnswer:
       '@type': Answer
       text: Ja. Die Software steht unter der GNU General Public License v3.0. Es gibt keine bezahlte Ausgabe, keine Funktion hinter einer Bezahlschranke und kein Abonnement. Kosten entstehen für Ihren Server und den Betrieb.
+  - '@type': Question
+    name: 'Was kostet ein Hinweisgebersystem?'
+    acceptedAnswer:
+      '@type': Answer
+      text: 'Open-Source-Software wie OpenWhistle und GlobaLeaks kostet keine Lizenz; die verglichenen Dienste kosten laut Anbieter ab 39 € im Monat. Ein verwaltetes GlobaLeaks kostet ab 39 € bei jährlicher Zahlung, WhistlePort 69 €, jeweils im Monat und zzgl. MwSt. EQS Integrity Line nennt keinen Preis. Stand 27. September 2026, Quellen im Artikel „Hinweisgebersystem-Anbieter im Vergleich 2026“.'
   - '@type': Question
     name: Was kostet ein kostenloses Hinweisgebersystem wirklich?
     acceptedAnswer:
@@ -117,10 +127,20 @@ jsonld:
       '@type': Answer
       text: Für Beschäftigungsgeber mit in der Regel mindestens 50 Beschäftigten, bestimmte Finanzunternehmen jeder Größe und öffentliche Stellen. Die GPL-3.0 erlaubt die kommerzielle Nutzung ausdrücklich.
   - '@type': Question
+    name: 'Für wen ist OpenWhistle nicht die richtige Wahl?'
+    acceptedAnswer:
+      '@type': Answer
+      text: 'Für Organisationen ohne eigenen Server und ohne jemanden, der Updates und Backups übernimmt: Dann passt ein verwalteter Dienst oder ein SaaS-Anbieter besser. Einen verwalteten Dienst für OpenWhistle kennen wir nicht. Wer mehr als fünf Sprachen, ein externes Audit, eine Ombudsperson oder bezahlten Support braucht, findet das bei anderen Anbietern.'
+  - '@type': Question
     name: Welche technischen Voraussetzungen gibt es?
     acceptedAnswer:
       '@type': Answer
       text: Docker 24 oder neuer mit Compose v2, 1 vCPU, mindestens 512 MB RAM (1 GB empfohlen) und 5 GB Speicher. Dazu eine Domain mit HTTPS-Zertifikat. PostgreSQL 18 und Redis 8 sind im Compose-Stack enthalten.
+  - '@type': Question
+    name: 'Wie schnell ist OpenWhistle eingerichtet?'
+    acceptedAnswer:
+      '@type': Answer
+      text: 'Die Installation braucht drei Befehle und eine Änderung in der Datei .env. Danach legt der Einrichtungsassistent unter /setup das erste Konto an. Vorher brauchen Sie einen Server mit Docker, eine Domain und ein HTTPS-Zertifikat (Installationsanleitung, englisch).'
   - '@type': Question
     name: Gibt es kommerziellen Support?
     acceptedAnswer:
@@ -131,6 +151,11 @@ jsonld:
     acceptedAnswer:
       '@type': Answer
       text: OpenWhistle läuft nur selbst gehostet und kostet keine Lizenz. Der Quellcode ist öffentlich. Einen Vergleich mit GlobaLeaks und kommerziellen Anbietern, mit Quellen und Datum, bietet der Artikel „Hinweisgebersystem-Anbieter im Vergleich 2026“.
+  - '@type': Question
+    name: 'Wie bewerten Unternehmen Anbieter von Hinweisgebersystemen?'
+    acceptedAnswer:
+      '@type': Answer
+      text: 'Sieben prüfbare Kriterien trennen die Anbieter: Hosting-Ort, Verschlüsselung, Anonymität, HinSchG-Fristen, Sprachen, Preismodell und Ombudsdienst. Fragen Sie je Kriterium nach einer Quelle, nicht nach einer Note. Die Antworten für OpenWhistle stehen im Artikel „Hinweisgebersystem-Anbieter im Vergleich 2026“.'
   - '@type': Question
     name: Unterstützt OpenWhistle Single Sign-on und LDAP?
     acceptedAnswer:
@@ -206,6 +231,42 @@ jsonld:
       </div>
     </section>
 
+    <!-- At a glance -->
+    <section class="section" id="facts" aria-labelledby="facts-heading">
+      <div class="section-inner">
+        <span class="section-eyebrow">Auf einen Blick</span>
+        <h2 class="section-heading" id="facts-heading">
+          OpenWhistle auf einen Blick
+        </h2>
+        <div class="section-divider" aria-hidden="true"></div>
+
+        <p class="section-note">
+          OpenWhistle ist eine kostenlose Hinweisgebersystem-Software, Open Source unter der GPL-3.0.
+          Sie ist für Beschäftigungsgeber ab 50 Beschäftigten, bestimmte Finanzunternehmen und öffentliche
+          Stellen gedacht, die einen internen Meldekanal nach EU-Richtlinie oder HinSchG brauchen.
+          Sie betreiben OpenWhistle mit Docker auf Ihrem eigenen Server, auch in der EU; Kosten entstehen
+          für Server und Betrieb, nicht für eine Lizenz.
+        </p>
+        <div class="figure-row">
+          <div class="table-scroll">
+            <table class="comparison-table">
+              <caption>Fakten zu OpenWhistle</caption>
+              <tbody>
+                <tr><td>Lizenz</td><td>GPL-3.0, Quellcode öffentlich auf GitHub</td></tr>
+                <tr><td>Preis</td><td>0&nbsp;€, keine bezahlte Ausgabe, kein Abonnement</td></tr>
+                <tr><td>Hosting</td><td>Nur selbst gehostet, mit Docker Compose oder Helm. Den Standort wählen Sie.</td></tr>
+                <tr><td>Sprachen</td><td>5 Sprachen: Deutsch, Englisch, Französisch, Spanisch, Portugiesisch (Brasilien)</td></tr>
+                <tr><td>HinSchG-Fristen</td><td>Eingangsbestätigung in 7 Tagen und Rückmeldung in 3 Monaten (§&nbsp;17), je Fall gezählt</td></tr>
+                <tr><td>Verschlüsselung</td><td>Jede Meldung hat einen eigenen Datenschlüssel; der Hauptschlüssel liegt nie in der Datenbank</td></tr>
+                <tr><td>Konto für Hinweisgebende</td><td>Keines: Fallnummer und eine PIN im UUID4-Format, einmal angezeigt, keine E-Mail-Adresse</td></tr>
+                <tr><td>Audit-Log</td><td>Jede Aktion im Admin-Bereich; keine Seite ändert oder löscht einen Eintrag</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- How it works -->
     <section class="section" id="how-it-works" aria-labelledby="how-it-works-heading">
       <div class="section-inner">
@@ -238,7 +299,6 @@ jsonld:
               <table class="comparison-table">
                 <caption>Für Hinweisgebende</caption>
                 <tbody>
-                  <tr><td>Zugang</td><td>Fallnummer und eine PIN im UUID4-Format, einmal angezeigt. Kein Konto, keine E-Mail-Adresse.</td></tr>
                   <tr><td>Modus</td><td>Anonym oder vertraulich: Name und Kontakt verschlüsselt, für die Fallbearbeitung erst nach protokolliertem Grund sichtbar</td></tr>
                   <tr><td>Rückfragen</td><td>Antworten lesen und Nachrichten senden unter <code>/status</code>, mit Fallnummer und PIN</td></tr>
                 </tbody>
@@ -250,16 +310,7 @@ jsonld:
                 <tbody>
                   <tr><td>Fallarbeit</td><td>Status, Zuweisung, interne Notizen, verknüpfte Fälle, PDF-Export</td></tr>
                   <tr><td>Hinweise</td><td>Auf Wunsch E-Mail- und Webhook-Zusammenfassungen und Fristerinnerungen</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="table-scroll">
-              <table class="comparison-table">
-                <caption>Für den Betrieb</caption>
-                <tbody>
                   <tr><td>Anmeldung</td><td>Passwort, LDAP oder OIDC, danach immer TOTP. Die Einrichtung ist Pflicht.</td></tr>
-                  <tr><td>Verschlüsselung</td><td>Jede Meldung hat einen eigenen Datenschlüssel; der Hauptschlüssel liegt nie in der Datenbank</td></tr>
-                  <tr><td>Sprachen</td><td>5 Sprachen: Deutsch, Englisch, Französisch, Spanisch, Portugiesisch (Brasilien)</td></tr>
                 </tbody>
               </table>
             </div>
@@ -430,6 +481,15 @@ jsonld:
           </details>
 
           <details class="faq-item">
+            <summary>Hat OpenWhistle ein Audit-Log?</summary>
+            <div class="faq-answer">
+              Ja. Das Audit-Log verzeichnet jede Aktion im Admin-Bereich, und keine Seite ändert oder
+              löscht einen Eintrag. Wer eine Identität aufdeckt, nennt einen Grund; das Log hält fest,
+              wer, wann und warum. Ein CSV-Export ist jederzeit möglich.
+            </div>
+          </details>
+
+          <details class="faq-item">
             <summary>In welchen Sprachen gibt es OpenWhistle?</summary>
             <div class="faq-answer">
               Die Oberfläche gibt es auf Deutsch, Englisch, Französisch, Spanisch und Portugiesisch (Brasilien). Sie folgt der Sprache des Browsers, bis die Person selbst eine wählt.
@@ -442,6 +502,18 @@ jsonld:
               Ja. Die Software steht unter der GNU General Public License v3.0. Es gibt keine
               bezahlte Ausgabe, keine Funktion hinter einer Bezahlschranke und kein Abonnement.
               Kosten entstehen für Ihren Server und den Betrieb.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>Was kostet ein Hinweisgebersystem?</summary>
+            <div class="faq-answer">
+              Open-Source-Software wie OpenWhistle und GlobaLeaks kostet keine Lizenz; die verglichenen
+              Dienste kosten laut Anbieter ab 39&nbsp;€ im Monat. Ein verwaltetes GlobaLeaks kostet ab
+              39&nbsp;€ bei jährlicher Zahlung, WhistlePort 69&nbsp;€, jeweils im Monat und zzgl. MwSt.
+              EQS Integrity Line nennt keinen Preis. Stand 27.&nbsp;September 2026, Quellen im Artikel
+              <a href="/de/blog/whistleblower-software-vergleich/"
+              class="link-accent">Hinweisgebersystem-Anbieter im Vergleich 2026</a>.
             </div>
           </details>
 
@@ -483,11 +555,33 @@ jsonld:
           </details>
 
           <details class="faq-item">
+            <summary>Für wen ist OpenWhistle nicht die richtige Wahl?</summary>
+            <div class="faq-answer">
+              Für Organisationen ohne eigenen Server und ohne jemanden, der Updates und Backups
+              übernimmt: Dann passt ein verwalteter Dienst oder ein SaaS-Anbieter besser. Einen
+              verwalteten Dienst für OpenWhistle kennen wir nicht. Wer mehr als fünf Sprachen, ein
+              externes Audit, eine Ombudsperson oder bezahlten Support braucht, findet das bei anderen
+              Anbietern.
+            </div>
+          </details>
+
+          <details class="faq-item">
             <summary>Welche technischen Voraussetzungen gibt es?</summary>
             <div class="faq-answer">
               Docker 24 oder neuer mit Compose v2, 1&nbsp;vCPU, mindestens 512&nbsp;MB RAM
               (1&nbsp;GB empfohlen) und 5&nbsp;GB Speicher. Dazu eine Domain mit HTTPS-Zertifikat.
               PostgreSQL 18 und Redis 8 sind im Compose-Stack enthalten.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>Wie schnell ist OpenWhistle eingerichtet?</summary>
+            <div class="faq-answer">
+              Die Installation braucht drei Befehle und eine Änderung in der Datei <code>.env</code>.
+              Danach legt der Einrichtungsassistent unter <code>/setup</code> das erste Konto an. Vorher
+              brauchen Sie einen Server mit Docker, eine Domain und ein HTTPS-Zertifikat (<a
+              href="/en/docs/install/" class="link-accent" hreflang="en">Installationsanleitung,
+              englisch</a>).
             </div>
           </details>
 
@@ -507,6 +601,17 @@ jsonld:
               OpenWhistle läuft nur selbst gehostet und kostet keine Lizenz. Der Quellcode ist
               öffentlich. Einen Vergleich mit GlobaLeaks und kommerziellen Anbietern, mit Quellen
               und Datum, bietet der Artikel „Hinweisgebersystem-Anbieter im Vergleich 2026“.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>Wie bewerten Unternehmen Anbieter von Hinweisgebersystemen?</summary>
+            <div class="faq-answer">
+              Sieben prüfbare Kriterien trennen die Anbieter: Hosting-Ort, Verschlüsselung, Anonymität,
+              HinSchG-Fristen, Sprachen, Preismodell und Ombudsdienst. Fragen Sie je Kriterium nach
+              einer Quelle, nicht nach einer Note. Die Antworten für OpenWhistle stehen im Artikel <a
+              href="/de/blog/whistleblower-software-vergleich/"
+              class="link-accent">Hinweisgebersystem-Anbieter im Vergleich 2026</a>.
             </div>
           </details>
 

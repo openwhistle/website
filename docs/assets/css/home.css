@@ -535,6 +535,7 @@
 }
 .section-note { color: var(--body); max-width: 68ch; margin-top: var(--space-8); }
 .section-note a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+.section-note + .figure-row { margin-top: var(--space-8); }
 @media (max-width: 900px) {
   .figure-row { grid-template-columns: 1fr; gap: var(--space-6); }
 }
