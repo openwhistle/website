@@ -31,6 +31,7 @@ jsonld:
         <nav class="sidebar-links" aria-label="On this page">
           <a href="#v2-4-0" class="active">v2.4.0</a>
           <a href="#v2-5-0">v2.5.0</a>
+          <a href="#v2-6-0">v2.6.0</a>
           <a href="#released">Already released</a>
         </nav>
       </div>
@@ -66,9 +67,9 @@ jsonld:
       <div class="callout callout-note">
         <div class="callout-title">Ordering principle</div>
         <p>
-          Breadth before depth. v2.4.0 changes how <em>every</em> deployment receives and connects
-          reports. v2.5.0 adds modules for specific German regulations (LkSG, KWG, CSRD), useful to
-          some operators only. The order is a plan, not a promise: it moves when a reason turns up.
+          Breadth before depth. Release 2.4.0 changes how <em>every</em> deployment receives and
+          connects reports. Release 2.5.0 changes how every deployment stores them. v2.6.0 adds modules for specific German
+          regulations (LkSG, KWG, CSRD), useful to some operators only. The order is a plan, not a promise: it moves when a reason turns up.
         </p>
       </div>
 
@@ -95,6 +96,25 @@ jsonld:
               <li>Recorded in the browser (Web Audio API, MediaRecorder), stored as an <code>.ogg</code> or <code>.webm</code> attachment.</li>
               <li>Played back in the case view.</li>
               <li>Optional pitch shift against speaker identification: <code>VOICE_DISTORTION_ENABLED=true</code>, server-side with <code>ffmpeg</code>.</li>
+            </ul>
+          </li>
+          <li><strong>Phone and in-person reports</strong>
+            <ul>
+              <li>&sect;16 Abs. 3 HinSchG requires oral reporting and, on request, a meeting in person.</li>
+              <li>A handler records a report taken by phone or in a meeting as a case; the reporter gets the case number and PIN like any other.</li>
+              <li>The record follows &sect;11 HinSchG: a transcript or summary, shown to the reporter to check and correct.</li>
+              <li>A reporter can ask for a meeting from the status page; the request is a message in the case, with its own deadline.</li>
+            </ul>
+          </li>
+        </ul>
+
+        <h3>Reporter anonymity</h3>
+        <ul>
+          <li><strong>Connection status</strong>: the submit and status pages say whether the report arrives over the onion service, before anything is typed.</li>
+          <li><strong>Onion-only mode</strong>
+            <ul>
+              <li><code>REPORTER_ONION_ONLY=true</code>: the clearnet address shows only the onion address and how to open it; reports are accepted over Tor alone.</li>
+              <li>Admin routes stay on the clearnet address.</li>
             </ul>
           </li>
         </ul>
@@ -145,7 +165,35 @@ jsonld:
 
       <!-- v2.5.0 -->
       <section class="docs-section" id="v2-5-0" aria-labelledby="v2-5-0-h2">
-        <h2 id="v2-5-0-h2">v2.5.0 — Compliance Expansion (LkSG, KWG, CSRD)</h2>
+        <h2 id="v2-5-0-h2">v2.5.0 — End-to-End Encryption</h2>
+        <p>
+          Today the server encrypts a report at rest but can read it. From v2.5.0 it cannot: a
+          report is readable only with the reporter's PIN or a handler's key.
+        </p>
+
+        <h3>Encryption</h3>
+        <ul>
+          <li><strong>Per-report keys</strong>
+            <ul>
+              <li>Description, messages and attachments are encrypted in the browser, to the reporter and to the organisation's handlers.</li>
+              <li>The reporter's key is derived from the PIN.</li>
+              <li>A handler's private key never leaves the browser. A passphrase of its own unlocks it, as OIDC and LDAP logins have no local password.</li>
+              <li>A database dump, a backup or the operator of the server reads ciphertext only.</li>
+            </ul>
+          </li>
+          <li><strong>Key recovery</strong>: a recovery key shown once at setup, split between two people if the organisation wants. It opens every case when no handler's key is left.</li>
+        </ul>
+
+        <h3>Open questions</h3>
+        <ul>
+          <li>Metadata stripping, virus scan, full-text search and the PDF export run on the server today and need the plaintext. Each moves to the browser or works only on what the handler opens.</li>
+          <li>Migration: existing cases are re-encrypted when a handler first opens them after the upgrade.</li>
+        </ul>
+      </section>
+
+      <!-- v2.6.0 -->
+      <section class="docs-section" id="v2-6-0" aria-labelledby="v2-6-0-h2">
+        <h2 id="v2-6-0-h2">v2.6.0 — Compliance Expansion (LkSG, KWG, CSRD)</h2>
         <p>
           Obligations beyond HinSchG, as add-on modules that leave the whistleblower flow unchanged.
           LkSG (since 2023) needs a supply-chain channel, KWG a banking one; CSRD disclosures refer
@@ -194,6 +242,7 @@ jsonld:
               <li>New: IT, PL, NL, PT, SV, DA, FI, CS, SK, HU, RO, BG, HR, SL, ET, LV, LT, MT, GA, EL.</li>
               <li>Formal and informal variants for DE/AT/CH.</li>
               <li>Machine-translated first, then reviewed by native speakers, in <code>app/locales/{lang}.json</code> with the existing key schema.</li>
+              <li>Translators work in Weblate's free hosting for open source projects and need no Git; Weblate opens the pull requests.</li>
             </ul>
           </li>
         </ul>
