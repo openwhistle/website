@@ -56,7 +56,7 @@ typography:
   fonts:
     display: "Sora"                       # display + headings
     body:    "Sora"                        # body + UI
-    mono:    "JetBrains Mono"              # identifiers, eyebrows, code
+    mono:    "JetBrains Mono"              # identifiers, code
   # weight ceiling: 700 (the hero, stat figures and the mono voices); 600 for every other heading; 400 body.
   scale:
     display-hero: { font: display, size: "clamp(34px, 5vw, 52px)", weight: 700, tracking: "-0.035em", leading: 1.05 }
@@ -68,7 +68,7 @@ typography:
     body-sm:      { font: body,    size: "14px", weight: 400, tracking: "0",        leading: 1.55 }
     label:        { font: body,    size: "13.5px", weight: 600, tracking: "0",      leading: 1.4 }   # form labels
     hint:         { font: body,    size: "12.5px", weight: 400, tracking: "0",      leading: 1.5 }   # helper text
-    eyebrow:      { font: mono,    size: "11.5px", weight: 700, tracking: "0.16em", transform: "uppercase" }
+    caption:      { font: body,    size: "12.5px", weight: 600, tracking: "0",      leading: 1.3 }   # table headers, nav groups, stat labels
     mono-id-lg:   { font: mono,    size: "26px", weight: 700, tracking: "-0.01em", numeric: "tabular-nums" }  # receipt case number
     mono-id:      { font: mono,    size: "14px", weight: 400, numeric: "tabular-nums" }                       # table ids, PIN, dates
 
@@ -179,9 +179,9 @@ above) and native controls and scrollbars follow the chosen theme.
 
 **The app.** `--accent` follows the operator's primary colour: with the default brand
 it equals `{colors.accent}` / `{colors.accent-strong}` / `{colors.accent-weak}` in both
-themes; a custom `primary_color` derives its own family with `color-mix`
-(`brand_accent()` in `app/templating.py`). Every other app token is a DESIGN.md value
-(`tests/test_site_css.py::APP_TOKENS`).
+themes; a custom `primary_color` derives its own family in `brand_colour.tokens()`
+(`app/services/brand_colour.py`, see [A custom brand colour](#a-custom-brand-colour)). Every
+other app token is a DESIGN.md value (`tests/test_site_css.py::APP_TOKENS`).
 
 **Semantic colours are not the accent.** Status and feedback use
 `{colors.info}` / `{colors.success}` / `{colors.warning}` / `{colors.danger}` and
@@ -190,17 +190,36 @@ their `-weak` tints. `{colors.success}` deliberately equals the accent hue —
 Because of that overlap, **never place a success pill and the primary CTA in the
 same eyeline**; let context disambiguate.
 
+### A custom brand colour
+
+An operator may set a brand colour on `/admin/branding`. The server derives every token from it so
+text stays at 4.5:1 or better (WCAG 2.x) in both themes:
+
+| Token | Rule |
+| --- | --- |
+| `--accent-subtle` (tint behind badges, active pills and the admin nav) | The canvas with 12 % (light) or 24 % (dark) of the colour |
+| `--accent`, light | The colour mixed towards black in 2 % steps until 4.5:1 on the canvas and on the tint |
+| `--accent`, dark | The colour mixed towards white in 2 % steps until 4.5:1 on the canvas and on the tint |
+| `--brand-on` (text on brand fills) | White or pure black, whichever contrasts more with the accent |
+| `--cta-bg-hover` | The accent mixed 15 % away from its text colour, so hover never loses contrast |
+
+The default `#0c7253` keeps the tokens listed above unchanged.
+
 ### Report status → colour mapping
 
 The `ReportStatus` values map to fixed semantic roles (keep this table and the
 `ReportStatus` enum in sync):
 
-| Status              | Role      | Pill background        | Pill text / dot    |
-| ------------------- | --------- | --------------------- | ------------------ |
-| `received`          | neutral   | `{colors.surface-2}`  | `{colors.muted}`   |
-| `in_review`         | info      | `{colors.info-weak}`  | `{colors.info}`    |
-| `pending_feedback`  | warning   | `{colors.warning-weak}` | `{colors.warning}` |
-| `closed`            | success   | `{colors.success-weak}` | `{colors.success}` |
+Every pill is the same neutral pill (`{colors.surface}`, hairline ring,
+`{colors.body}` text); only the dot carries the role. Four tinted pills put blue,
+amber and green side by side on one screen.
+
+| Status              | Role      | Dot                 |
+| ------------------- | --------- | ------------------- |
+| `received`          | neutral   | `{colors.muted}`    |
+| `in_review`         | active    | `{colors.ink}`      |
+| `pending_feedback`  | warning   | `{colors.warning}`  |
+| `closed`            | success   | `{colors.success}`  |
 
 ## Typography
 
@@ -208,23 +227,25 @@ Two families, three voices:
 
 - **Sora** — display and body. A geometric-humanist sans: confident at large
   sizes, quiet at reading sizes. One family keeps the system coherent.
-- **JetBrains Mono** — every identifier and the uppercase eyebrow label.
+- **JetBrains Mono** — every identifier, and nothing else.
 
 Set the scale from `{typography.scale}` and stay on it. The full ramp, largest to
 smallest: `display-hero` → `display-lg` → `heading` → `heading-sm` → `lead` →
-`body` → `body-sm` → `label` → `hint`, with `eyebrow`, `mono-id-lg`, and `mono-id`
+`body` → `body-sm` → `label` → `caption` → `hint`, with `mono-id-lg` and `mono-id`
 as the mono voices.
 
 ### Principles
 
 - **Negative tracking scales with size.** `-0.035em` on the hero, easing to `0` by
-  body. Never track body or mono positively (except the eyebrow's `0.16em`).
+  body. Never track body or mono positively.
 - **Weight ceiling 700:** the hero, the stat figures (`display-lg`) and the mono voices
-  (`eyebrow`, `mono-id-lg`) — as the scale above sets them. Every other heading and every
+  (`mono-id-lg`) — as the scale above sets them. Every other heading and every
   Sora label is 600. Nothing on the platform is heavier than the hero.
-- **Eyebrows are mono, uppercase, `0.16em`.** They label a section or state
-  (`CONFIDENTIAL REPORTING CHANNEL`, `CASE STATUS`); they are not decoration and
-  must describe what follows.
+- **No eyebrows, no all-caps labels.** A tracked capital label above a heading only
+  restated the heading below it. Every label is sentence case Sora 600: alert titles,
+  credential and review labels, the message sender, the stepper's step names, table
+  headers, the admin menu's group names, stat labels, the demo badge. Mono stays for
+  the facts beside them (case number, PIN, dates).
 - **Identifiers are mono with `tabular-nums`.** Case numbers, PINs, timestamps,
   deadlines, stat figures. Digits must align in columns and never re-flow.
 - **Keep running text at `{spacing.container.measure}` (~62ch).** Reports and
@@ -311,24 +332,31 @@ A speech bubble with a keyhole: one evenodd path on a 24-unit grid, drawn in ink
 
 ### Reassurance block (signature)
 
-A single full-width band split into three cells, filled with `{colors.accent}`.
-Each cell: a mono eyebrow in a lightened `{colors.accent-ink}`, a 600 headline, and
-one line of `{typography.scale.body-sm}`. This is the platform's emotional anchor —
-*Anonymous · No IP logging · Encrypted*. Use it **once** on the entry screen. It is
-the only place the accent is used generously.
+On `/submit`, a neutral `{rounded.md}` card (`{colors.surface}`, hairline ring)
+beside the form: a 600 heading and four promises (no IP address stored, case
+number and PIN, no tracking, HinSchG deadlines), each led by an accent check and
+set as an `{colors.ink}` 600 title over one or two lines of
+`{typography.scale.body-sm}`, then the onion address and the link to the external
+reporting offices. A brand-coloured fill was tried in 2.4.0 and dropped: on the
+dark theme it fought the demo banner, the info alert and the status pills.
+
+Block and form are one grid inside the header's `--frame` (`.split-layout`): the
+block starts at the logo, the form ends at the footer's last link, at any window
+width. The block sticks while the form scrolls and is never taller than the
+wizard's first step, so the page stays one Full HD window high.
 
 ### Cards & panels
 
 `{colors.surface-2}` fill, 1px `{colors.hairline}`, `{rounded.md}`, `{spacing.scale.x6}`
 padding, optional `{elevation.card}`. A panel is the same at `{colors.surface}`.
-Card titles use a mono `eyebrow` over a hairline rule.
+Card titles are `heading-sm` over a hairline rule.
 The page's main content panel (`.panel-primary`, the report on the case page) carries a
 3px inset top stripe in `{colors.ink}`, never `{colors.accent}`: the accent stays with the
 view's one primary action.
 
 ### Stat cards (admin)
 
-`{colors.surface}` card, mono `eyebrow` label, a `display-lg` figure with
+`{colors.surface}` card, a `caption` label, a `display-lg` figure with
 `tabular-nums`, and a faint accent **sparkline** (SVG polyline in `{colors.accent}`)
 showing trend. An `alert` variant recolours the label and figure to
 `{colors.danger}` when a metric needs attention (e.g. overdue cases). Used only on
@@ -341,14 +369,14 @@ muted, no gradients. Statistics-page only.
 
 ### Tables
 
-Full-width, hairline row dividers, no vertical rules. `thead th` is a mono
-`eyebrow`; `td` is `{typography.scale.body-sm}`. Case IDs and dates use `mono-id`
-with `tabular-nums`. Row hover fills `{colors.surface}`. Wrap in `overflow-x: auto`.
+Full-width, hairline row dividers, no vertical rules. `thead th` is a `caption`;
+`td` is `{typography.scale.body-sm}`. Case IDs and dates use `mono-id` with
+`tabular-nums` and never wrap. Row hover fills `{colors.surface}`. Wrap in `overflow-x: auto`.
 
 ### Status pills
 
-`{rounded.sm}`, ~`4px 10px`, weight 600, a leading `{rounded.full}` dot in
-`currentColor`. Colour strictly by the [status→colour table](#report-status--colour-mapping).
+`{rounded.sm}`, ~`4px 10px`, weight 600, a leading `{rounded.full}` dot. The dot's
+colour comes strictly from the [status→colour table](#report-status--colour-mapping).
 Pills read state at a glance and must never borrow the accent for a non-success state.
 
 ### Forms
@@ -372,7 +400,7 @@ component platform-wide — do not fork a second progress pattern.
 ### Case-number / PIN receipt (signature)
 
 The reporter's key to their report, framed like a receipt: a `{colors.surface}`
-panel with a mono `eyebrow` ("YOUR CASE NUMBER"), the case number in `mono-id-lg`,
+panel with a sentence-case label ("Case number"), the case number in `mono-id-lg`,
 and the current status pill aligned opposite. Immediately below, a **PIN callout**
 on `{colors.warning-weak}`: a warning glyph, the "keep this safe — it is the only
 way back, we cannot recover it" message, and the PIN in a bordered mono token.
@@ -389,16 +417,20 @@ showing the statutory deadline countdown (HinSchG acknowledgement / feedback win
 ### Secure message thread
 
 Two-sided bubbles. Handler messages (`them`): `{colors.surface}` + hairline,
-left-aligned. Reporter messages (`you`): `{colors.accent-weak}` + accent-tinted
-border, right-aligned. Each bubble carries a mono `who` label ("CASE HANDLER",
-"YOU · ANONYMOUS"). Max width ~80%.
+left-aligned, an `{colors.ink}` sender. Reporter messages (`you`): `{colors.accent-weak}` + accent-tinted
+border, right-aligned. Each bubble carries the sender in sentence-case Sora 600
+("Reporting office") and the date in mono. Max width ~80%.
 
 ### Alerts / banners
 
 One banner system: `{rounded.md}`, `-weak` tint background, matching semantic
-border and text, from `{colors.info}` / `{colors.success}` / `{colors.warning}` /
-`{colors.danger}`. The demo banner and IP-warning banner are variants of this —
-not separate components. Notification emails are plain text on purpose — no
+border and text, from `{colors.success}` / `{colors.warning}` / `{colors.danger}`.
+The tints are `{colors.success-weak}`, `{colors.warning-weak}` and
+`{colors.danger-weak}`. **Information is neutral**: `alert-info` is `{colors.surface}`
+with a `{colors.border-strong}` bar and an `{colors.ink}` title; `{colors.info}` and
+`{colors.info-weak}` stay out of the reporter's pages. Amber and red are kept
+for what needs the reader to act. The demo banner is neutral too (a note, not a
+warning); the IP-warning banner is the warning variant. Notification emails are plain text on purpose — no
 tracking pixels, no remote images.
 
 ### Navigation & footer
@@ -406,7 +438,11 @@ tracking pixels, no remote images.
 Sticky nav on an opaque `{colors.canvas}` with a bottom hairline: mark +
 wordmark left, utility controls (theme, language) right as equal-sized icon buttons
 (1px hairline ring, `{rounded.md}`). Footer sits on `{colors.inverse}` in both themes,
-text in `{colors.inverse-muted}`; the version string in mono.
+text in `{colors.inverse-muted}`, one compact row lower than the nav: the operator's
+privacy and legal notice links and the external reporting offices on the left, "Powered
+by OpenWhistle" on the right. The version string, in mono, only on admin pages. The footer is not
+brandable. An operator logo replaces the mark in the nav with `alt=""`, because the name stands beside
+it; the optional dark variant shows in the dark theme, else the light logo serves both.
 
 ### Printed case record
 
@@ -443,8 +479,10 @@ How to draw one: `docs-tech/diagrams.md`.
 
 Restraint. Motion confirms, it does not entertain.
 
-- **One page-load reveal.** Screens rise `~10px` and fade over `~0.5s`, staggered
-  `~60ms`. That is the whole entrance.
+- **No page-load reveal.** A page is there when it opens: the admin moves between
+  pages all day, and a panel caught mid-fade reads as unfinished. Only two things
+  enter: the reporter's receipt (one staggered rise, `~0.5s`) and an alert that
+  answers an action.
 - **Micro-feedback only** elsewhere: a `~0.15s` hover/focus transition on
   interactive surfaces, the accent focus ring.
 - **Theme change** cross-fades background and text over `~0.3s`.
@@ -517,7 +555,7 @@ the parent's curve, so squaring every inner control would be wrong. Full pills n
 - Don't add a third typeface, a gradient, or a decorative illustration.
 - Don't let a success pill and the primary CTA share an eyeline (both are emerald).
 - Don't load a font, script, or asset from any third-party host.
-- Don't put an eyebrow above a heading that already says the same thing.
+- Don't put a label above a heading, or set a label in capitals.
 - Don't put more than five panels on a page.
 
 ## Responsive Behavior
@@ -525,8 +563,9 @@ the parent's curve, so squaring every inner control would be wrong. Full pills n
 - **Breakpoints** — desktop (default); layouts adapt at `900px`, `768px`, `640px`
   and `540px`; the admin shell alone breaks at `1024px`.
 - **Touch targets** — interactive elements are `≥44×44px` on touch.
-- **Reassurance block & stat grid** — 3/4-up on desktop → 2-up on tablet → 1-up on
-  mobile.
+- **Reassurance block** — beside the form on desktop; below it at `≤900px`, its
+  promises 2-up at `≤768px` and 1-up at `≤540px`.
+- **Stat grid** — 4-up on desktop → 2-up on tablet → 1-up on mobile.
 - **Admin shell** — the sidebar sits beside the content at `≥1024px`; below that it
   collapses to a single column with the menu below the content.
 - **Tables** — stack into labelled rows at `≤640px`; the page never scrolls
@@ -534,8 +573,9 @@ the parent's curve, so squaring every inner control would be wrong. Full pills n
 - **Report form** — the submit page's split layout stacks at `≤900px`, report form
   first, reassurance sidebar second.
 - **Hero** — `display-hero` clamps down to ~30px on mobile.
-- **Wizard & nav** — the stepper stays horizontal but tightens; nav padding
-  collapses; the session-expiry banner docks to the bottom, full-width.
+- **Wizard & nav** — the stepper stays horizontal but tightens; at `≤480px` the
+  wizard drops the step names (six hyphenated into "Mo-dus") and shows "Step n of 6";
+  nav padding collapses; the session-expiry banner docks to the bottom, full-width.
 
 ## Iteration Guide
 
