@@ -155,14 +155,15 @@ js:
         </p>
         <ul>
           <li><strong>Name</strong>: shown in the navigation bar and page titles.</li>
-          <li><strong>Logo and dark logo</strong>: replace the shield in the navigation bar. Without a dark logo, the light one is used in both themes.</li>
+          <li><strong>Logo and dark logo</strong>: replace the OpenWhistle mark in the navigation bar. Without a dark logo, the light one is used in both themes. The light logo also becomes the favicon.</li>
           <li><strong>Colour</strong>: the brand colour. The server adjusts it per theme so text meets WCAG AA (4.5:1) and shows the achieved ratios.</li>
-          <li><strong>Reset</strong>: clears one field or all of them and falls back to the instance default.</li>
+          <li><strong>Falling back</strong>: empty a field, or tick <em>Remove</em> under a logo, and save; <em>Reset everything</em> clears all four. An emptied field falls back to the instance default.</li>
         </ul>
         <p>Limits and rules:</p>
         <ul>
           <li>PNG, JPEG or WebP only, up to 1 MB and 16 megapixels. SVG is refused, because it can carry script.</li>
-          <li>Every logo is re-encoded as PNG without metadata, at most 96 px high.</li>
+          <li>Every logo is re-encoded as PNG without metadata, at most 96 px high and 1536 px wide.</li>
+          <li>Logos are served from <code>/branding/&lt;sha&gt;.png</code>, named by the hash of the image, so a changed logo gets a new address.</li>
           <li>Each organisation can have its own branding. A field it leaves empty falls back to the instance default.</li>
           <li>The footer cannot be branded.</li>
         </ul>
