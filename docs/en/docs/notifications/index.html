@@ -17,7 +17,7 @@ js:
 <table class="env-table">
           <thead><tr><th>Channel</th><th>Goes to</th><th>Carries</th></tr></thead>
           <tbody>
-            <tr><td>Email</td><td>your own admins</td><td>the case number: only they can act on a specific case</td></tr>
+            <tr><td>Email</td><td><code>NOTIFY_EMAIL_TO</code>, for every organisation of the instance</td><td>the case numbers: only admins can act on a specific case</td></tr>
             <tr><td>Webhook</td><td>third parties (Slack, Teams, a generic endpoint)</td><td><strong>counts only</strong>, never a case number or a deadline date</td></tr>
           </tbody>
         </table>
@@ -32,11 +32,17 @@ js:
             times are stored as the day only; the digest interval bounds how precisely a notice dates
             a report. An hourly digest would say which hour. The trade-off: case managers learn of a
             report up to a day late, well inside the 7-day acknowledgement deadline.
-            <code>0</code> sends each notice at once, only if you accept the timing risk. The queue is
-            in Redis, which keeps nothing on disk: when the stack stops (deploy, reboot, certificate
-            renewal), the app sends what is queued before Redis goes down.
+            <code>0</code> sends each notice at once, only if you accept the timing risk: the mail and the
+            application's log line about it carry the second. The queue is in Redis, which keeps nothing
+            on disk: when the stack stops (deploy, reboot, certificate renewal), the app sends what is
+            queued before Redis goes down.
           </p>
         </div>
+        <p>
+          A digest that no channel delivered (SMTP down, webhook refused) goes out again with the next one. The
+          queue lives in Redis: a Redis restart drops the notices not yet sent; the dashboard still lists the
+          cases and their deadlines.
+        </p>
 
 <div data-config="notifications"></div>
 

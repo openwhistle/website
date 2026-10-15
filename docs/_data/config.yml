@@ -51,7 +51,8 @@ groups:
     default: <code>80</code>
   - name: APP_NAME
     need: optional
-    description: Display name shown in the application UI and browser title.
+    description: Display name shown in the application UI and browser title. A starting value;
+      what is saved on <code>/admin/branding</code> overrides it.
     default: <code>OpenWhistle</code>
   - name: DEMO_MODE
     need: optional
@@ -70,7 +71,8 @@ groups:
     need: optional
     description: Set to <code>false</code> when the app is served over plain HTTP (e.g. local network
       without TLS). Must be <code>true</code> behind HTTPS. Browsers block <code>Secure</code> cookies
-      over HTTP, causing session failures when accessed from other devices.
+      over HTTP, causing session failures when accessed from other devices. The Ansible role sets it from
+      <code>openwhistle_tls_enabled</code>.
     default: <code>true</code>
   - name: SESSION_MAX_HOURS
     need: optional
@@ -79,7 +81,7 @@ groups:
     default: <code>12</code>
   - name: ACCESS_TOKEN_EXPIRE_MINUTES
     need: optional
-    description: Lifetime of one admin session token; <em>Stay signed in</em> renews it, up to <code>SESSION_MAX_HOURS</code>.
+    description: Lifetime of one admin session token; <em>Stay signed in</em> renews it, up to <code>SESSION_MAX_HOURS</code>. At least 1.
     default: <code>60</code>
   - name: ALGORITHM
     need: optional
@@ -88,19 +90,19 @@ groups:
   - name: MAX_ACCESS_ATTEMPTS
     need: optional
     description: Wrong PINs for one case number before the status page asks the reporter to wait. A correct
-      PIN always works.
+      PIN always works. At least 1.
     default: <code>5</code>
   - name: ACCESS_LOCKOUT_MINUTES
     need: optional
-    description: How long that wait notice lasts.
+    description: How long that wait notice lasts. At least 1.
     default: <code>15</code>
   - name: MAX_LOGIN_ATTEMPTS
     need: optional
-    description: Wrong admin passwords for one username before that username is locked.
+    description: Wrong admin passwords for one username before that username is locked. At least 1.
     default: <code>10</code>
   - name: LOGIN_LOCKOUT_MINUTES
     need: optional
-    description: How long an admin username stays locked.
+    description: How long an admin username stays locked. At least 1.
     default: <code>30</code>
   - name: APP_VERSION
     need: optional
@@ -150,12 +152,13 @@ groups:
   - name: BRAND_PRIMARY_COLOR
     need: optional
     description: Primary brand colour as a hex value. Used for buttons, accents, and links throughout
-      the UI.
+      the UI. A starting value; what is saved on <code>/admin/branding</code> overrides it.
     default: <code>#0c7253</code>
   - name: BRAND_LOGO_URL
     need: optional
-    description: A company logo, shown in the navigation bar instead of the OpenWhistle shield. A path this
-      server serves (<code>/static/...</code>) or a <code>data:image/</code> URI; anything else is ignored with a
+    description: Starting value for the company logo shown in the navigation bar instead of the OpenWhistle
+      shield; what is saved on <code>/admin/branding</code> overrides it. A path this server serves
+      (<code>/static/...</code>) or a <code>data:image/</code> URI; anything else is ignored with a
       warning; the Content-Security-Policy
       (<code>img-src 'self' data:</code>) blocks it, and allowing it would let the whistleblower's browser
       fetch it from another host.
@@ -339,11 +342,13 @@ groups:
   - name: LDAP_PORT
     need: optional
     description: LDAP port. Use <code>389</code> with <code>LDAP_START_TLS</code> or <code>636</code>
-      for LDAPS. Plain <code>389</code> without either sends passwords in clear.
+      for LDAPS. Plain <code>389</code> without either would send passwords in clear, so the app refuses
+      to start.
     default: <code>389</code>
   - name: LDAP_USE_SSL
     need: optional
     description: Set to <code>true</code> to use LDAPS (TLS from the start). Set port to <code>636</code>.
+      With <code>LDAP_ENABLED</code>, this or <code>LDAP_START_TLS</code> is required.
       The server certificate is verified against the system CA store; for a private CA, mount its PEM
       file and set <code>LDAPTLS_CACERT</code> to its path.
     default: <code>false</code>

@@ -20,7 +20,7 @@ js:
         </table>
 </div>
         <ul>
-          <li>Run the script inside the container: <code>docker exec -it openwhistle python scripts/reset_admin_password.py …</code>.</li>
+          <li>Run the script inside the container: <code>docker compose exec app python scripts/reset_admin_password.py …</code>.</li>
           <li>Every reset ends every session of the account at once. After an authenticator reset, the old app stops working.</li>
           <li>A password reset by the script is in the audit log as <code>admin.password_reset</code>. The next login must change it.</li>
           <li>A reset in <code>/admin/users</code> makes the account new again: new authenticator, and a new temporary password in place of the old one.</li>

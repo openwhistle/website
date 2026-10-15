@@ -42,8 +42,8 @@ User-Agent: openwhistle/&lt;version&gt;</code></pre>
             <tr><td>The identifier</td><td>16 random bytes made on your server when you first agree, and kept in the database. <strong>Admin &rarr; System</strong> shows it and <em>Reset identifier</em> replaces it: the next report is then a new installation as far as anyone can tell</td></tr>
             <tr><td>Why random</td><td>a value derived from the hostname or a machine id could be recomputed by anyone who knows the host, which turns a count into a lookup</td></tr>
             <tr><td>At the far end</td><td>one line: timestamp, identifier, version. <strong>Your address is not recorded.</strong> Lines are kept 35 days, then only the rolled-up number</td></tr>
-            <tr><td>When</td><td>checked every hour, sent when 24 hours passed since the last success; the first attempt waits a random part of an hour after start. With several replicas only one sends (Redis lock)</td></tr>
-            <tr><td>A failure</td><td>10 seconds for the whole request, redirects refused, one debug log line; retried at the next hourly check, never in a loop, never shown on a page</td></tr>
+            <tr><td>When</td><td>checked every hour, sent when 24 hours passed since the last success, at most one attempt a day; the first attempt waits a random part of an hour after start. With several replicas only one sends (Redis lock)</td></tr>
+            <tr><td>A failure</td><td>10 seconds for the whole request, redirects refused, one debug log line; tried again a day later, never in a loop, never shown on a page</td></tr>
             <tr><td>Never counted</td><td><code>DEMO_MODE</code> (the public demo) and <code>LOCAL_REVIEW_LOGIN</code> instances</td></tr>
           </tbody>
         </table>
