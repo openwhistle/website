@@ -51,7 +51,8 @@ groups:
     default: <code>80</code>
   - name: APP_NAME
     need: optional
-    description: Display name shown in the application UI and browser title.
+    description: Display name shown in the application UI and browser title. A starting value;
+      what is saved on <code>/admin/branding</code> overrides it.
     default: <code>OpenWhistle</code>
   - name: DEMO_MODE
     need: optional
@@ -151,12 +152,13 @@ groups:
   - name: BRAND_PRIMARY_COLOR
     need: optional
     description: Primary brand colour as a hex value. Used for buttons, accents, and links throughout
-      the UI.
+      the UI. A starting value; what is saved on <code>/admin/branding</code> overrides it.
     default: <code>#0c7253</code>
   - name: BRAND_LOGO_URL
     need: optional
-    description: A company logo, shown in the navigation bar instead of the OpenWhistle shield. A path this
-      server serves (<code>/static/...</code>) or a <code>data:image/</code> URI; anything else is ignored with a
+    description: Starting value for the company logo shown in the navigation bar instead of the OpenWhistle
+      shield; what is saved on <code>/admin/branding</code> overrides it. A path this server serves
+      (<code>/static/...</code>) or a <code>data:image/</code> URI; anything else is ignored with a
       warning; the Content-Security-Policy
       (<code>img-src 'self' data:</code>) blocks it, and allowing it would let the whistleblower's browser
       fetch it from another host.
