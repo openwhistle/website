@@ -163,6 +163,18 @@ groups:
       (<code>img-src 'self' data:</code>) blocks it, and allowing it would let the whistleblower's browser
       fetch it from another host.
     default: —
+  - name: PRIVACY_POLICY_URL
+    need: recommended
+    description: Your privacy notice for reporters, linked in every page's footer. Art. 13 GDPR asks for it where
+      the data is collected; the admin dashboard says while it is missing. Only <code>https://</code> or
+      <code>http://</code> addresses.
+    default: —
+  - name: LEGAL_NOTICE_URL
+    need: optional
+    description: Your legal notice (Impressum), linked in every page's footer. Whether § 5 DDG requires one on a
+      reporting portal is contested; linking the company's existing one is the safe choice. Empty leaves the
+      link out.
+    default: —
   - name: APP_PUBLIC_URL
     need: optional
     description: Public base URL of the application. Used to build dashboard links inside notification
