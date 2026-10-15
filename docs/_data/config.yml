@@ -339,11 +339,13 @@ groups:
   - name: LDAP_PORT
     need: optional
     description: LDAP port. Use <code>389</code> with <code>LDAP_START_TLS</code> or <code>636</code>
-      for LDAPS. Plain <code>389</code> without either sends passwords in clear.
+      for LDAPS. Plain <code>389</code> without either would send passwords in clear, so the app refuses
+      to start.
     default: <code>389</code>
   - name: LDAP_USE_SSL
     need: optional
     description: Set to <code>true</code> to use LDAPS (TLS from the start). Set port to <code>636</code>.
+      With <code>LDAP_ENABLED</code>, this or <code>LDAP_START_TLS</code> is required.
       The server certificate is verified against the system CA store; for a private CA, mount its PEM
       file and set <code>LDAPTLS_CACERT</code> to its path.
     default: <code>false</code>
