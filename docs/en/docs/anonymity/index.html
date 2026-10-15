@@ -26,7 +26,8 @@ js:
               <div class="security-layer-desc">
                 <code>X-Forwarded-For</code>, <code>X-Real-IP</code>, <code>Forwarded</code>,
                 <code>CF-Connecting-IP</code> and 19 more CDN and proxy variants are cleared before a
-                request reaches the app, even when a CDN added them. The app strips the same list. <code>access_log off</code>: request URIs never reach the disk.
+                request reaches the app, even when a CDN added them. So are the 38 location headers CDNs add:
+                CloudFront's viewer address, the city, coordinates and network of a visitor. The app strips the same list. <code>access_log off</code>: request URIs never reach the disk.
                 A reverse proxy of your own in front must not log them either.
               </div>
             </div>

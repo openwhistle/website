@@ -70,7 +70,8 @@ groups:
     need: optional
     description: Set to <code>false</code> when the app is served over plain HTTP (e.g. local network
       without TLS). Must be <code>true</code> behind HTTPS. Browsers block <code>Secure</code> cookies
-      over HTTP, causing session failures when accessed from other devices.
+      over HTTP, causing session failures when accessed from other devices. The Ansible role sets it from
+      <code>openwhistle_tls_enabled</code>.
     default: <code>true</code>
   - name: SESSION_MAX_HOURS
     need: optional
@@ -79,7 +80,7 @@ groups:
     default: <code>12</code>
   - name: ACCESS_TOKEN_EXPIRE_MINUTES
     need: optional
-    description: Lifetime of one admin session token; <em>Stay signed in</em> renews it, up to <code>SESSION_MAX_HOURS</code>.
+    description: Lifetime of one admin session token; <em>Stay signed in</em> renews it, up to <code>SESSION_MAX_HOURS</code>. At least 1.
     default: <code>60</code>
   - name: ALGORITHM
     need: optional
@@ -88,19 +89,19 @@ groups:
   - name: MAX_ACCESS_ATTEMPTS
     need: optional
     description: Wrong PINs for one case number before the status page asks the reporter to wait. A correct
-      PIN always works.
+      PIN always works. At least 1.
     default: <code>5</code>
   - name: ACCESS_LOCKOUT_MINUTES
     need: optional
-    description: How long that wait notice lasts.
+    description: How long that wait notice lasts. At least 1.
     default: <code>15</code>
   - name: MAX_LOGIN_ATTEMPTS
     need: optional
-    description: Wrong admin passwords for one username before that username is locked.
+    description: Wrong admin passwords for one username before that username is locked. At least 1.
     default: <code>10</code>
   - name: LOGIN_LOCKOUT_MINUTES
     need: optional
-    description: How long an admin username stays locked.
+    description: How long an admin username stays locked. At least 1.
     default: <code>30</code>
   - name: APP_VERSION
     need: optional
