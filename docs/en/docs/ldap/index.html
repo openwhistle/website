@@ -19,6 +19,8 @@ js:
           <li>Accounts with a local password, such as the one the setup wizard created, keep signing in with it.</li>
           <li>A directory user whose name a local account already has is refused, never merged into it.</li>
           <li>The username comes from <code>LDAP_ATTR_USERNAME</code>. An entry without it is refused.</li>
+          <li>Only over TLS: <code>LDAP_USE_SSL</code> or <code>LDAP_START_TLS</code>. Without either, a bind
+            sends every password in clear text, and the app refuses to start.</li>
         </ul>
         <p>
           LDAP uses python-ldap (the OpenLDAP client) and S3 storage uses boto3: optional extras,

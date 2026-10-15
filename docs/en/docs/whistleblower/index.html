@@ -23,7 +23,7 @@ js:
         <h2 id="submitting-a-report">Submitting a report</h2>
         <p>
           Use a private browsing window and, where possible, a network not traceable to you (public
-          Wi-Fi, Tor). The wizard keeps your progress in a temporary session for 2 hours; you can go
+          Wi-Fi, Tor). The wizard keeps your progress for 2 hours, or until the browser closes; you can go
           back and forward at any step.
         </p>
         <figure class="doc-shot">
@@ -39,7 +39,8 @@ js:
           <li><div><strong>Location</strong> (optional), only when the operator has configured branches or offices.</div></li>
           <li><div><strong>Category</strong> (required) from the operator's list (e.g. financial fraud, safety violation, discrimination).</div></li>
           <li><div><strong>Description</strong> (required), 10 to 10&nbsp;000 characters. Be as specific as possible without naming yourself.</div></li>
-          <li><div><strong>Files</strong> (optional): PDF, images, Word (<code>.docx</code>), Excel (<code>.xlsx</code>), CSV, TXT, up to 10 MB each and 5 per report. Legacy <code>.doc</code>/<code>.xls</code> are refused; save them as <code>.docx</code>/<code>.xlsx</code>. Metadata is removed, and with virus scanning on, an infected file is refused. Going back keeps attached files; choosing new ones replaces them, and <strong>Remove</strong> drops one.</div></li>
+          <li><div><strong>Files</strong> (optional): PDF, images, Word (<code>.docx</code>), Excel (<code>.xlsx</code>), CSV, TXT, up to 10 MB each and 5 per report. Legacy <code>.doc</code>/<code>.xls</code> are refused; save them as <code>.docx</code>/<code>.xlsx</code>. Metadata is removed: location and camera data in photos, the author, signature, edit times and
+            printer in PDF and Office files. With virus scanning on, an infected file is refused. Going back keeps attached files; choosing new ones replaces them, and <strong>Remove</strong> drops one.</div></li>
           <li><div><strong>Review and submit.</strong></div></li>
         </ol>
         <figure class="doc-shot">
@@ -73,9 +74,19 @@ js:
           <li>A form to send a follow-up message</li>
         </ul>
         <p>
-          Nobody can lock you out of your own case: the correct case number and PIN always work.
+          Nobody can lock you out of your own case: the correct case number and PIN always work, the PIN in
+          upper or lower case.
           After several wrong attempts on a case number the page asks you to wait, a notice, not a
-          lock. <em>Look up a different report</em> ends the session on a shared device.
+          lock. <em>Look up a different report</em> ends the session on a shared device; closing the browser ends it too.
+        </p>
+
+        <h2 id="external-reporting-offices">External reporting offices</h2>
+        <p>
+          You may report to a state's external reporting office instead, or afterwards (&sect;7 HinSchG).
+          <code>/external-reporting</code>, linked from every footer and the submit page, names them:
+          the Bundesamt f&uuml;r Justiz, BaFin, the Bundeskartellamt, the federal states' own offices
+          and the EU's anti-fraud office OLAF. &sect;13 Abs. 2 HinSchG requires the internal reporting
+          office to provide this.
         </p>
 
         <h2 id="security-recommendations-for-whistleblowers">Security recommendations for whistleblowers</h2>

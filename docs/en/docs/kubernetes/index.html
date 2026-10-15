@@ -16,7 +16,10 @@ js:
           sets the bundled nginx's rate limit: <code>limit-rps: "10"</code>,
           <code>limit-burst-multiplier: "3"</code>, a burst of 30. It raises
           <code>proxy-body-size</code> to <code>55m</code>, like the bundled nginx; ingress-nginx
-          otherwise refuses any upload over 1 MB.
+          otherwise refuses any upload over 1 MB. <code>proxy-request-buffering: "off"</code> keeps a report
+          off the controller's disk: with buffering on, ingress-nginx writes every body over 8 KB, original
+          attachments included, to a file first. The pod's <code>/tmp</code>, where uploads wait before their
+          metadata is removed, is in memory.
         </p>
         <p>
           The chart bundles no PostgreSQL and no Redis: set <code>secrets.databaseUrl</code> and
