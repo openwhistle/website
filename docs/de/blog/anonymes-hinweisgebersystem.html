@@ -12,7 +12,7 @@ js:
 jsonld:
 - '@context': https://schema.org
   '@type': BlogPosting
-  headline: 'Wie OpenWhistle die Anonymität von Hinweisgebern schützt, und welche Installationsfehler sie gefährden'
+  headline: 'Wie OpenWhistle die Anonymität von Hinweisgebern schützt und welche Installationsfehler sie gefährden'
   description: 'Was OpenWhistle über meldende Personen nie speichert, wo ihre IP-Adresse trotzdem sichtbar sein kann und welche Fehler bei der Installation die Anonymität brechen.'
   url: https://openwhistle.net/de/blog/anonymes-hinweisgebersystem/
   mainEntityOfPage:
@@ -54,8 +54,8 @@ jsonld:
       <article>
         <header class="article-header">
           <div class="article-tag">Anonymität · Sicherheit · Betrieb</div>
-          <h1 class="article-title">Wie OpenWhistle die Anonymität von Hinweisgebern schützt, und welche Installationsfehler sie gefährden</h1>
-          <p class="article-subtitle">Was ein anonymes Hinweisgebersystem über meldende Personen nie speichert, wo ihre IP-Adresse trotzdem sichtbar sein kann und wie Sie das als Betreiber verhindern.</p>
+          <h1 class="article-title">Wie OpenWhistle die Anonymität von Hinweisgebern schützt und welche Installationsfehler sie gefährden</h1>
+          <p class="article-subtitle">Was OpenWhistle als anonymes Hinweisgebersystem über meldende Personen nie speichert, wo ihre IP-Adresse trotzdem sichtbar sein kann und wie Sie das als Betreiber verhindern.</p>
           <div class="article-meta">
             <span>27. Oktober 2026</span>
             <span>Aktualisiert am 27. Oktober 2026</span>
@@ -66,7 +66,7 @@ jsonld:
 
         <div class="article-body">
 
-          <p>Ein anonymes Hinweisgebersystem ist nur so anonym wie seine Installation. OpenWhistle speichert keine IP-Adresse, keine Uhrzeit und keine Metadaten aus Anhängen. Was vor dem Server passiert, im Netz und in einem vorgeschalteten Proxy, liegt beim Betreiber.</p>
+          <p>Ein anonymes Hinweisgebersystem ist nur so anonym wie seine Installation. OpenWhistle speichert keine IP-Adresse, keine Uhrzeit und keine Metadaten aus Anhängen. Was davor passiert, entscheiden das Netz der meldenden Person und ein Proxy, den der Betreiber davorsetzt.</p>
 
           <div class="callout callout-warn">
             <p class="callout-title">Transparenzhinweis</p>
@@ -91,14 +91,14 @@ jsonld:
               </tr>
             </thead>
             <tbody>
-              <tr><td>IP-Adresse, nginx</td><td data-label="Wie">leert 61 Header, darunter X-Forwarded-For und 38 Standort-Header von CDNs; kein Zugriffsprotokoll <a class="cite" href="#q1">[1]</a></td></tr>
+              <tr><td>IP-Adresse, nginx</td><td data-label="Wie">leert 59 Header, die eine Adresse verraten: 23 für die IP wie X-Forwarded-For und 36 für den Standort, die CDNs anhängen; kein Zugriffsprotokoll <a class="cite" href="#q1">[1]</a></td></tr>
               <tr><td>IP-Adresse, App</td><td data-label="Wie">entfernt dieselben Header noch einmal und löscht die Absenderadresse, bevor ein Handler läuft <a class="cite" href="#q2">[2]</a></td></tr>
               <tr><td>IP-Adresse, Datenbank</td><td data-label="Wie">keine Tabelle hat eine IP-Spalte <a class="cite" href="#q3">[3]</a></td></tr>
               <tr><td>Zugang zur Meldung</td><td data-label="Wie">Fallnummer und PIN, kein Konto, keine E-Mail-Adresse; die Statussitzung hält nur die Fall-ID, 2 Stunden lang <a class="cite" href="#q4">[4]</a></td></tr>
-              <tr><td>Zeitpunkt</td><td data-label="Wie">von Meldung, Nachrichten und Dateien nur das Datum, nie die Uhrzeit</td></tr>
+              <tr><td>Zeitpunkt</td><td data-label="Wie">von Meldung, eigenen Nachrichten und Dateien nur das Datum, nie die Uhrzeit (<a href="/en/docs/timestamps/" hreflang="en">Zeitstempel</a>)</td></tr>
               <tr><td>Anhänge</td><td data-label="Wie">GPS-Daten, Autor und Gerät werden entfernt, bevor etwas gespeichert wird <a class="cite" href="#q5">[5]</a></td></tr>
               <tr><td>Inhalt</td><td data-label="Wie">verschlüsselt, mit eigenem Schlüssel je Meldung <a class="cite" href="#q6">[6]</a></td></tr>
-              <tr><td>Dritte</td><td data-label="Wie">keine Schrift, kein Skript, kein Logo von fremden Servern; Verbindungen nach außen sind aus, bis Sie sie einschalten <a class="cite" href="#q2">[2]</a></td></tr>
+              <tr><td>Dritte</td><td data-label="Wie">keine Webfonts, kein Skript, kein Logo von fremden Servern <a class="cite" href="#q2">[2]</a>; Verbindungen nach außen sind aus, bis Sie sie einschalten (<a href="/en/docs/outbound/" hreflang="en">Anfragen nach außen</a>)</td></tr>
               <tr><td>Warnung</td><td data-label="Wie">kommt trotzdem ein IP-Header an, warnen Dashboard, Melde- und Statusseite <a class="cite" href="#q7">[7]</a></td></tr>
             </tbody>
           </table>
@@ -120,21 +120,21 @@ jsonld:
               <tr><td>Ein CDN wie Cloudflare davor</td><td data-label="Folge">Der Anbieter sieht jede Adresse und reicht sie im Header CF-Connecting-IP weiter <a class="cite" href="#q9">[9]</a></td><td data-label="So vermeiden Sie ihn">bewusst entscheiden; zusätzlich eine Onion-Adresse anbieten</td></tr>
               <tr><td>Port der App oder des Onion-Zugangs an nginx vorbei erreichbar</td><td data-label="Folge">Die Header werden nicht geleert; Anfragen können sich als Tor-Besucher ausgeben</td><td data-label="So vermeiden Sie ihn">nur Port 80 und 443 öffnen; 8080 bleibt an 127.0.0.1 gebunden (<a href="/en/docs/onion-trust/" hreflang="en">Onion-Vertrauensgrenze</a>)</td></tr>
               <tr><td>Meldeseite nur im Intranet oder über das Firmen-VPN</td><td data-label="Folge">Firewall und Proxy der Firma sehen, wer wann gemeldet hat</td><td data-label="So vermeiden Sie ihn">öffentlich erreichbar machen und auf ein privates Gerät außerhalb des Firmennetzes hinweisen</td></tr>
-              <tr><td>Anhänge in S3</td><td data-label="Folge">Der Bucket vermerkt je Datei die Upload-Zeit, sekundengenau <a class="cite" href="#q10">[10]</a></td><td data-label="So vermeiden Sie ihn">lokalen Speicher nutzen, oder den Zugriff auf den Bucket eng begrenzen</td></tr>
+              <tr><td>Anhänge in S3</td><td data-label="Folge">Der Bucket vermerkt je Datei die Upload-Zeit, sekundengenau <a class="cite" href="#q10">[10]</a></td><td data-label="So vermeiden Sie ihn">lokalen Speicher nutzen oder den Zugriff auf den Bucket eng begrenzen</td></tr>
               <tr><td>Datenbank-Backup zusammen mit <code>ENCRYPTION_KEY</code></td><td data-label="Folge">Wer das Backup hat, liest alle Meldungen</td><td data-label="So vermeiden Sie ihn">den Schlüssel getrennt vom Backup aufbewahren</td></tr>
-              <tr><td>Kein gültiges Zertifikat</td><td data-label="Folge">Der Browser warnt; Beschäftigte brechen ab oder gewöhnen sich an Warnungen</td><td data-label="So vermeiden Sie ihn">ein Zertifikat von Let's Encrypt (<a href="/en/docs/install/" hreflang="en">Installation</a>)</td></tr>
+              <tr><td>Kein gültiges Zertifikat</td><td data-label="Folge">Der Browser warnt; Beschäftigte brechen ab oder gewöhnen sich an Warnungen</td><td data-label="So vermeiden Sie ihn">ein Zertifikat von Let's Encrypt einrichten (<a href="/en/docs/install/" hreflang="en">Installation</a>)</td></tr>
             </tbody>
           </table>
 
           <h2>Tor: die stärkste Option</h2>
-          <p>Mit einer Onion-Adresse erreicht man OpenWhistle nur über Tor <a class="cite" href="#q11">[11]</a>. Das Netz der meldenden Person sieht dann nur eine Verbindung ins Tor-Netz, der Server keine Adresse. Wie Sie die Adresse einrichten, zeigt <a href="/en/docs/onion/" hreflang="en">Onion-Adresse anbieten</a>.</p>
+          <p>Eine Onion-Adresse ist nur über Tor erreichbar <a class="cite" href="#q11">[11]</a>. Wer sie nutzt, zeigt seinem Netz nur eine Verbindung ins Tor-Netz, und der Server sieht keine Adresse. Wie Sie die Adresse einrichten, zeigt <a href="/en/docs/onion/" hreflang="en">Onion-Adresse anbieten</a>.</p>
 
           <h2>Was das Gesetz verlangt</h2>
           <p>Die Identität der hinweisgebenden Person ist vertraulich zu behandeln (§ 8 HinSchG) <a class="cite" href="#q12">[12]</a>. Anonyme Meldungen „sollte“ die Meldestelle bearbeiten; einen anonymen Kanal verlangt das Gesetz nicht (§ 16 Abs. 1). OpenWhistle bietet beides: anonym und vertraulich mit Namen.</p>
 
           <div class="article-cta">
             <h3>Selbst prüfen</h3>
-            <p>Die Live-Demo zeigt den anonymen Meldeweg. Der gesamte Quellcode liegt offen; jede Zeile dieses Artikels lässt sich dort nachlesen.</p>
+            <p>Die Live-Demo zeigt den anonymen Meldeweg. Der gesamte Quellcode liegt offen; jede Aussage über die Software lässt sich dort nachlesen.</p>
             <a href="https://demo.openwhistle.net" class="btn-cta" rel="noopener noreferrer" target="_blank">Live-Demo öffnen &rarr;</a>
           </div>
 
