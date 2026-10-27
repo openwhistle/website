@@ -4,7 +4,7 @@ description: How OpenWhistle strips GPS data and Windows user names from attachm
 translation_key: removing-metadata-without-altering-evidence
 og_type: article
 published: '2026-09-27'
-modified: '2026-09-27'
+modified: '2026-10-27'
 section: Privacy
 css:
 - post
@@ -20,7 +20,7 @@ jsonld:
     '@type': WebPage
     '@id': https://openwhistle.net/en/blog/removing-metadata-without-altering-evidence/
   datePublished: '2026-09-27'
-  dateModified: '2026-09-27'
+  dateModified: '2026-10-27'
   author:
     '@type': Organization
     name: OpenWhistle Contributors
@@ -59,6 +59,7 @@ jsonld:
           <p class="article-subtitle">A photo from a work phone says where it was taken. A spreadsheet names its Windows account. OpenWhistle removes both. Up to version 2.0, it also changed the evidence itself.</p>
           <div class="article-meta">
             <span>27 September 2026</span>
+            <span>Updated 27 October 2026</span>
             <span>4 min read</span>
             <span>OpenWhistle Contributors</span>
           </div>
@@ -66,12 +67,12 @@ jsonld:
 
         <div class="article-body">
 
-          <p>Whoever reports wrongdoing often attaches proof: a photo, a screenshot, a spreadsheet. Each of these files carries data nobody sees. A phone photo holds GPS coordinates and the camera's serial number. An Office file holds its author. An anonymous report is only as anonymous as its attachment.</p>
+          <p>Whoever reports wrongdoing often attaches proof: a photo, a screenshot, a spreadsheet. Each of these files carries data nobody sees. A phone photo can hold GPS coordinates and the camera's serial number <a class="cite" href="#q1">[1]</a>. An Office file holds its author <a class="cite" href="#q2">[2]</a>. An anonymous report is only as anonymous as its attachment.</p>
 
           <p>So OpenWhistle removes that data on upload, before anything is stored. A file that cannot be cleaned is refused, never stored as it came.</p>
 
           <h2>The old way: paint the picture again</h2>
-          <p>Up to version 2.0, OpenWhistle read an image and wrote only its pixels into a new file. Metadata could not come along. Neither, always, could the pixels. A bug bounty run measured it:</p>
+          <p>Up to version 2.0, OpenWhistle read an image and wrote only its pixels into a new file. Metadata could not come along. Neither, always, could the pixels. A bug bounty run measured it <a class="cite" href="#q3">[3]</a>:</p>
 
           <table class="data-table">
             <thead><tr><th scope="col">Attachment</th><th scope="col">Before</th><th scope="col">After cleaning (up to 2.0)</th></tr></thead>
@@ -89,7 +90,7 @@ jsonld:
           <p>The tests asked whether the metadata was gone. It was. Nobody asked whether the image still showed the same thing. And the test images were plain colour photos, with no palette and no animation. The fault sat exactly where nobody looked.</p>
 
           <h2>The new way: cut out only the metadata</h2>
-          <p>Since version 2.1 an image is no longer written again. JPEG, PNG and WebP consist of separate chunks. OpenWhistle keeps the chunks that describe the image and drops all others. The pixels stay identical bit for bit, and the file does not grow. Only the orientation is kept, so a portrait photo stays upright.</p>
+          <p>Since version 2.1 an image is no longer written again <a class="cite" href="#q3">[3]</a> <a class="cite" href="#q4">[4]</a>. JPEG, PNG and WebP consist of separate chunks. OpenWhistle keeps the chunks that describe the image and drops all others. The pixels stay identical bit for bit, and the file does not grow. Only the orientation is kept, so a portrait photo stays upright.</p>
 
           <p>The same run found more gaps, now closed:</p>
           <ul>
@@ -113,6 +114,15 @@ jsonld:
             <a href="/en/blog/hinschg-compliance-guide/">HinSchG compliance guide</a> ·
             <a href="https://github.com/openwhistle/OpenWhistle/issues" rel="noopener noreferrer" target="_blank">GitHub issues</a>
           </p>
+          <section class="sources" aria-labelledby="sources-title">
+            <h2 id="sources-title">Sources</h2>
+            <ol>
+              <li id="q1"><a href="https://www.cipa.jp/e/std/std-sec.html" rel="noopener noreferrer" target="_blank">CIPA, Standards: DC-008 Exif</a>: tags for GPS data and the device serial number. Retrieved 27 October 2026.</li>
+              <li id="q2"><a href="https://ecma-international.org/publications-and-standards/standards/ecma-376/" rel="noopener noreferrer" target="_blank">Ecma International, ECMA-376 Office Open XML</a>: the author document property. Retrieved 27 October 2026.</li>
+              <li id="q3"><a href="https://github.com/openwhistle/OpenWhistle/blob/v2.4.0/CHANGELOG.md" rel="noopener noreferrer" target="_blank">OpenWhistle, CHANGELOG.md</a>: section 2.1.0, measurements and fixes. Retrieved 27 October 2026.</li>
+              <li id="q4"><a href="https://github.com/openwhistle/OpenWhistle/blob/v2.4.0/app/services/attachment.py" rel="noopener noreferrer" target="_blank">OpenWhistle 2.4.0, app/services/attachment.py</a>: the metadata removal. Retrieved 27 October 2026.</li>
+            </ol>
+          </section>
         </div>
       </article>
     </div>
