@@ -66,7 +66,7 @@ jsonld:
 
         <div class="article-body">
 
-          <p>An anonymous whistleblowing system is only as anonymous as its installation. OpenWhistle stores no IP address, no time of day and no metadata from attachments. What happens before the server, in the network and in a proxy in front, is the operator's part.</p>
+          <p>An anonymous whistleblowing system is only as anonymous as its installation. OpenWhistle stores no IP address, no time of day and no metadata from attachments. What happens before it is decided by the reporting person's network and by any proxy the operator puts in front.</p>
 
           <div class="callout callout-warn">
             <p class="callout-title">Transparency note</p>
@@ -91,14 +91,14 @@ jsonld:
               </tr>
             </thead>
             <tbody>
-              <tr><td>IP address, nginx</td><td data-label="How">clears 61 headers, among them X-Forwarded-For and 38 location headers added by CDNs; no access log <a class="cite" href="#q1">[1]</a></td></tr>
+              <tr><td>IP address, nginx</td><td data-label="How">clears 59 headers that give an address away: 23 for the IP, such as X-Forwarded-For, and 36 for the location that CDNs add; no access log <a class="cite" href="#q1">[1]</a></td></tr>
               <tr><td>IP address, app</td><td data-label="How">removes the same headers again and clears the peer address before any handler runs <a class="cite" href="#q2">[2]</a></td></tr>
               <tr><td>IP address, database</td><td data-label="How">no table has an IP column <a class="cite" href="#q3">[3]</a></td></tr>
               <tr><td>Access to the report</td><td data-label="How">case number and PIN, no account, no email address; the status session holds only the case id, for 2 hours <a class="cite" href="#q4">[4]</a></td></tr>
-              <tr><td>Time</td><td data-label="How">of the report, messages and files only the date, never the time of day</td></tr>
+              <tr><td>Time</td><td data-label="How">of the report, your own messages and files only the date, never the time of day (<a href="/en/docs/timestamps/">timestamps</a>)</td></tr>
               <tr><td>Attachments</td><td data-label="How">GPS data, author and device are removed before anything is stored <a class="cite" href="#q5">[5]</a></td></tr>
               <tr><td>Content</td><td data-label="How">encrypted, with a key of its own per report <a class="cite" href="#q6">[6]</a></td></tr>
-              <tr><td>Third parties</td><td data-label="How">no font, script or logo from another server; outbound connections are off until you switch them on <a class="cite" href="#q2">[2]</a></td></tr>
+              <tr><td>Third parties</td><td data-label="How">no web font, script or logo from another server <a class="cite" href="#q2">[2]</a>; outbound connections are off until you switch them on (<a href="/en/docs/outbound/">outbound requests</a>)</td></tr>
               <tr><td>Warning</td><td data-label="How">if an IP header still arrives, the dashboard, the report page and the status page warn <a class="cite" href="#q7">[7]</a></td></tr>
             </tbody>
           </table>
@@ -122,19 +122,19 @@ jsonld:
               <tr><td>The report page only on the intranet or via the company VPN</td><td data-label="Consequence">The company's firewall and proxy see who reported and when</td><td data-label="How to avoid it">make it publicly reachable and point employees to a private device outside the company network</td></tr>
               <tr><td>Attachments in S3</td><td data-label="Consequence">The bucket records each file's upload time to the second <a class="cite" href="#q10">[10]</a></td><td data-label="How to avoid it">use local storage, or restrict access to the bucket tightly</td></tr>
               <tr><td>A database backup together with <code>ENCRYPTION_KEY</code></td><td data-label="Consequence">Whoever holds the backup reads every report</td><td data-label="How to avoid it">keep the key apart from the backup</td></tr>
-              <tr><td>No valid certificate</td><td data-label="Consequence">The browser warns; employees give up or get used to warnings</td><td data-label="How to avoid it">a certificate from Let's Encrypt (<a href="/en/docs/install/">Install</a>)</td></tr>
+              <tr><td>No valid certificate</td><td data-label="Consequence">The browser warns; employees give up or get used to warnings</td><td data-label="How to avoid it">use a certificate from Let's Encrypt (<a href="/en/docs/install/">Install</a>)</td></tr>
             </tbody>
           </table>
 
           <h2>Tor: the strongest option</h2>
-          <p>With an onion address, OpenWhistle is reachable only over Tor <a class="cite" href="#q11">[11]</a>. The reporting person's network then sees only a connection into the Tor network, and the server sees no address. How to set it up is in <a href="/en/docs/onion/">Offering an onion address</a>.</p>
+          <p>An onion address is reachable only over Tor <a class="cite" href="#q11">[11]</a>. Whoever uses it shows their network only a connection into the Tor network, and the server sees no address. How to set it up is in <a href="/en/docs/onion/">Offering an onion address</a>.</p>
 
           <h2>What the law requires</h2>
           <p>In Germany, the identity of the reporting person must be kept confidential (§ 8 HinSchG) <a class="cite" href="#q12">[12]</a>. The reporting office “should” handle anonymous reports; the law does not require an anonymous channel (§ 16 Abs. 1). OpenWhistle offers both: anonymous, and confidential with a name.</p>
 
           <div class="article-cta">
             <h3>Check it yourself</h3>
-            <p>The live demo shows the anonymous reporting path. The whole source code is open; every line of this article can be checked there.</p>
+            <p>The live demo shows the anonymous reporting path. The whole source code is open; every statement about the software can be checked there.</p>
             <a href="https://demo.openwhistle.net" class="btn-cta" rel="noopener noreferrer" target="_blank">Open the live demo &rarr;</a>
           </div>
 
