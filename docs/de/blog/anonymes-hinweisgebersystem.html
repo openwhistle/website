@@ -1,6 +1,6 @@
 ---
 title: 'Anonymes Hinweisgebersystem: Schutz und Fallen | OpenWhistle'
-description: 'Anonymes Hinweisgebersystem: wie OpenWhistle IP-Adresse, Uhrzeit und Metadaten von Hinweisgebern schützt und welche Installationsfehler die Anonymität brechen.'
+description: 'Anonymes Hinweisgebersystem: wie OpenWhistle IP-Adresse, Uhrzeit und Metadaten schützt und welche Installationsfehler die Anonymität brechen.'
 translation_key: whistleblower-anonymity
 og_type: article
 published: '2026-10-27'
@@ -55,7 +55,7 @@ jsonld:
         <header class="article-header">
           <div class="article-tag">Anonymität · Sicherheit · Betrieb</div>
           <h1 class="article-title">Wie OpenWhistle die Anonymität von Hinweisgebern schützt, und welche Installationsfehler sie gefährden</h1>
-          <p class="article-subtitle">Was die Software über meldende Personen nie speichert, wo ihre IP-Adresse trotzdem sichtbar sein kann und wie Sie das als Betreiber verhindern.</p>
+          <p class="article-subtitle">Was ein anonymes Hinweisgebersystem über meldende Personen nie speichert, wo ihre IP-Adresse trotzdem sichtbar sein kann und wie Sie das als Betreiber verhindern.</p>
           <div class="article-meta">
             <span>27. Oktober 2026</span>
             <span>Aktualisiert am 27. Oktober 2026</span>
@@ -76,8 +76,8 @@ jsonld:
           <h2>Wo die IP-Adresse sichtbar ist</h2>
 
           <figure class="diagram">
-            <img class="diagram-light" src="/img/diagrams/ip-path.de-light.svg" alt="Weg einer Meldung: Browser, Netz, optional ein CDN oder Reverse Proxy, dann nginx von OpenWhistle, App und Datenbank. Risiken: Das Netz kann Verbindungen protokollieren, Tor Browser zeigt ihm nur Tor. Ein Proxy davor kann ein Zugriffsprotokoll mit IP schreiben. nginx sieht die IP, speichert sie aber nicht; die App verwirft sie, die Datenbank hat keine IP-Spalte." width="655" height="503" loading="lazy">
-            <img class="diagram-dark" src="/img/diagrams/ip-path.de-dark.svg" alt="Weg einer Meldung: Browser, Netz, optional ein CDN oder Reverse Proxy, dann nginx von OpenWhistle, App und Datenbank. Risiken: Das Netz kann Verbindungen protokollieren, Tor Browser zeigt ihm nur Tor. Ein Proxy davor kann ein Zugriffsprotokoll mit IP schreiben. nginx sieht die IP, speichert sie aber nicht; die App verwirft sie, die Datenbank hat keine IP-Spalte." width="655" height="503" loading="lazy">
+            <img class="diagram-light" src="/img/diagrams/ip-path.de-light.svg" alt="Weg einer Meldung durch ein anonymes Hinweisgebersystem: Browser, Netz, optional ein CDN oder Reverse Proxy, dann nginx von OpenWhistle, App und Datenbank. Risiken: Das Netz kann Verbindungen protokollieren, Tor Browser zeigt ihm nur Tor. Ein Proxy davor kann ein Zugriffsprotokoll mit IP schreiben. nginx sieht die IP, speichert sie aber nicht; die App verwirft sie, die Datenbank hat keine IP-Spalte." width="655" height="503" loading="lazy">
+            <img class="diagram-dark" src="/img/diagrams/ip-path.de-dark.svg" alt="Weg einer Meldung durch ein anonymes Hinweisgebersystem: Browser, Netz, optional ein CDN oder Reverse Proxy, dann nginx von OpenWhistle, App und Datenbank. Risiken: Das Netz kann Verbindungen protokollieren, Tor Browser zeigt ihm nur Tor. Ein Proxy davor kann ein Zugriffsprotokoll mit IP schreiben. nginx sieht die IP, speichert sie aber nicht; die App verwirft sie, die Datenbank hat keine IP-Spalte." width="655" height="503" loading="lazy">
             <figcaption>Ab nginx speichert nichts mehr die Adresse. Davor entscheidet der Betreiber.</figcaption>
           </figure>
 
@@ -105,7 +105,7 @@ jsonld:
 
           <p>Die Einzelheiten stehen in der Dokumentation: <a href="/en/docs/anonymity/" hreflang="en">Anonymitätsschichten</a>, <a href="/en/docs/timestamps/" hreflang="en">Zeitstempel</a> und <a href="/en/docs/outbound/" hreflang="en">Anfragen nach außen</a>.</p>
 
-          <h2>Installationsfehler, die die Anonymität brechen</h2>
+          <h2>Installationsfehler, die ein anonymes Hinweisgebersystem brechen</h2>
 
           <table class="data-table">
             <thead>

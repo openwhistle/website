@@ -1,6 +1,6 @@
 ---
 title: 'Anonymous whistleblowing: protections, traps | OpenWhistle'
-description: 'Anonymous whistleblowing system: how OpenWhistle protects a reporter''s IP address, time and file metadata, and which installation mistakes break the anonymity.'
+description: 'Anonymous whistleblowing with OpenWhistle: how it protects a reporter''s IP address, time and file metadata, and which setup mistakes break it.'
 translation_key: whistleblower-anonymity
 og_type: article
 published: '2026-10-27'
@@ -55,7 +55,7 @@ jsonld:
         <header class="article-header">
           <div class="article-tag">Anonymity · Security · Operation</div>
           <h1 class="article-title">How OpenWhistle protects whistleblowers' anonymity, and which installation mistakes put it at risk</h1>
-          <p class="article-subtitle">What the software never stores about reporting people, where their IP address can still be visible, and how you prevent it as the operator.</p>
+          <p class="article-subtitle">What anonymous whistleblowing with OpenWhistle never stores about reporting people, where their IP address can still be visible, and how you prevent it as the operator.</p>
           <div class="article-meta">
             <span>27 October 2026</span>
             <span>Updated 27 October 2026</span>
@@ -76,8 +76,8 @@ jsonld:
           <h2>Where the IP address is visible</h2>
 
           <figure class="diagram">
-            <img class="diagram-light" src="/img/diagrams/ip-path-light.svg" alt="The path of a report: browser, network, optionally a CDN or reverse proxy, then OpenWhistle's nginx, the app and the database. Risks: the network can log connections, and Tor Browser shows it only Tor. A proxy in front can write an access log with the IP. nginx sees the IP but stores it nowhere; the app discards it, and the database has no IP column." width="655" height="503" loading="lazy">
-            <img class="diagram-dark" src="/img/diagrams/ip-path-dark.svg" alt="The path of a report: browser, network, optionally a CDN or reverse proxy, then OpenWhistle's nginx, the app and the database. Risks: the network can log connections, and Tor Browser shows it only Tor. A proxy in front can write an access log with the IP. nginx sees the IP but stores it nowhere; the app discards it, and the database has no IP column." width="655" height="503" loading="lazy">
+            <img class="diagram-light" src="/img/diagrams/ip-path-light.svg" alt="The path of an anonymous whistleblowing report: browser, network, optionally a CDN or reverse proxy, then OpenWhistle's nginx, the app and the database. Risks: the network can log connections, and Tor Browser shows it only Tor. A proxy in front can write an access log with the IP. nginx sees the IP but stores it nowhere; the app discards it, and the database has no IP column." width="655" height="503" loading="lazy">
+            <img class="diagram-dark" src="/img/diagrams/ip-path-dark.svg" alt="The path of an anonymous whistleblowing report: browser, network, optionally a CDN or reverse proxy, then OpenWhistle's nginx, the app and the database. Risks: the network can log connections, and Tor Browser shows it only Tor. A proxy in front can write an access log with the IP. nginx sees the IP but stores it nowhere; the app discards it, and the database has no IP column." width="655" height="503" loading="lazy">
             <figcaption>From nginx on, nothing stores the address. Before it, the operator decides.</figcaption>
           </figure>
 
@@ -105,7 +105,7 @@ jsonld:
 
           <p>The details are in the documentation: <a href="/en/docs/anonymity/">anonymity layers</a>, <a href="/en/docs/timestamps/">timestamps</a> and <a href="/en/docs/outbound/">outbound requests</a>.</p>
 
-          <h2>Installation mistakes that break anonymity</h2>
+          <h2>Installation mistakes that break anonymous whistleblowing</h2>
 
           <table class="data-table">
             <thead>
