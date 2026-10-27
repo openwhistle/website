@@ -225,6 +225,9 @@ def _in_container(*cmd: str) -> subprocess.CompletedProcess[str]:
 
 def test_no_dynamic_module_ships_and_neither_does_its_tiff() -> None:
     assert _in_container("apk", "info", "-e", "tiff").returncode != 0
+    # Unused, and the only path to the libcurl and brotli-libs CVEs Trivy reported.
+    for unused in ("curl", "libcurl", "brotli-libs", "freetype"):
+        assert _in_container("apk", "info", "-e", unused).returncode != 0, unused
     packages = _in_container("apk", "info").stdout.split()
     assert [p for p in packages if p.startswith("nginx-module")] == []
 
