@@ -191,9 +191,9 @@ fetched or found in search that day.
 | SourceForge / Slashdot directory | sourceforge.net/software/vendors/ | free basic vendor listing, shared with slashdot.org/software | not submitted | yes: vendor page in search |
 | G2 | sell.g2.com/create-a-profile | free profile, 3-5 days review, category "Whistleblowing" | not submitted | yes: free profile, category criteria |
 | Capterra / GetApp | capterra.com/vendors/ | free vendor form; the network belongs to G2 since 2026 | not submitted | yes: vendor page; Capterra lists GlobaLeaks as free |
-| OMR Reviews (DE) | omr.com/de/reviews/contenthub/hinweisgeberschutzgesetz-software | free basic profile via form; editors at `reviews@omr.com` | not submitted; mail drafted 2026-10-27 | yes: 2026-10-27, OpenWhistle absent |
-| trusted.de (DE) | trusted.de/beste-hinweisgebersysteme | no public listing route; editors at `hello@trusted.de` | not submitted; mail drafted 2026-10-27 | yes: 2026-10-27, OpenWhistle absent, affiliate links |
-| whistleblowertools.eu | whistleblowertools.eu/countries/germany/ | vendor submission to `contact@whistleblowertools.eu`; tests and scores, re-tests yearly | not submitted; mail drafted 2026-10-27 | yes: 2026-10-27, lists managed GlobaLeaks, not OpenWhistle |
+| OMR Reviews (DE) | omr.com/de/reviews/contenthub/hinweisgeberschutzgesetz-software | free basic profile via form; editors at `reviews@omr.com` | mail sent 2026-10-27 from `kontakt@openwhistle.net` | yes: 2026-10-27, OpenWhistle absent |
+| trusted.de (DE) | trusted.de/beste-hinweisgebersysteme | no public listing route; editors at `hello@trusted.de` | mail sent 2026-10-27 from `kontakt@openwhistle.net` | yes: 2026-10-27, OpenWhistle absent, affiliate links |
+| whistleblowertools.eu | whistleblowertools.eu/countries/germany/ | vendor submission to `contact@whistleblowertools.eu`; tests and scores, re-tests yearly | mail sent 2026-10-27 from `kontakt@openwhistle.net` | yes: 2026-10-27, lists managed GlobaLeaks, not OpenWhistle |
 | die-hinweisgeber-meldestelle.de | die-hinweisgeber-meldestelle.de/vergleich/ | none: the operator is a provider comparing commercial services only | skip | yes: no open source entry, no suggestion route |
 | EU OSOR | interoperable-europe.ec.europa.eu/collection/open-source-observatory-osor | EU Login account; signed-in users create news and solutions | not submitted | yes: "signed-in user can create content" |
 | Product Hunt | producthunt.com | maker account, launch post | not submitted | no: not fetched |
