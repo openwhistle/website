@@ -1,0 +1,85 @@
+{
+  "timeout_seconds": 600,
+  "test_groups": {
+    "ARTICLE": [
+      "tests/test_blog_sources.py",
+      "-k",
+      "cites_dated_sources"
+    ],
+    "TWINS": [
+      "tests/test_blog_sources.py",
+      "-k",
+      "twins"
+    ],
+    "UPDATED": [
+      "tests/test_blog_sources.py",
+      "-k",
+      "visible_update_date"
+    ]
+  },
+  "mutations": [
+    {
+      "id": "SOURCES-SECTION-RENAMED",
+      "file": "docs/de/blog/whistleblower-software-vergleich.html",
+      "old": "<section class=\"sources\"",
+      "new": "<section class=\"refs\"",
+      "tests": "ARTICLE"
+    },
+    {
+      "id": "RETRIEVED-AFTER-MODIFIED",
+      "file": "docs/de/blog/whistleblower-software-vergleich.html",
+      "old": "Projektwebsite</a>: Sprachen, Übersetzer, Audits. Abgerufen am 27.&nbsp;Oktober 2026.",
+      "new": "Projektwebsite</a>: Sprachen, Übersetzer, Audits. Abgerufen am 28.&nbsp;Oktober 2026.",
+      "tests": "ARTICLE"
+    },
+    {
+      "id": "NO-RETRIEVAL-DATE",
+      "file": "docs/en/blog/whistleblowing-software-comparison.html",
+      "old": "GlobaLeaks, demo</a>. Retrieved 27 October 2026.",
+      "new": "GlobaLeaks, demo</a>.",
+      "tests": "ARTICLE"
+    },
+    {
+      "id": "SOURCE-NEVER-CITED",
+      "file": "docs/de/blog/whistleblower-software-vergleich.html",
+      "old": "GlobaLeaks-Demo</a> <a class=\"cite\" href=\"#q9\">[9]</a>.",
+      "new": "GlobaLeaks-Demo</a>.",
+      "tests": "ARTICLE"
+    },
+    {
+      "id": "CITE-TO-NOWHERE",
+      "file": "docs/en/blog/whistleblowing-software-comparison.html",
+      "old": "<a class=\"cite\" href=\"#q8\">[8]</a>",
+      "new": "<a class=\"cite\" href=\"#q19\">[19]</a>",
+      "tests": "ARTICLE"
+    },
+    {
+      "id": "BODY-LINK-UNSOURCED",
+      "file": "docs/de/blog/whistleblower-software-vergleich.html",
+      "old": "<a href=\"https://try.globaleaks.org/\" rel=\"noopener noreferrer\" target=\"_blank\">GlobaLeaks-Demo</a>",
+      "new": "<a href=\"https://demo.globaleaks.org/\" rel=\"noopener noreferrer\" target=\"_blank\">GlobaLeaks-Demo</a>",
+      "tests": "ARTICLE"
+    },
+    {
+      "id": "TWIN-SOURCE-DRIFT",
+      "file": "docs/en/blog/whistleblowing-software-comparison.html",
+      "old": "releases/tag/v5.0.99",
+      "new": "releases/tag/v5.0.98",
+      "tests": "TWINS"
+    },
+    {
+      "id": "EUR-LEX-LANGUAGE-NOT-NEUTRAL",
+      "file": "tests/test_blog_sources.py",
+      "old": "_EUR_LEX_LANG = re.compile(r\"/legal-content/(?:DE|EN)/\")",
+      "new": "_EUR_LEX_LANG = re.compile(r\"/legal-content/(?:XX)/\")",
+      "tests": "TWINS"
+    },
+    {
+      "id": "UPDATE-LINE-DRIFT",
+      "file": "docs/en/blog/whistleblowing-software-comparison.html",
+      "old": "<span>Updated 27 October 2026</span>",
+      "new": "<span>Updated 26 October 2026</span>",
+      "tests": "UPDATED"
+    }
+  ]
+}

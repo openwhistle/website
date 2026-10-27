@@ -26,11 +26,11 @@ import pytest
 import yaml
 
 ROOT = Path(__file__).parents[1]
-ARTICLES = sorted(
-    p for p in (ROOT / "docs").glob("*/blog/*.html") if p.name != "index.html"
+ARTICLES = sorted(p for p in (ROOT / "docs").glob("*/blog/*.html") if p.name != "index.html")
+# The project's own site and repositories: where to go next, not evidence.
+OWN_HOSTS = re.compile(
+    r"^https://(?:(?:[a-z0-9-]+\.)?openwhistle\.net(?:/|$)|github\.com/openwhistle/)"
 )
-# The project's own site and repositories: where to go next, not evidence. A source may still name them.
-OWN_HOSTS = re.compile(r"^https://(?:(?:[a-z0-9-]+\.)?openwhistle\.net(?:/|$)|github\.com/openwhistle/)")
 MONTHS = {
     "de": "Januar Februar März April Mai Juni Juli August September Oktober November Dezember",
     "en": "January February March April May June July August September October November December",
@@ -174,7 +174,8 @@ def test_german_and_english_twins_cite_the_same_sources() -> None:
 GOOD = (
     '<p>Ab 50 <a class="cite" href="#q1">[1]</a>.</p>'
     '<section class="sources" aria-labelledby="sources-title"><h2 id="sources-title">Quellen</h2>'
-    '<ol><li id="q1"><a href="https://example.org/a">A</a>, X. Abgerufen am 27.&nbsp;Oktober 2026.</li>'
+    '<ol><li id="q1"><a href="https://example.org/a">A</a>, X.'
+    " Abgerufen am 27.&nbsp;Oktober 2026.</li>"
     "</ol></section>"
 )
 DAY = dt.date(2026, 10, 27)
