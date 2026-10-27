@@ -1,0 +1,67 @@
+<mxfile>
+  <diagram name="reporting-obligation">
+    <mxGraphModel>
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="start" value="You employ&#xa;at least one person" style="ow:start" vertex="1" parent="1">
+          <mxGeometry x="0" y="0" width="280" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="d1" value="Financial company&#xa;under § 12 Abs. 3?" style="ow:decision" vertex="1" parent="1">
+          <mxGeometry x="0" y="84" width="280" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="r1" value="Obliged&#xa;whatever the size" style="ow:result" vertex="1" parent="1">
+          <mxGeometry x="350" y="103" width="300" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="d2" value="Municipality or a company&#xa;it owns or controls?" style="ow:decision" vertex="1" parent="1">
+          <mxGeometry x="0" y="206" width="280" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="r2" value="State law decides&#xa;§ 12 Abs. 1 Satz 4" style="ow:note" vertex="1" parent="1">
+          <mxGeometry x="350" y="225" width="300" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="d3" value="Normally at least&#xa;50 employees?" style="ow:decision" vertex="1" parent="1">
+          <mxGeometry x="0" y="328" width="280" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="r3" value="Obliged&#xa;50 to 249: a shared office is allowed" style="ow:result" vertex="1" parent="1">
+          <mxGeometry x="350" y="347" width="300" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="r4" value="Not obliged&#xa;voluntary channel allowed" style="ow:step" vertex="1" parent="1">
+          <mxGeometry x="0" y="450" width="280" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-start" style="ow:edge;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="start" target="d1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-d1-yes" value="yes" style="ow:edge;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="d1" target="r1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" x="0" y="-11"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-d1-no" value="no" style="ow:edge;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="d1" target="d2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" x="18" y="0"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-d2-yes" value="yes" style="ow:edge;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="d2" target="r2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" x="0" y="-11"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-d2-no" value="no" style="ow:edge;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="d2" target="d3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" x="18" y="0"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-d3-yes" value="yes" style="ow:edge;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="d3" target="r3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" x="0" y="-11"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-d3-no" value="no" style="ow:edge;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="d3" target="r4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" x="18" y="0"/>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

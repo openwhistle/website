@@ -13,7 +13,7 @@ ROOT = Path(__file__).parents[1]
 # Section -> number of Absätze; per Absatz, the number of Nr. where cited.
 SHAPE: dict[int, tuple[int, dict[int, int]]] = {
     2: (3, {1: 11}),
-    3: (8, {}),
+    3: (10, {8: 7}),
     7: (3, {}),
     8: (2, {}),
     9: (4, {}),
@@ -23,6 +23,7 @@ SHAPE: dict[int, tuple[int, dict[int, int]]] = {
     14: (2, {}),
     16: (3, {}),
     17: (2, {1: 6}),
+    19: (4, {}),
     26: (3, {}),
     32: (2, {}),
     40: (6, {2: 3}),
