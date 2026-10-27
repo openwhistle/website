@@ -1,0 +1,40 @@
+<mxfile>
+  <diagram name="office-roles">
+    <mxGraphModel>
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="a" value="Reporting person" style="ow:start" vertex="1" parent="1">
+          <mxGeometry x="0" y="0" width="290" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="b" value="Whistleblowing software&#xa;written channel, tracks deadlines" style="ow:step" vertex="1" parent="1">
+          <mxGeometry x="0" y="72" width="290" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="c" value="Internal reporting office&#xa;own employees or an ombudsperson" style="ow:result" vertex="1" parent="1">
+          <mxGeometry x="0" y="156" width="290" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="d" value="Employer&#xa;remedies the breach" style="ow:end" vertex="1" parent="1">
+          <mxGeometry x="0" y="240" width="290" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="n1" value="Phone and meetings&#xa;organised by the office" style="ow:note" vertex="1" parent="1">
+          <mxGeometry x="350" y="72" width="260" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="n2" value="independent and competent&#xa;§ 15 HinSchG" style="ow:note" vertex="1" parent="1">
+          <mxGeometry x="350" y="156" width="260" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="n3" value="always stays responsible&#xa;§ 14 Abs. 1 HinSchG" style="ow:note" vertex="1" parent="1">
+          <mxGeometry x="350" y="240" width="260" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-a" style="ow:edge" edge="1" parent="1" source="a" target="b">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-b" style="ow:edge" edge="1" parent="1" source="b" target="c">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-c" style="ow:edge" edge="1" parent="1" source="c" target="d">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

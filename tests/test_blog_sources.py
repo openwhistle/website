@@ -237,3 +237,21 @@ def test_the_compare_page_dates_its_table_by_the_day_its_sources_were_read() -> 
     day, month, year = read.split()
     months = MONTHS["en"].split()
     assert as_of == f"{year}-{months.index(month) + 1:02d}-{int(day):02d}"
+
+
+def _shape(text: str) -> tuple[int, ...]:
+    body = text.split("---", 2)[2]
+    return tuple(len(re.findall(p, body)) for p in ("<h2", "<tr", "<li", 'class="cite"', "<figure"))
+
+
+def test_german_and_english_twins_have_the_same_shape() -> None:
+    """Same sections, table rows, list items, citations and figures: a fact added to one language
+    and not the other shows up here. The English twins once lagged the German ones by two weeks."""
+    shapes: dict[str, dict[str, tuple[int, ...]]] = {}
+    for path in ARTICLES:
+        text = path.read_text(encoding="utf-8")
+        shapes.setdefault(str(_meta(path)["translation_key"]), {})[path.parent.parent.name] = (
+            _shape(text)
+        )
+    differ = {k: v for k, v in shapes.items() if v.get("de") != v.get("en")}
+    assert not differ, differ
