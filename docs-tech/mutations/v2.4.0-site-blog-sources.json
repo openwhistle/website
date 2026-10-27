@@ -32,6 +32,11 @@
       "tests/test_blog_sources.py",
       "-k",
       "compare_page"
+    ],
+    "SHAPE": [
+      "tests/test_blog_sources.py",
+      "-k",
+      "same_shape"
     ]
   },
   "mutations": [
@@ -125,6 +130,13 @@
       "old": "|TDDDG|LkSG)",
       "new": "|TDDDG)",
       "tests": "CITATIONS"
+    },
+    {
+      "id": "TWIN-LOSES-A-ROW",
+      "file": "docs/en/blog/who-needs-a-whistleblowing-system.html",
+      "old": "              <tr><td>Employees</td><td class=\"td-law\" data-label=\"Provision\">§ 3 Abs. 8 Nr. 1</td></tr>\n",
+      "new": "",
+      "tests": "SHAPE"
     }
   ]
 }
