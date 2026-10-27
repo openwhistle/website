@@ -69,6 +69,7 @@ description of a screen. A thorough page nobody finishes is worth less than a sh
 | No sentence over 30 words, average under 18 per page | `tests/test_docs_prose.py` |
 | Every page of the interface is named in the docs | `tests/test_every_page_is_documented.py` |
 | Every setting has one row in `docs/_data/config.yml` | `tests/test_config_documented.py` |
+| Every blog article cites numbered sources, each with its retrieval date; twins cite the same | `tests/test_blog_sources.py` |
 
 The prose rules cover every page the site builds from a source of its own; generated pages (changelog,
 configuration) and the 404 are left out. Code, tables and headings are not counted; inline code is one word. German
