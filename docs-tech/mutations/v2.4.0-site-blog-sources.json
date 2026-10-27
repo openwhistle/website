@@ -118,6 +118,13 @@
       "old": "<th scope=\"col\">As of 2026-10-27</th>",
       "new": "<th scope=\"col\">As of 2026-09-27</th>",
       "tests": "COMPARE"
+    },
+    {
+      "id": "LKSG-READ-AS-HINSCHG",
+      "file": "tests/test_hinschg_citations.py",
+      "old": "|TDDDG|LkSG)",
+      "new": "|TDDDG)",
+      "tests": "CITATIONS"
     }
   ]
 }
