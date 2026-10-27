@@ -15,6 +15,18 @@
       "tests/test_blog_sources.py",
       "-k",
       "visible_update_date"
+    ],
+    "CITATIONS": [
+      "tests/test_hinschg_citations.py"
+    ],
+    "PHONE": [
+      "tests/e2e/test_layout.py",
+      "-m",
+      "e2e",
+      "--browser",
+      "chromium",
+      "-k",
+      "no_horizontal_overflow and who-needs and 390"
     ]
   },
   "mutations": [
@@ -80,6 +92,20 @@
       "old": "<span>Updated 27 October 2026</span>",
       "new": "<span>Updated 26 October 2026</span>",
       "tests": "UPDATED"
+    },
+    {
+      "id": "HINSCHG-3-HAS-8-ABSAETZE",
+      "file": "tests/test_hinschg_citations.py",
+      "old": "    3: (10, {8: 7}),",
+      "new": "    3: (8, {8: 7}),",
+      "tests": "CITATIONS"
+    },
+    {
+      "id": "PHONE-CARD-CITATION-NOWRAP",
+      "file": "docs/assets/css/post.css",
+      "old": "      .data-table .td-law { white-space: normal; }\n",
+      "new": "",
+      "tests": "PHONE"
     }
   ]
 }
