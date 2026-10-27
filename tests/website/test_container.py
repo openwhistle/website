@@ -215,6 +215,17 @@ def test_every_log_line_is_a_counter_line() -> None:
     assert all(re.fullmatch(r"\S+ \S+ \d{3} \S+", line) for line in lines), lines
 
 
+@pytest.mark.parametrize("path", ["/impressum/", "/de/datenschutz/", "/en/privacy/"])
+def test_the_legal_pages_are_noindex_by_header_too(path: str) -> None:
+    """They carry the operator's name and address; a crawler that reads only headers must see it."""
+    assert get(path).headers.get("X-Robots-Tag") == "noindex"
+
+
+@pytest.mark.parametrize("path", ["/de/", "/en/blog/", "/en/compare/"])
+def test_other_pages_carry_no_robots_header(path: str) -> None:
+    assert get(path).headers.get("X-Robots-Tag") is None
+
+
 def test_the_base_images_error_page_is_gone() -> None:
     assert get("/50x.html").status == 404
 

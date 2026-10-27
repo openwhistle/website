@@ -161,7 +161,7 @@ def test_no_location_sets_headers() -> None:
         else:
             found += 1
             assert depth == 2 and not located, f"add_header number {found} is not server-level"
-    assert found == 9, found
+    assert found == 10, found
 
 
 def test_map_keys_fit_the_hash_bucket_with_headroom() -> None:
