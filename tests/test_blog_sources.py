@@ -255,3 +255,15 @@ def test_german_and_english_twins_have_the_same_shape() -> None:
         )
     differ = {k: v for k, v in shapes.items() if v.get("de") != v.get("en")}
     assert not differ, differ
+
+
+def test_the_blog_index_links_every_article() -> None:
+    """A new article reaches readers through its language's blog index; nothing else failed when
+    one was left off it."""
+    missing = []
+    for path in ARTICLES:
+        lang = path.parent.parent.name
+        index = (ROOT / "docs" / lang / "blog" / "index.html").read_text(encoding="utf-8")
+        if f'href="/{lang}/blog/{path.stem}/"' not in index:
+            missing.append(f"{lang}/{path.stem}")
+    assert not missing, missing
