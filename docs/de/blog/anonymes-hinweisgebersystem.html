@@ -1,0 +1,168 @@
+---
+title: 'Anonymes Hinweisgebersystem: Schutz und Fallen | OpenWhistle'
+description: 'Anonymes Hinweisgebersystem: wie OpenWhistle IP-Adresse, Uhrzeit und Metadaten von Hinweisgebern schützt und welche Installationsfehler die Anonymität brechen.'
+translation_key: whistleblower-anonymity
+og_type: article
+published: '2026-10-27'
+modified: '2026-10-27'
+css:
+- post
+js:
+- site
+jsonld:
+- '@context': https://schema.org
+  '@type': BlogPosting
+  headline: 'Wie OpenWhistle die Anonymität von Hinweisgebern schützt, und welche Installationsfehler sie gefährden'
+  description: 'Was OpenWhistle über meldende Personen nie speichert, wo ihre IP-Adresse trotzdem sichtbar sein kann und welche Fehler bei der Installation die Anonymität brechen.'
+  url: https://openwhistle.net/de/blog/anonymes-hinweisgebersystem/
+  mainEntityOfPage:
+    '@type': WebPage
+    '@id': https://openwhistle.net/de/blog/anonymes-hinweisgebersystem/
+  datePublished: '2026-10-27'
+  dateModified: '2026-10-27'
+  author:
+    '@type': Organization
+    name: OpenWhistle Contributors
+    url: https://github.com/openwhistle
+  publisher:
+    '@type': Organization
+    name: OpenWhistle
+    url: https://openwhistle.net/en/
+    logo:
+      '@type': ImageObject
+      url: https://openwhistle.net/apple-touch-icon.png
+  image: https://openwhistle.net/de/blog/anonymes-hinweisgebersystem/og.png
+  inLanguage: de
+- '@context': https://schema.org
+  '@type': BreadcrumbList
+  itemListElement:
+  - '@type': ListItem
+    position: 1
+    name: OpenWhistle
+    item: https://openwhistle.net/en/
+  - '@type': ListItem
+    position: 2
+    name: Blog
+    item: https://openwhistle.net/de/blog/
+  - '@type': ListItem
+    position: 3
+    name: Anonymes Hinweisgebersystem
+    item: https://openwhistle.net/de/blog/anonymes-hinweisgebersystem/
+---
+  <main id="main-content">
+    <div class="article-wrap">
+      <article>
+        <header class="article-header">
+          <div class="article-tag">Anonymität · Sicherheit · Betrieb</div>
+          <h1 class="article-title">Wie OpenWhistle die Anonymität von Hinweisgebern schützt, und welche Installationsfehler sie gefährden</h1>
+          <p class="article-subtitle">Was die Software über meldende Personen nie speichert, wo ihre IP-Adresse trotzdem sichtbar sein kann und wie Sie das als Betreiber verhindern.</p>
+          <div class="article-meta">
+            <span>27. Oktober 2026</span>
+            <span>Aktualisiert am 27. Oktober 2026</span>
+            <span>6 Min. Lesezeit</span>
+            <span>OpenWhistle Contributors</span>
+          </div>
+        </header>
+
+        <div class="article-body">
+
+          <p>Ein anonymes Hinweisgebersystem ist nur so anonym wie seine Installation. OpenWhistle speichert keine IP-Adresse, keine Uhrzeit und keine Metadaten aus Anhängen. Was vor dem Server passiert, im Netz und in einem vorgeschalteten Proxy, liegt beim Betreiber.</p>
+
+          <div class="callout callout-warn">
+            <p class="callout-title">Transparenzhinweis</p>
+            <p>Diesen Artikel schreiben die Entwickler von OpenWhistle. Jede Aussage über die Software belegt eine Datei aus Release 2.4.0. Keine Rechtsberatung.</p>
+          </div>
+
+          <h2>Wo die IP-Adresse sichtbar ist</h2>
+
+          <figure class="diagram">
+            <img class="diagram-light" src="/img/diagrams/ip-path.de-light.svg" alt="Weg einer Meldung: Browser, Netz, optional ein CDN oder Reverse Proxy, dann nginx von OpenWhistle, App und Datenbank. Risiken: Das Netz kann Verbindungen protokollieren, Tor Browser zeigt ihm nur Tor. Ein Proxy davor kann ein Zugriffsprotokoll mit IP schreiben. nginx sieht die IP, speichert sie aber nicht; die App verwirft sie, die Datenbank hat keine IP-Spalte." width="655" height="503" loading="lazy">
+            <img class="diagram-dark" src="/img/diagrams/ip-path.de-dark.svg" alt="Weg einer Meldung: Browser, Netz, optional ein CDN oder Reverse Proxy, dann nginx von OpenWhistle, App und Datenbank. Risiken: Das Netz kann Verbindungen protokollieren, Tor Browser zeigt ihm nur Tor. Ein Proxy davor kann ein Zugriffsprotokoll mit IP schreiben. nginx sieht die IP, speichert sie aber nicht; die App verwirft sie, die Datenbank hat keine IP-Spalte." width="655" height="503" loading="lazy">
+            <figcaption>Ab nginx speichert nichts mehr die Adresse. Davor entscheidet der Betreiber.</figcaption>
+          </figure>
+
+          <h2>Was OpenWhistle tut</h2>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th scope="col">Schutz</th>
+                <th scope="col">Wie</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>IP-Adresse, nginx</td><td data-label="Wie">leert 61 Header, darunter X-Forwarded-For und 38 Standort-Header von CDNs; kein Zugriffsprotokoll <a class="cite" href="#q1">[1]</a></td></tr>
+              <tr><td>IP-Adresse, App</td><td data-label="Wie">entfernt dieselben Header noch einmal und löscht die Absenderadresse, bevor ein Handler läuft <a class="cite" href="#q2">[2]</a></td></tr>
+              <tr><td>IP-Adresse, Datenbank</td><td data-label="Wie">keine Tabelle hat eine IP-Spalte <a class="cite" href="#q3">[3]</a></td></tr>
+              <tr><td>Zugang zur Meldung</td><td data-label="Wie">Fallnummer und PIN, kein Konto, keine E-Mail-Adresse; die Statussitzung hält nur die Fall-ID, 2 Stunden lang <a class="cite" href="#q4">[4]</a></td></tr>
+              <tr><td>Zeitpunkt</td><td data-label="Wie">von Meldung, Nachrichten und Dateien nur das Datum, nie die Uhrzeit</td></tr>
+              <tr><td>Anhänge</td><td data-label="Wie">GPS-Daten, Autor und Gerät werden entfernt, bevor etwas gespeichert wird <a class="cite" href="#q5">[5]</a></td></tr>
+              <tr><td>Inhalt</td><td data-label="Wie">verschlüsselt, mit eigenem Schlüssel je Meldung <a class="cite" href="#q6">[6]</a></td></tr>
+              <tr><td>Dritte</td><td data-label="Wie">keine Schrift, kein Skript, kein Logo von fremden Servern; Verbindungen nach außen sind aus, bis Sie sie einschalten <a class="cite" href="#q2">[2]</a></td></tr>
+              <tr><td>Warnung</td><td data-label="Wie">kommt trotzdem ein IP-Header an, warnen Dashboard, Melde- und Statusseite <a class="cite" href="#q7">[7]</a></td></tr>
+            </tbody>
+          </table>
+
+          <p>Die Einzelheiten stehen in der Dokumentation: <a href="/en/docs/anonymity/" hreflang="en">Anonymitätsschichten</a>, <a href="/en/docs/timestamps/" hreflang="en">Zeitstempel</a> und <a href="/en/docs/outbound/" hreflang="en">Anfragen nach außen</a>.</p>
+
+          <h2>Installationsfehler, die die Anonymität brechen</h2>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th scope="col">Fehler</th>
+                <th scope="col">Folge</th>
+                <th scope="col">So vermeiden Sie ihn</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Ein Reverse Proxy davor schreibt ein Zugriffsprotokoll</td><td data-label="Folge">IP-Adresse und Uhrzeit jeder Meldung liegen im Log <a class="cite" href="#q8">[8]</a></td><td data-label="So vermeiden Sie ihn">Protokoll für diese Domain abschalten; die gelbe Warnung zeigt, dass ein Proxy die Adresse weiterreicht</td></tr>
+              <tr><td>Ein CDN wie Cloudflare davor</td><td data-label="Folge">Der Anbieter sieht jede Adresse und reicht sie im Header CF-Connecting-IP weiter <a class="cite" href="#q9">[9]</a></td><td data-label="So vermeiden Sie ihn">bewusst entscheiden; zusätzlich eine Onion-Adresse anbieten</td></tr>
+              <tr><td>Port der App oder des Onion-Zugangs an nginx vorbei erreichbar</td><td data-label="Folge">Die Header werden nicht geleert; Anfragen können sich als Tor-Besucher ausgeben</td><td data-label="So vermeiden Sie ihn">nur Port 80 und 443 öffnen; 8080 bleibt an 127.0.0.1 gebunden (<a href="/en/docs/onion-trust/" hreflang="en">Onion-Vertrauensgrenze</a>)</td></tr>
+              <tr><td>Meldeseite nur im Intranet oder über das Firmen-VPN</td><td data-label="Folge">Firewall und Proxy der Firma sehen, wer wann gemeldet hat</td><td data-label="So vermeiden Sie ihn">öffentlich erreichbar machen und auf ein privates Gerät außerhalb des Firmennetzes hinweisen</td></tr>
+              <tr><td>Anhänge in S3</td><td data-label="Folge">Der Bucket vermerkt je Datei die Upload-Zeit, sekundengenau <a class="cite" href="#q10">[10]</a></td><td data-label="So vermeiden Sie ihn">lokalen Speicher nutzen, oder den Zugriff auf den Bucket eng begrenzen</td></tr>
+              <tr><td>Datenbank-Backup zusammen mit <code>ENCRYPTION_KEY</code></td><td data-label="Folge">Wer das Backup hat, liest alle Meldungen</td><td data-label="So vermeiden Sie ihn">den Schlüssel getrennt vom Backup aufbewahren</td></tr>
+              <tr><td>Kein gültiges Zertifikat</td><td data-label="Folge">Der Browser warnt; Beschäftigte brechen ab oder gewöhnen sich an Warnungen</td><td data-label="So vermeiden Sie ihn">ein Zertifikat von Let's Encrypt (<a href="/en/docs/install/" hreflang="en">Installation</a>)</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Tor: die stärkste Option</h2>
+          <p>Mit einer Onion-Adresse erreicht man OpenWhistle nur über Tor <a class="cite" href="#q11">[11]</a>. Das Netz der meldenden Person sieht dann nur eine Verbindung ins Tor-Netz, der Server keine Adresse. Wie Sie die Adresse einrichten, zeigt <a href="/en/docs/onion/" hreflang="en">Onion-Adresse anbieten</a>.</p>
+
+          <h2>Was das Gesetz verlangt</h2>
+          <p>Die Identität der hinweisgebenden Person ist vertraulich zu behandeln (§ 8 HinSchG) <a class="cite" href="#q12">[12]</a>. Anonyme Meldungen „sollte“ die Meldestelle bearbeiten; einen anonymen Kanal verlangt das Gesetz nicht (§ 16 Abs. 1). OpenWhistle bietet beides: anonym und vertraulich mit Namen.</p>
+
+          <div class="article-cta">
+            <h3>Selbst prüfen</h3>
+            <p>Die Live-Demo zeigt den anonymen Meldeweg. Der gesamte Quellcode liegt offen; jede Zeile dieses Artikels lässt sich dort nachlesen.</p>
+            <a href="https://demo.openwhistle.net" class="btn-cta" rel="noopener noreferrer" target="_blank">Live-Demo öffnen &rarr;</a>
+          </div>
+
+          <p class="post-note">
+            <strong>Weitere Ressourcen:</strong>
+            <a href="/de/blog/metadaten-entfernen-ohne-beweise-zu-veraendern/">Metadaten entfernen, ohne Beweise zu verändern</a> ·
+            <a href="/de/blog/hinweisgebersystem-dsgvo-eu-hosting/">Hinweisgebersystem mit EU-Hosting und DSGVO</a> ·
+            <a href="/de/blog/interne-meldestelle-einrichten/">Schritt-für-Schritt-Anleitung zur Installation</a>
+          </p>
+
+          <section class="sources" aria-labelledby="sources-title">
+            <h2 id="sources-title">Quellen</h2>
+            <ol>
+              <li id="q1"><a href="https://github.com/openwhistle/OpenWhistle/blob/v2.4.0/nginx/snippets/proxy-headers.conf" rel="noopener noreferrer" target="_blank">OpenWhistle 2.4.0, nginx/snippets/proxy-headers.conf</a>: die geleerten Header. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+              <li id="q2"><a href="https://github.com/openwhistle/OpenWhistle/blob/v2.4.0/app/middleware.py" rel="noopener noreferrer" target="_blank">OpenWhistle 2.4.0, app/middleware.py</a>. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+              <li id="q3"><a href="https://github.com/openwhistle/OpenWhistle/blob/v2.4.0/app/models/report.py" rel="noopener noreferrer" target="_blank">OpenWhistle 2.4.0, app/models/report.py</a>. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+              <li id="q4"><a href="https://github.com/openwhistle/OpenWhistle/blob/v2.4.0/app/api/reports.py" rel="noopener noreferrer" target="_blank">OpenWhistle 2.4.0, app/api/reports.py</a>: Statussitzung, 7200 Sekunden. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+              <li id="q5"><a href="https://github.com/openwhistle/OpenWhistle/blob/v2.4.0/app/services/attachment.py" rel="noopener noreferrer" target="_blank">OpenWhistle 2.4.0, app/services/attachment.py</a>. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+              <li id="q6"><a href="https://github.com/openwhistle/OpenWhistle/blob/v2.4.0/app/services/encryption.py" rel="noopener noreferrer" target="_blank">OpenWhistle 2.4.0, app/services/encryption.py</a>. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+              <li id="q7"><a href="https://github.com/openwhistle/OpenWhistle/blob/v2.4.0/app/templates/_ip_notice.html" rel="noopener noreferrer" target="_blank">OpenWhistle 2.4.0, app/templates/_ip_notice.html</a>. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+              <li id="q8"><a href="https://doc.traefik.io/traefik/observability/access-logs/" rel="noopener noreferrer" target="_blank">Traefik, Access Logs</a>: Feld ClientHost. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+              <li id="q9"><a href="https://developers.cloudflare.com/support/troubleshooting/restoring-visitor-ips/restoring-original-visitor-ips/" rel="noopener noreferrer" target="_blank">Cloudflare, Restoring original visitor IPs</a>. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+              <li id="q10"><a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingMetadata.html" rel="noopener noreferrer" target="_blank">Amazon S3, Working with object metadata</a>: Last-Modified. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+              <li id="q11"><a href="https://community.torproject.org/onion-services/overview/" rel="noopener noreferrer" target="_blank">Tor Project, How do Onion Services work?</a> Abgerufen am 27.&nbsp;Oktober 2026.</li>
+              <li id="q12"><a href="https://www.gesetze-im-internet.de/hinschg/" rel="noopener noreferrer" target="_blank">Hinweisgeberschutzgesetz (HinSchG)</a>, gesetze-im-internet.de. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+            </ol>
+          </section>
+        </div>
+      </article>
+    </div>
+  </main>

@@ -94,6 +94,7 @@ the build reads the latest app release (`scripts/release_source.py`); with it, t
 | `/de/blog/whistleblower-software-vergleich/` | Article. |
 | `/de/blog/metadaten-entfernen-ohne-beweise-zu-veraendern/` | Article. |
 | `/de/blog/hinweisgebersystem-pflicht/` | Article with the decision-tree diagram; check both themes. |
+| `/de/blog/anonymes-hinweisgebersystem/` | Article with the IP-path diagram; both tables stack into cards at 390 px. |
 | `/en/blog/` | Blog index, English. Every article below is the English twin of a German one; check the language switch both ways. |
 | `/en/blog/hinschg-compliance-guide/` | Article, English. |
 | `/en/blog/whistleblowing-system-gdpr-eu-hosting/` | Article, English. |
@@ -103,6 +104,7 @@ the build reads the latest app release (`scripts/release_source.py`); with it, t
 | `/en/blog/whistleblowing-software-comparison/` | Article, English. |
 | `/en/blog/removing-metadata-without-altering-evidence/` | Article, English. |
 | `/en/blog/who-needs-a-whistleblowing-system/` | Article, English, with the decision-tree diagram. |
+| `/en/blog/anonymous-whistleblowing-system/` | Article, English, with the IP-path diagram. |
 
 ## What to check, on every page
 

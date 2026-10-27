@@ -1,0 +1,52 @@
+<mxfile>
+  <diagram name="ip-path">
+    <mxGraphModel>
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="browser" value="The reporting person's browser" style="ow:start" vertex="1" parent="1">
+          <mxGeometry x="0" y="0" width="280" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="net" value="Network&#xa;Wi-Fi, company VPN, provider" style="ow:step" vertex="1" parent="1">
+          <mxGeometry x="0" y="72" width="280" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="proxy" value="Optional: a CDN or&#xa;reverse proxy in front" style="ow:step" vertex="1" parent="1">
+          <mxGeometry x="0" y="156" width="280" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="nginx" value="OpenWhistle's nginx&#xa;strips IP headers, no log" style="ow:step" vertex="1" parent="1">
+          <mxGeometry x="0" y="240" width="280" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="app" value="App&#xa;discards the address" style="ow:step" vertex="1" parent="1">
+          <mxGeometry x="0" y="324" width="280" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="db" value="Database&#xa;no IP column" style="ow:store" vertex="1" parent="1">
+          <mxGeometry x="0" y="408" width="280" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="n1" value="Risk: the network's logs&#xa;Tor Browser shows only Tor" style="ow:note" vertex="1" parent="1">
+          <mxGeometry x="340" y="72" width="290" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="n2" value="Risk: an access log with the IP&#xa;turn it off, or use the onion" style="ow:note" vertex="1" parent="1">
+          <mxGeometry x="340" y="156" width="290" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="n3" value="sees the IP, stores it nowhere" style="ow:note" vertex="1" parent="1">
+          <mxGeometry x="340" y="240" width="290" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-browser" style="ow:edge" edge="1" parent="1" source="browser" target="net">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-net" style="ow:edge-optional" edge="1" parent="1" source="net" target="proxy">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-proxy" style="ow:edge-optional" edge="1" parent="1" source="proxy" target="nginx">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-nginx" style="ow:edge" edge="1" parent="1" source="nginx" target="app">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-app" style="ow:edge" edge="1" parent="1" source="app" target="db">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
