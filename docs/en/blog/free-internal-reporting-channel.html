@@ -4,7 +4,7 @@ description: 'Run an internal reporting channel for free: what is left in server
 translation_key: free-internal-reporting-channel
 og_type: article
 published: '2026-09-27'
-modified: '2026-09-27'
+modified: '2026-10-27'
 section: Practice
 css:
 - post
@@ -20,7 +20,7 @@ jsonld:
     '@type': WebPage
     '@id': https://openwhistle.net/en/blog/free-internal-reporting-channel/
   datePublished: '2026-09-27'
-  dateModified: '2026-09-27'
+  dateModified: '2026-10-27'
   author:
     '@type': Organization
     name: OpenWhistle Contributors
@@ -59,6 +59,7 @@ jsonld:
           <p class="article-subtitle">Getting a whistleblowing tool for free is easy. The duties under the Whistleblower Protection Act (HinSchG) remain all the same. What is left in server, operations and work, which options exist and how to start with OpenWhistle.</p>
           <div class="article-meta">
             <span>27 September 2026</span>
+            <span>Updated 27 October 2026</span>
             <span>6 min read</span>
             <span>OpenWhistle Contributors</span>
           </div>
@@ -66,11 +67,11 @@ jsonld:
 
         <div class="article-body">
 
-          <p>A <strong>free whistleblowing system</strong> saves the licence. It does not save the internal reporting office (interne Meldestelle). Employers with, as a rule, at least 50 employees must set one up and run it (§ 12 HinSchG). The law does not ask what the software cost.</p>
+          <p>A <strong>free whistleblowing system</strong> saves the licence. It does not save the internal reporting office (interne Meldestelle). Employers with, as a rule, at least 50 employees must set one up and run it (§ 12 HinSchG) <a class="cite" href="#q1">[1]</a>. The law does not ask what the software cost.</p>
 
           <div class="callout callout-warn">
             <p class="callout-title">Transparency notice</p>
-            <p>This article is written by the developers of OpenWhistle. Other providers' prices are shown as the providers publish them, retrieved on 27 September 2026. Not legal advice.</p>
+            <p>This article is written by the developers of OpenWhistle. Other providers' prices are shown as the providers publish them, each with its source and retrieval date. Not legal advice.</p>
           </div>
 
           <h2>What is left when the licence costs €0</h2>
@@ -85,12 +86,12 @@ jsonld:
                 </tr>
               </thead>
               <tbody>
-                <tr><td>Software licence</td><td class="val-good" data-label="With self-hosted open source">€0</td><td data-label="Reason">GPL-3.0 or AGPL-3.0</td></tr>
-                <tr><td>Server</td><td data-label="With self-hosted open source">a small VPS at your host's rate</td><td data-label="Reason">1 vCPU and 1 GB RAM are usually enough for OpenWhistle</td></tr>
+                <tr><td>Software licence</td><td class="val-good" data-label="With self-hosted open source">€0</td><td data-label="Reason">GPL-3.0 or AGPL-3.0 <a class="cite" href="#q7">[7]</a> <a class="cite" href="#q8">[8]</a></td></tr>
+                <tr><td>Server</td><td data-label="With self-hosted open source">a small VPS at your host's rate</td><td data-label="Reason">1 vCPU and 1 GB RAM are usually enough for OpenWhistle <a class="cite" href="#q8">[8]</a></td></tr>
                 <tr><td>Operations</td><td data-label="With self-hosted open source">Updates, backups, certificate</td><td data-label="Reason">Security fixes ship as patch versions</td></tr>
                 <tr><td>People</td><td data-label="With self-hosted open source">Working time of the reporting office, training</td><td data-label="Reason">Independence and expertise (§ 15)</td></tr>
                 <tr><td>Telephone</td><td data-label="With self-hosted open source">a number for the reporting office</td><td data-label="Reason">Oral reports are mandatory (§ 16 Abs. 3)</td></tr>
-                <tr><td>Data protection</td><td data-label="With self-hosted open source">Contract with the host, record of processing</td><td data-label="Reason">Art. 28 and Art. 30 GDPR</td></tr>
+                <tr><td>Data protection</td><td data-label="With self-hosted open source">Contract with the host, record of processing</td><td data-label="Reason">Art. 28 and Art. 30 GDPR <a class="cite" href="#q2">[2]</a></td></tr>
               </tbody>
             </table>
           </div>
@@ -122,11 +123,11 @@ jsonld:
               <tbody>
                 <tr><td>Open source, self-hosted</td><td data-label="Example">OpenWhistle</td><td class="val-good" data-label="Price per provider">€0 licence</td><td data-label="Run by">You</td></tr>
                 <tr><td>Open source, self-hosted</td><td data-label="Example">GlobaLeaks</td><td class="val-good" data-label="Price per provider">€0 licence</td><td data-label="Run by">You</td></tr>
-                <tr><td>Open source, managed</td><td data-label="Example"><a href="https://opensource-hinweisgeberportal.de/preise" rel="noopener noreferrer" target="_blank">Hinweisgeberportal OpenSource</a></td><td data-label="Price per provider">from €39/month paid yearly, €49 paid monthly, plus VAT</td><td data-label="Run by">Provider</td></tr>
-                <tr><td>SaaS</td><td data-label="Example"><a href="https://www.whistleport.de/preise/" rel="noopener noreferrer" target="_blank">WhistlePort</a></td><td data-label="Price per provider">€69/month plus VAT</td><td data-label="Run by">Provider</td></tr>
-                <tr><td>SaaS</td><td data-label="Example"><a href="https://www.hintbox.de/preise/" rel="noopener noreferrer" target="_blank">Hintbox</a></td><td data-label="Price per provider">from €99/month plus VAT</td><td data-label="Run by">Provider</td></tr>
-                <tr><td>SaaS</td><td data-label="Example"><a href="https://www.integrityline.com/de/produkt/pakete/" rel="noopener noreferrer" target="_blank">EQS Integrity Line</a></td><td data-label="Price per provider">not stated</td><td data-label="Run by">Provider</td></tr>
-                <tr><td>External ombudsperson</td><td data-label="Example">WhistlePort package 3, with lawyers</td><td data-label="Price per provider">€69 plus €79/month plus VAT</td><td data-label="Run by">Provider</td></tr>
+                <tr><td>Open source, managed</td><td data-label="Example"><a href="https://opensource-hinweisgeberportal.de/preise" rel="noopener noreferrer" target="_blank">Hinweisgeberportal OpenSource</a></td><td data-label="Price per provider">from €39/month paid yearly, €49 paid monthly, plus VAT <a class="cite" href="#q3">[3]</a></td><td data-label="Run by">Provider</td></tr>
+                <tr><td>SaaS</td><td data-label="Example"><a href="https://www.whistleport.de/preise/" rel="noopener noreferrer" target="_blank">WhistlePort</a></td><td data-label="Price per provider">from €69/month plus VAT, one-year term <a class="cite" href="#q4">[4]</a></td><td data-label="Run by">Provider</td></tr>
+                <tr><td>SaaS</td><td data-label="Example"><a href="https://www.hintbox.de/preise/" rel="noopener noreferrer" target="_blank">Hintbox</a></td><td data-label="Price per provider">from €99/month plus VAT, billed yearly <a class="cite" href="#q5">[5]</a></td><td data-label="Run by">Provider</td></tr>
+                <tr><td>SaaS</td><td data-label="Example"><a href="https://www.integrityline.com/de/produkt/pakete/" rel="noopener noreferrer" target="_blank">EQS Integrity Line</a></td><td data-label="Price per provider">not stated <a class="cite" href="#q6">[6]</a></td><td data-label="Run by">Provider</td></tr>
+                <tr><td>External ombudsperson</td><td data-label="Example">WhistlePort package 3, with lawyers</td><td data-label="Price per provider">€69 plus €79/month plus VAT <a class="cite" href="#q4">[4]</a></td><td data-label="Run by">Provider</td></tr>
               </tbody>
             </table>
           </div>
@@ -175,9 +176,21 @@ jsonld:
           <p class="post-note">
             <strong>More resources:</strong>
             <a href="/en/blog/whistleblowing-software-comparison/">Whistleblowing software compared 2026</a> ·
-            <a href="/en/blog/hinschg-compliance-guide/">HinSchG compliance guide</a> ·
-            <a href="https://www.gesetze-im-internet.de/hinschg/" rel="noopener noreferrer" target="_blank">HinSchG full text</a>
+            <a href="/en/blog/hinschg-compliance-guide/">HinSchG compliance guide</a>
           </p>
+          <section class="sources" aria-labelledby="sources-title">
+            <h2 id="sources-title">Sources</h2>
+            <ol>
+              <li id="q1"><a href="https://www.gesetze-im-internet.de/hinschg/" rel="noopener noreferrer" target="_blank">Hinweisgeberschutzgesetz (HinSchG)</a>, gesetze-im-internet.de (German). Retrieved 27 October 2026.</li>
+              <li id="q2"><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32016R0679" rel="noopener noreferrer" target="_blank">Regulation (EU) 2016/679 (GDPR)</a>, EUR-Lex. Retrieved 27 October 2026.</li>
+              <li id="q3"><a href="https://opensource-hinweisgeberportal.de/preise" rel="noopener noreferrer" target="_blank">Hinweisgeberportal OpenSource, prices</a>: “Company Bundle” plan. Retrieved 27 October 2026.</li>
+              <li id="q4"><a href="https://www.whistleport.de/preise/" rel="noopener noreferrer" target="_blank">WhistlePort, prices</a>: packages 1 and 3, term. Retrieved 27 October 2026.</li>
+              <li id="q5"><a href="https://www.hintbox.de/preise/" rel="noopener noreferrer" target="_blank">Hintbox, prices</a> (German). Retrieved 27 October 2026.</li>
+              <li id="q6"><a href="https://www.integrityline.com/de/produkt/pakete/" rel="noopener noreferrer" target="_blank">EQS Integrity Line, packages</a>: no price stated. Retrieved 27 October 2026.</li>
+              <li id="q7"><a href="https://github.com/globaleaks/globaleaks-whistleblowing-software" rel="noopener noreferrer" target="_blank">GlobaLeaks, GitHub repository</a>: licence. Retrieved 27 October 2026.</li>
+              <li id="q8"><a href="https://github.com/openwhistle/OpenWhistle" rel="noopener noreferrer" target="_blank">OpenWhistle, GitHub repository</a>: licence, requirements. Retrieved 27 October 2026.</li>
+            </ol>
+          </section>
         </div>
       </article>
     </div>

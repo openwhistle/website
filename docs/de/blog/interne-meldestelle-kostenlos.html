@@ -4,7 +4,7 @@ description: 'Interne Meldestelle kostenlos betreiben: was bei 0 € Lizenz an S
 translation_key: free-internal-reporting-channel
 og_type: article
 published: '2026-09-27'
-modified: '2026-10-12'
+modified: '2026-10-27'
 section: Praxis
 css:
 - post
@@ -20,7 +20,7 @@ jsonld:
     '@type': WebPage
     '@id': https://openwhistle.net/de/blog/interne-meldestelle-kostenlos/
   datePublished: '2026-09-27'
-  dateModified: '2026-10-12'
+  dateModified: '2026-10-27'
   author:
     '@type': Organization
     name: OpenWhistle Contributors
@@ -59,6 +59,7 @@ jsonld:
           <p class="article-subtitle">Die Software für eine interne Meldestelle kostenlos zu bekommen, ist leicht. Die Pflichten des HinSchG bleiben trotzdem. Was an Server, Betrieb und Arbeit übrig bleibt, welche Optionen es gibt und wie Sie mit OpenWhistle anfangen.</p>
           <div class="article-meta">
             <span>27. September 2026</span>
+            <span>Aktualisiert am 27. Oktober 2026</span>
             <span>6 Min. Lesezeit</span>
             <span>OpenWhistle Contributors</span>
           </div>
@@ -66,11 +67,11 @@ jsonld:
 
         <div class="article-body">
 
-          <p>Ein <strong>kostenloses Hinweisgebersystem</strong> spart die Lizenz. Es spart nicht die interne Meldestelle. Beschäftigungsgeber mit in der Regel mindestens 50 Beschäftigten müssen sie einrichten und betreiben (§ 12 HinSchG). Das Gesetz fragt nicht, was die Software gekostet hat.</p>
+          <p>Ein <strong>kostenloses Hinweisgebersystem</strong> spart die Lizenz. Es spart nicht die interne Meldestelle. Beschäftigungsgeber mit in der Regel mindestens 50 Beschäftigten müssen sie einrichten und betreiben (§ 12 HinSchG) <a class="cite" href="#q1">[1]</a>. Das Gesetz fragt nicht, was die Software gekostet hat.</p>
 
           <div class="callout callout-warn">
             <p class="callout-title">Transparenzhinweis</p>
-            <p>Diesen Artikel schreiben die Entwickler von OpenWhistle. Preise anderer Anbieter stehen so da, wie die Anbieter sie veröffentlichen, abgerufen am 27. September 2026. Keine Rechtsberatung.</p>
+            <p>Diesen Artikel schreiben die Entwickler von OpenWhistle. Preise anderer Anbieter stehen so da, wie die Anbieter sie veröffentlichen, jeder mit Quelle und Abrufdatum. Keine Rechtsberatung.</p>
           </div>
 
           <h2>Was bleibt, wenn die Lizenz 0 € kostet</h2>
@@ -85,12 +86,12 @@ jsonld:
                 </tr>
               </thead>
               <tbody>
-                <tr><td>Softwarelizenz</td><td class="val-good" data-label="Bei Open Source selbst gehostet">0 €</td><td data-label="Grund">GPL-3.0 oder AGPL-3.0</td></tr>
-                <tr><td>Server</td><td data-label="Bei Open Source selbst gehostet">ein kleiner VPS nach Tarif Ihres Hosters</td><td data-label="Grund">1 vCPU und 1 GB RAM reichen OpenWhistle meist</td></tr>
+                <tr><td>Softwarelizenz</td><td class="val-good" data-label="Bei Open Source selbst gehostet">0 €</td><td data-label="Grund">GPL-3.0 oder AGPL-3.0 <a class="cite" href="#q7">[7]</a> <a class="cite" href="#q8">[8]</a></td></tr>
+                <tr><td>Server</td><td data-label="Bei Open Source selbst gehostet">ein kleiner VPS nach Tarif Ihres Hosters</td><td data-label="Grund">1 vCPU und 1 GB RAM reichen OpenWhistle meist <a class="cite" href="#q8">[8]</a></td></tr>
                 <tr><td>Betrieb</td><td data-label="Bei Open Source selbst gehostet">Updates, Backups, Zertifikat</td><td data-label="Grund">Sicherheitskorrekturen kommen als Patch-Versionen</td></tr>
                 <tr><td>Menschen</td><td data-label="Bei Open Source selbst gehostet">Arbeitszeit der Meldestelle, Schulung</td><td data-label="Grund">Unabhängigkeit und Fachkunde (§ 15)</td></tr>
                 <tr><td>Telefon</td><td data-label="Bei Open Source selbst gehostet">eine Nummer für die Meldestelle</td><td data-label="Grund">Mündliche Meldungen sind Pflicht (§ 16 Abs. 3)</td></tr>
-                <tr><td>Datenschutz</td><td data-label="Bei Open Source selbst gehostet">Vertrag mit dem Hoster, Verzeichnis</td><td data-label="Grund">Art. 28 und Art. 30 DSGVO</td></tr>
+                <tr><td>Datenschutz</td><td data-label="Bei Open Source selbst gehostet">Vertrag mit dem Hoster, Verzeichnis</td><td data-label="Grund">Art. 28 und Art. 30 DSGVO <a class="cite" href="#q2">[2]</a></td></tr>
               </tbody>
             </table>
           </div>
@@ -122,11 +123,11 @@ jsonld:
               <tbody>
                 <tr><td>Open Source, selbst gehostet</td><td data-label="Beispiel">OpenWhistle</td><td class="val-good" data-label="Preis laut Anbieter">0 € Lizenz</td><td data-label="Betrieb durch">Sie</td></tr>
                 <tr><td>Open Source, selbst gehostet</td><td data-label="Beispiel">GlobaLeaks</td><td class="val-good" data-label="Preis laut Anbieter">0 € Lizenz</td><td data-label="Betrieb durch">Sie</td></tr>
-                <tr><td>Open Source, verwaltet</td><td data-label="Beispiel"><a href="https://opensource-hinweisgeberportal.de/preise" rel="noopener noreferrer" target="_blank">Hinweisgeberportal OpenSource</a></td><td data-label="Preis laut Anbieter">ab 39 €/Monat bei jährlicher, 49 € bei monatlicher Zahlung, zzgl. MwSt.</td><td data-label="Betrieb durch">Anbieter</td></tr>
-                <tr><td>SaaS</td><td data-label="Beispiel"><a href="https://www.whistleport.de/preise/" rel="noopener noreferrer" target="_blank">WhistlePort</a></td><td data-label="Preis laut Anbieter">69 €/Monat zzgl. MwSt.</td><td data-label="Betrieb durch">Anbieter</td></tr>
-                <tr><td>SaaS</td><td data-label="Beispiel"><a href="https://www.hintbox.de/preise/" rel="noopener noreferrer" target="_blank">Hintbox</a></td><td data-label="Preis laut Anbieter">ab 99 €/Monat zzgl. USt.</td><td data-label="Betrieb durch">Anbieter</td></tr>
-                <tr><td>SaaS</td><td data-label="Beispiel"><a href="https://www.integrityline.com/de/produkt/pakete/" rel="noopener noreferrer" target="_blank">EQS Integrity Line</a></td><td data-label="Preis laut Anbieter">nicht angegeben</td><td data-label="Betrieb durch">Anbieter</td></tr>
-                <tr><td>Externe Ombudsperson</td><td data-label="Beispiel">WhistlePort Paket 3, mit Rechtsanwälten</td><td data-label="Preis laut Anbieter">69 € plus 79 €/Monat zzgl. MwSt.</td><td data-label="Betrieb durch">Anbieter</td></tr>
+                <tr><td>Open Source, verwaltet</td><td data-label="Beispiel"><a href="https://opensource-hinweisgeberportal.de/preise" rel="noopener noreferrer" target="_blank">Hinweisgeberportal OpenSource</a></td><td data-label="Preis laut Anbieter">ab 39 €/Monat bei jährlicher, 49 € bei monatlicher Zahlung, zzgl. MwSt. <a class="cite" href="#q3">[3]</a></td><td data-label="Betrieb durch">Anbieter</td></tr>
+                <tr><td>SaaS</td><td data-label="Beispiel"><a href="https://www.whistleport.de/preise/" rel="noopener noreferrer" target="_blank">WhistlePort</a></td><td data-label="Preis laut Anbieter">ab 69 €/Monat zzgl. MwSt., Laufzeit ein Jahr <a class="cite" href="#q4">[4]</a></td><td data-label="Betrieb durch">Anbieter</td></tr>
+                <tr><td>SaaS</td><td data-label="Beispiel"><a href="https://www.hintbox.de/preise/" rel="noopener noreferrer" target="_blank">Hintbox</a></td><td data-label="Preis laut Anbieter">ab 99 €/Monat zzgl. USt., jährliche Abrechnung <a class="cite" href="#q5">[5]</a></td><td data-label="Betrieb durch">Anbieter</td></tr>
+                <tr><td>SaaS</td><td data-label="Beispiel"><a href="https://www.integrityline.com/de/produkt/pakete/" rel="noopener noreferrer" target="_blank">EQS Integrity Line</a></td><td data-label="Preis laut Anbieter">nicht angegeben <a class="cite" href="#q6">[6]</a></td><td data-label="Betrieb durch">Anbieter</td></tr>
+                <tr><td>Externe Ombudsperson</td><td data-label="Beispiel">WhistlePort Paket 3, mit Rechtsanwälten</td><td data-label="Preis laut Anbieter">69 € plus 79 €/Monat zzgl. MwSt. <a class="cite" href="#q4">[4]</a></td><td data-label="Betrieb durch">Anbieter</td></tr>
               </tbody>
             </table>
           </div>
@@ -175,9 +176,21 @@ jsonld:
           <p class="post-note">
             <strong>Weitere Ressourcen:</strong>
             <a href="/de/blog/whistleblower-software-vergleich/">Hinweisgebersystem-Anbieter im Vergleich 2026</a> ·
-            <a href="/de/blog/hinschg-compliance-leitfaden/">HinSchG-Compliance-Leitfaden</a> ·
-            <a href="https://www.gesetze-im-internet.de/hinschg/" rel="noopener noreferrer" target="_blank">HinSchG Volltext</a>
+            <a href="/de/blog/hinschg-compliance-leitfaden/">HinSchG-Compliance-Leitfaden</a>
           </p>
+          <section class="sources" aria-labelledby="sources-title">
+            <h2 id="sources-title">Quellen</h2>
+            <ol>
+              <li id="q1"><a href="https://www.gesetze-im-internet.de/hinschg/" rel="noopener noreferrer" target="_blank">Hinweisgeberschutzgesetz (HinSchG)</a>, gesetze-im-internet.de. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+              <li id="q2"><a href="https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX%3A32016R0679" rel="noopener noreferrer" target="_blank">Verordnung (EU) 2016/679 (DSGVO)</a>, EUR-Lex. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+              <li id="q3"><a href="https://opensource-hinweisgeberportal.de/preise" rel="noopener noreferrer" target="_blank">Hinweisgeberportal OpenSource, Preise</a>: Tarif „Company Bundle“. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+              <li id="q4"><a href="https://www.whistleport.de/preise/" rel="noopener noreferrer" target="_blank">WhistlePort, Preise</a>: Pakete 1 und 3, Laufzeit. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+              <li id="q5"><a href="https://www.hintbox.de/preise/" rel="noopener noreferrer" target="_blank">Hintbox, Preise</a>. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+              <li id="q6"><a href="https://www.integrityline.com/de/produkt/pakete/" rel="noopener noreferrer" target="_blank">EQS Integrity Line, Pakete</a>: kein Preis angegeben. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+              <li id="q7"><a href="https://github.com/globaleaks/globaleaks-whistleblowing-software" rel="noopener noreferrer" target="_blank">GlobaLeaks, GitHub-Repository</a>: Lizenz. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+              <li id="q8"><a href="https://github.com/openwhistle/OpenWhistle" rel="noopener noreferrer" target="_blank">OpenWhistle, GitHub-Repository</a>: Lizenz, Anforderungen. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+            </ol>
+          </section>
         </div>
       </article>
     </div>
