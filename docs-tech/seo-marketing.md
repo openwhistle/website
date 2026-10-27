@@ -16,13 +16,15 @@ One primary keyword per page; no two pages share one. The title starts with it, 
 | `/en/compare/` | GlobaLeaks alternative | SecureDrop alternative, open source whistleblowing software compared, Hush Line |
 | `/de/` | Hinweisgebersystem Software | HinSchG Software, Hinweisgeberschutzgesetz Software, interne Meldestelle Software, Hinweisgeber Software; kostenloses Hinweisgebersystem, Hinweisgebersystem Open Source as differentiator |
 | `/de/blog/` | HinSchG Blog | Hinweisgeberschutz Praxis |
-| `/de/blog/hinschg-compliance-leitfaden/` | HinSchG Pflichten | interne Meldestelle Pflicht, HinSchG Fristen |
+| `/de/blog/hinschg-compliance-leitfaden/` | HinSchG Pflichten | HinSchG Fristen, HinSchG Checkliste |
 | `/de/blog/interne-meldestelle-einrichten/` | interne Meldestelle einrichten | Hinweisgebersystem Docker, interne Meldestelle Anleitung |
 | `/de/blog/whistleblower-software-vergleich/` | Hinweisgebersystem Anbieter Vergleich | Hinweisgeberschutzgesetz Software Vergleich, Anbieter Hinweisgebersystem, Hinweisgebersystem Anbieter, GlobaLeaks |
 | `/de/blog/hinweisgebersystem-dsgvo-eu-hosting/` | Hinweisgebersystem EU-Hosting | DSGVO-konformes Hinweisgebersystem, Hinweisgebersystem Verschlüsselung, Hinweisgebersystem mehrsprachig |
 | `/de/blog/was-ist-neu-in-2-0/` | OpenWhistle 2.0 | Hinweisgebersystem Update |
 | `/de/blog/interne-meldestelle-kostenlos/` | interne Meldestelle kostenlos | HinSchG Meldekanal kostenlos |
 | `/de/blog/metadaten-entfernen-ohne-beweise-zu-veraendern/` | Metadaten entfernen Hinweisgebersystem | Foto Metadaten anonyme Meldung |
+| `/de/blog/hinweisgebersystem-pflicht/` | Hinweisgebersystem Pflicht | wann brauche ich ein Hinweisgebersystem, Hinweisgebersystem ab wie vielen Mitarbeitern, interne Meldestelle Pflicht |
+| `/de/blog/anonymes-hinweisgebersystem/` | anonymes Hinweisgebersystem | Hinweisgeber Anonymität, Hinweisgebersystem IP-Adresse, Hinweisgebersystem Tor |
 | `blog/en.html` and the seven English twins | the German page's primary, in English | none yet: no Search Console data for the English blog |
 
 The blog is bilingual since 2026-09-27: every German article has an English twin (hreflang, x-default English;

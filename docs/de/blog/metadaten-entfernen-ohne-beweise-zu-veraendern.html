@@ -4,7 +4,7 @@ description: 'Metadaten entfernen im Hinweisgebersystem: Wie OpenWhistle GPS-Dat
 translation_key: removing-metadata-without-altering-evidence
 og_type: article
 published: '2026-09-27'
-modified: '2026-10-12'
+modified: '2026-10-27'
 section: Datenschutz
 css:
 - post
@@ -20,7 +20,7 @@ jsonld:
     '@type': WebPage
     '@id': https://openwhistle.net/de/blog/metadaten-entfernen-ohne-beweise-zu-veraendern/
   datePublished: '2026-09-27'
-  dateModified: '2026-10-12'
+  dateModified: '2026-10-27'
   author:
     '@type': Organization
     name: OpenWhistle Contributors
@@ -59,6 +59,7 @@ jsonld:
           <p class="article-subtitle">Ein Foto vom Diensthandy verrät, wo es entstand. Eine Excel-Datei nennt den Windows-Benutzernamen. OpenWhistle entfernt beides. Bis Version 2.0 veränderte es dabei auch das Beweisstück selbst.</p>
           <div class="article-meta">
             <span>27. September 2026</span>
+            <span>Aktualisiert am 27. Oktober 2026</span>
             <span>4 Min. Lesezeit</span>
             <span>OpenWhistle Contributors</span>
           </div>
@@ -66,12 +67,12 @@ jsonld:
 
         <div class="article-body">
 
-          <p>Wer einen Missstand meldet, hängt oft einen Beleg an: ein Foto, einen Screenshot, eine Tabelle. Jede dieser Dateien trägt Daten, die niemand sieht. Ein Handyfoto enthält GPS-Koordinaten und die Seriennummer der Kamera. Eine Office-Datei enthält den Autor. Eine anonyme Meldung ist nur so anonym wie ihr Anhang. Ein Hinweisgebersystem sollte Metadaten deshalb entfernen, bevor es einen Anhang speichert.</p>
+          <p>Wer einen Missstand meldet, hängt oft einen Beleg an: ein Foto, einen Screenshot, eine Tabelle. Jede dieser Dateien trägt Daten, die niemand sieht. Ein Handyfoto kann GPS-Koordinaten und die Seriennummer der Kamera enthalten <a class="cite" href="#q1">[1]</a>. Eine Office-Datei enthält den Autor <a class="cite" href="#q2">[2]</a>. Eine anonyme Meldung ist nur so anonym wie ihr Anhang. Ein Hinweisgebersystem sollte Metadaten deshalb entfernen, bevor es einen Anhang speichert.</p>
 
           <p>OpenWhistle tut das beim Hochladen, bevor irgendetwas gespeichert wird. Eine Datei, die sich nicht säubern lässt, wird abgelehnt, nie ungesäubert abgelegt.</p>
 
           <h2>Der alte Weg: das Bild neu malen</h2>
-          <p>Bis Version 2.0 las OpenWhistle ein Bild ein und schrieb nur die Pixel in eine neue Datei. Metadaten kamen so garantiert nicht mit. Die Pixel aber auch nicht immer. Ein Bug-Bounty-Durchlauf hat nachgemessen:</p>
+          <p>Bis Version 2.0 las OpenWhistle ein Bild ein und schrieb nur die Pixel in eine neue Datei. Metadaten kamen so garantiert nicht mit. Die Pixel aber auch nicht immer. Ein Bug-Bounty-Durchlauf hat nachgemessen <a class="cite" href="#q3">[3]</a>:</p>
 
           <table class="data-table">
             <thead><tr><th scope="col">Anhang</th><th scope="col">Vorher</th><th scope="col">Nach dem Säubern (bis 2.0)</th></tr></thead>
@@ -89,7 +90,7 @@ jsonld:
           <p>Die Tests fragten, ob die Metadaten weg sind. Das waren sie. Ob das Bild danach noch dasselbe zeigte, fragte keiner. Und die Testbilder waren gewöhnliche Farbfotos, ohne Palette und ohne Animation. Der Fehler lag genau dort, wo niemand hinsah.</p>
 
           <h2>Der neue Weg: nur die Metadaten herausschneiden</h2>
-          <p>Seit Version 2.1 wird ein Bild nicht mehr neu geschrieben. JPEG, PNG und WebP bestehen aus einzelnen Abschnitten. OpenWhistle behält die Abschnitte, die das Bild beschreiben, und verwirft alle anderen. Die Pixel bleiben Bit für Bit gleich, die Datei wird nicht größer. Nur die Ausrichtung bleibt erhalten, damit ein Hochkantfoto hochkant bleibt.</p>
+          <p>Seit Version 2.1 wird ein Bild nicht mehr neu geschrieben <a class="cite" href="#q3">[3]</a> <a class="cite" href="#q4">[4]</a>. JPEG, PNG und WebP bestehen aus einzelnen Abschnitten. OpenWhistle behält die Abschnitte, die das Bild beschreiben, und verwirft alle anderen. Die Pixel bleiben Bit für Bit gleich, die Datei wird nicht größer. Nur die Ausrichtung bleibt erhalten, damit ein Hochkantfoto hochkant bleibt.</p>
 
           <p>Dabei fielen weitere Lücken auf, die jetzt geschlossen sind:</p>
           <ul>
@@ -113,6 +114,15 @@ jsonld:
             <a href="/de/blog/hinschg-compliance-leitfaden/">HinSchG-Compliance-Leitfaden</a> ·
             <a href="https://github.com/openwhistle/OpenWhistle/issues" rel="noopener noreferrer" target="_blank">GitHub Issues</a>
           </p>
+          <section class="sources" aria-labelledby="sources-title">
+            <h2 id="sources-title">Quellen</h2>
+            <ol>
+              <li id="q1"><a href="https://www.cipa.jp/e/std/std-sec.html" rel="noopener noreferrer" target="_blank">CIPA, Standards: DC-008 Exif</a>: Tags für GPS-Daten und Seriennummer des Geräts. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+              <li id="q2"><a href="https://ecma-international.org/publications-and-standards/standards/ecma-376/" rel="noopener noreferrer" target="_blank">Ecma International, ECMA-376 Office Open XML</a>: Dokumenteigenschaft Autor. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+              <li id="q3"><a href="https://github.com/openwhistle/OpenWhistle/blob/v2.4.0/CHANGELOG.md" rel="noopener noreferrer" target="_blank">OpenWhistle, CHANGELOG.md</a>: Abschnitt 2.1.0, Messwerte und Fixes. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+              <li id="q4"><a href="https://github.com/openwhistle/OpenWhistle/blob/v2.4.0/app/services/attachment.py" rel="noopener noreferrer" target="_blank">OpenWhistle 2.4.0, app/services/attachment.py</a>: das Entfernen der Metadaten. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+            </ol>
+          </section>
         </div>
       </article>
     </div>

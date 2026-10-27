@@ -4,7 +4,7 @@ description: 'OpenWhistle 2.0 in six findings: a PDF that swallowed non-Latin te
 translation_key: whats-new-in-2-0
 og_type: article
 published: '2026-09-26'
-modified: '2026-09-27'
+modified: '2026-10-27'
 section: Release
 css:
 - post
@@ -20,7 +20,7 @@ jsonld:
     '@type': WebPage
     '@id': https://openwhistle.net/en/blog/whats-new-in-2-0/
   datePublished: '2026-09-26'
-  dateModified: '2026-09-27'
+  dateModified: '2026-10-27'
   author:
     '@type': Organization
     name: OpenWhistle Contributors
@@ -59,6 +59,7 @@ jsonld:
           <p class="article-subtitle">A PDF that swallowed the whistleblower's words. A header that was trusted too much. And a rollback that crashed half-finished sessions — six findings from release 2.0, told the way they were found.</p>
           <div class="article-meta">
             <span>26 September 2026</span>
+            <span>Updated 27 October 2026</span>
             <span>6 min read</span>
             <span>OpenWhistle Contributors</span>
           </div>
@@ -66,9 +67,9 @@ jsonld:
 
         <div class="article-body">
 
-          <p>Release 2.0 is mainly the result of a hardening audit. It found six places where OpenWhistle revealed more than it needed to, or did not keep a promise. All details are in the <a href="https://github.com/openwhistle/OpenWhistle/blob/main/CHANGELOG.md" rel="noopener noreferrer" target="_blank">CHANGELOG</a>.</p>
+          <p>Release 2.0 is mainly the result of a hardening audit. It found six places where OpenWhistle revealed more than it needed to, or did not keep a promise. All details are in the <a href="https://github.com/openwhistle/OpenWhistle/blob/main/CHANGELOG.md" rel="noopener noreferrer" target="_blank">CHANGELOG</a> <a class="cite" href="#q1">[1]</a>.</p>
 
-          <p class="post-update"><strong>Update of 27 September 2026:</strong> Upgrade to <strong>2.0.1</strong>. Until then, the setup wizard created the first account as a plain admin. Only a superadmin can grant superadmin, though, so no installation had one. Organisations and multi-tenancy were therefore out of reach. Migration 008 promotes the first account during the update; check <code>/admin/users</code> afterwards. Details in the <a href="/en/changelog/">changelog</a>.</p>
+          <p class="post-update"><strong>Update of 27 September 2026:</strong> Upgrade to <strong>2.0.1</strong> <a class="cite" href="#q2">[2]</a>. Until then, the setup wizard created the first account as a plain admin. Only a superadmin can grant superadmin, though, so no installation had one. Organisations and multi-tenancy were therefore out of reach. Migration 008 promotes the first account during the update; check <code>/admin/users</code> afterwards. Details in the <a href="/en/changelog/">changelog</a>.</p>
 
           <h2>The PDF that swallowed the reporter's own words</h2>
           <p>A case report in Polish, Greek or Cyrillic could be exported as a PDF. But the reporting person's text was no longer in it. Every character outside the Latin alphabet, and every typographic quotation mark “like this one”, became a single <code>?</code> on export. The cause: the built-in PDF font only knows Latin-1. The fix removes the cause: a real Unicode font (DejaVu LGC Sans, Latin/Greek/Cyrillic) is now embedded. Chinese, Japanese, Korean and right-to-left scripts remain open work — with a visible replacement box instead of a silent “?”.</p>
@@ -100,6 +101,13 @@ jsonld:
             <a href="/en/blog/hinschg-compliance-guide/">HinSchG compliance guide</a> ·
             <a href="https://github.com/openwhistle/OpenWhistle/issues" rel="noopener noreferrer" target="_blank">GitHub Issues</a>
           </p>
+          <section class="sources" aria-labelledby="sources-title">
+            <h2 id="sources-title">Sources</h2>
+            <ol>
+              <li id="q1"><a href="https://github.com/openwhistle/OpenWhistle/releases/tag/v2.0.0" rel="noopener noreferrer" target="_blank">OpenWhistle, release 2.0.0</a>: release notes. Retrieved 27 October 2026.</li>
+              <li id="q2"><a href="https://github.com/openwhistle/OpenWhistle/releases/tag/v2.0.1" rel="noopener noreferrer" target="_blank">OpenWhistle, release 2.0.1</a>: release notes. Retrieved 27 October 2026.</li>
+            </ol>
+          </section>
         </div>
       </article>
     </div>

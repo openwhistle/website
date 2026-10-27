@@ -1,0 +1,67 @@
+<mxfile>
+  <diagram name="reporting-obligation">
+    <mxGraphModel>
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="start" value="Sie beschäftigen&#xa;mindestens eine Person" style="ow:start" vertex="1" parent="1">
+          <mxGeometry x="0" y="0" width="280" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="d1" value="Finanzunternehmen&#xa;nach § 12 Abs. 3?" style="ow:decision" vertex="1" parent="1">
+          <mxGeometry x="0" y="84" width="280" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="r1" value="Pflicht&#xa;unabhängig von der Größe" style="ow:result" vertex="1" parent="1">
+          <mxGeometry x="350" y="103" width="300" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="d2" value="Gemeinde oder Unternehmen&#xa;einer Gemeinde?" style="ow:decision" vertex="1" parent="1">
+          <mxGeometry x="0" y="206" width="280" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="r2" value="Landesrecht entscheidet&#xa;§ 12 Abs. 1 Satz 4" style="ow:note" vertex="1" parent="1">
+          <mxGeometry x="350" y="225" width="300" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="d3" value="In der Regel mindestens&#xa;50 Beschäftigte?" style="ow:decision" vertex="1" parent="1">
+          <mxGeometry x="0" y="328" width="280" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="r3" value="Pflicht&#xa;50 bis 249: gemeinsame Stelle möglich" style="ow:result" vertex="1" parent="1">
+          <mxGeometry x="350" y="347" width="300" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="r4" value="Keine Pflicht&#xa;freiwillig möglich" style="ow:step" vertex="1" parent="1">
+          <mxGeometry x="0" y="450" width="280" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-start" style="ow:edge;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="start" target="d1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-d1-yes" value="ja" style="ow:edge;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="d1" target="r1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" x="0" y="-11"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-d1-no" value="nein" style="ow:edge;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="d1" target="d2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" x="18" y="0"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-d2-yes" value="ja" style="ow:edge;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="d2" target="r2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" x="0" y="-11"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-d2-no" value="nein" style="ow:edge;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="d2" target="d3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" x="18" y="0"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-d3-yes" value="ja" style="ow:edge;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="d3" target="r3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" x="0" y="-11"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-d3-no" value="nein" style="ow:edge;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="d3" target="r4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" x="18" y="0"/>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

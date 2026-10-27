@@ -13,7 +13,7 @@ ROOT = Path(__file__).parents[1]
 # Section -> number of Absätze; per Absatz, the number of Nr. where cited.
 SHAPE: dict[int, tuple[int, dict[int, int]]] = {
     2: (3, {1: 11}),
-    3: (8, {}),
+    3: (10, {8: 7}),
     7: (3, {}),
     8: (2, {}),
     9: (4, {}),
@@ -23,6 +23,7 @@ SHAPE: dict[int, tuple[int, dict[int, int]]] = {
     14: (2, {}),
     16: (3, {}),
     17: (2, {1: 6}),
+    19: (4, {}),
     26: (3, {}),
     32: (2, {}),
     40: (6, {2: 3}),
@@ -31,7 +32,7 @@ SHAPE: dict[int, tuple[int, dict[int, int]]] = {
 
 _OTHER_LAW = re.compile(
     r"\s*(?:[A-Za-z.\s\d]{0,8})?"
-    r"\b(?:StGB|DSGVO|BetrVG|OWiG|BDSG|UWG|BGB|GG|AktG|GmbHG|KWG|BPersVG|MStV|TDDDG)\b"
+    r"\b(?:StGB|DSGVO|BetrVG|OWiG|BDSG|UWG|BGB|GG|AktG|GmbHG|KWG|BPersVG|MStV|TDDDG|LkSG)\b"
 )
 _CITE = re.compile(r"§\s?(\d+)\s?(?:Abs\.|Absatz|al\.)\s?(\d+)(?:\s?(?:Nr\.|Satz)\s?(\d+))?")
 
@@ -80,3 +81,9 @@ def test_a_citation_written_with_entities_is_checked() -> None:
         "p: §\xa040\xa0Abs.\xa09 (§ 40 has 6)",
         "p: §\xa099\xa0Abs.\xa07 (section not checked yet)",
     ]
+
+
+def test_a_citation_of_another_law_is_not_read_as_the_hinschg() -> None:
+    """The roadmap cited "§12 Abs. 4 LkSG", which does not exist: it passed as HinSchG § 12, and
+    the correct "§ 10 Abs. 2 LkSG" was refused as an unchecked HinSchG section."""
+    assert _wrong("p", "§ 10 Abs. 2 LkSG und § 12 Abs. 5") == ["p: § 12 Abs. 5 (§ 12 has 4)"]

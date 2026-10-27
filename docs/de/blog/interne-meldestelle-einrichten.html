@@ -4,7 +4,7 @@ description: 'Interne Meldestelle einrichten mit OpenWhistle: Server, Docker Com
 translation_key: set-up-internal-reporting-channel
 og_type: article
 published: '2026-04-27'
-modified: '2026-10-12'
+modified: '2026-10-27'
 css:
 - post
 js:
@@ -19,7 +19,7 @@ jsonld:
     '@type': WebPage
     '@id': https://openwhistle.net/de/blog/interne-meldestelle-einrichten/
   datePublished: '2026-04-27'
-  dateModified: '2026-10-12'
+  dateModified: '2026-10-27'
   author:
     '@type': Organization
     name: OpenWhistle Contributors
@@ -58,7 +58,7 @@ jsonld:
           <p class="article-subtitle">Vom leeren Linux-Server bis zur ersten Testmeldung: Docker, Konfiguration, HTTPS-Zertifikat, Einrichtungsassistent und erste Schritte im Admin-Bereich.</p>
           <div class="article-meta">
             <span>27. April 2026</span>
-            <span>Aktualisiert am 12. Oktober 2026</span>
+            <span>Aktualisiert am 27. Oktober 2026</span>
             <span>10 Min. Lesezeit</span>
             <span>OpenWhistle Contributors</span>
           </div>
@@ -69,6 +69,7 @@ jsonld:
           <p>Diese Anleitung richtet OpenWhistle mit Docker Compose ein: den technischen Teil, wenn Sie eine interne Meldestelle einrichten. Am Ende läuft der digitale Meldekanal auf Ihrem eigenen Server. Die maßgebliche Referenz bleibt die <a href="/en/docs/install/" hreflang="en">Installationsanleitung in der Dokumentation</a>.</p>
 
           <h2>Voraussetzungen</h2>
+          <p>So steht es in den Dateien des Release 2.4.0 <a class="cite" href="#q1">[1]</a>.</p>
 
           <ul>
             <li>Ein Linux-Server mit 1 vCPU, mindestens 512 MB RAM (1 GB empfohlen) und 5 GB Speicher</li>
@@ -89,7 +90,7 @@ jsonld:
             <div class="step-num" aria-hidden="true">1</div>
             <div class="step-content">
               <h3>VPS auswählen</h3>
-              <p>Ein kleiner VPS genügt. Wählen Sie einen Anbieter mit Rechenzentrum in der EU, der einen Auftragsverarbeitungsvertrag nach Art. 28 DSGVO anbietet.</p>
+              <p>Ein kleiner VPS genügt. Wählen Sie einen Anbieter mit Rechenzentrum in der EU, der einen Auftragsverarbeitungsvertrag nach Art. 28 DSGVO anbietet <a class="cite" href="#q4">[4]</a>.</p>
               <p>Legen Sie einen Benutzer mit sudo-Rechten an und melden Sie sich per SSH-Schlüssel an.</p>
             </div>
           </div>
@@ -100,7 +101,7 @@ jsonld:
             <div class="step-num" aria-hidden="true">2</div>
             <div class="step-content">
               <h3>Docker Engine und Compose-Plugin</h3>
-              <p>Folgen Sie der offiziellen <a href="https://docs.docker.com/engine/install/" rel="noopener noreferrer" target="_blank">Installationsanleitung von Docker</a> für Ihre Distribution. Prüfen Sie danach beide Versionen:</p>
+              <p>Folgen Sie der offiziellen <a href="https://docs.docker.com/engine/install/" rel="noopener noreferrer" target="_blank">Installationsanleitung von Docker</a> <a class="cite" href="#q2">[2]</a> für Ihre Distribution. Prüfen Sie danach beide Versionen:</p>
             </div>
           </div>
 
@@ -239,12 +240,12 @@ curl -s https://meldestelle.ihr-unternehmen.de/health
 
           <div class="callout callout-note">
             <p class="callout-title">Fristerinnerungen</p>
-            <p>Mit <code>REMINDER_ENABLED=true</code> erinnert OpenWhistle per E-Mail, bevor die 7-Tage- oder die 3-Monats-Frist nach § 17 HinSchG abläuft. Die Prüfung läuft alle 30 Minuten.</p>
+            <p>Mit <code>REMINDER_ENABLED=true</code> erinnert OpenWhistle per E-Mail, bevor die 7-Tage- oder die 3-Monats-Frist nach § 17 HinSchG abläuft. Die Prüfung läuft alle 30 Minuten <a class="cite" href="#q1">[1]</a> <a class="cite" href="#q3">[3]</a>.</p>
           </div>
 
           <h2>Schritt 8: Die Meldestelle bekannt machen</h2>
 
-          <p>Beschäftigte brauchen klare Informationen über das interne Verfahren und über externe Meldestellen (§ 7 Abs. 3, § 13 Abs. 2 HinSchG). Bewährte Wege:</p>
+          <p>Beschäftigte brauchen klare Informationen über das interne Verfahren und über externe Meldestellen (§ 7 Abs. 3, § 13 Abs. 2 HinSchG) <a class="cite" href="#q3">[3]</a>. Bewährte Wege:</p>
 
           <ul>
             <li>Rundmail mit dem Link zum Meldeformular</li>
@@ -307,6 +308,15 @@ docker compose up -d</code></pre>
             <a href="/de/blog/interne-meldestelle-kostenlos/">Was ein kostenloses Hinweisgebersystem kostet</a> ·
             <a href="https://github.com/openwhistle/OpenWhistle/issues" rel="noopener noreferrer" target="_blank">GitHub Issues</a>
           </p>
+          <section class="sources" aria-labelledby="sources-title">
+            <h2 id="sources-title">Quellen</h2>
+            <ol>
+              <li id="q1"><a href="https://github.com/openwhistle/OpenWhistle/tree/v2.4.0" rel="noopener noreferrer" target="_blank">OpenWhistle 2.4.0, Quellcode</a>: Compose-Dateien, nginx, Einrichtung, Erinnerungen. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+              <li id="q2"><a href="https://docs.docker.com/engine/install/" rel="noopener noreferrer" target="_blank">Docker, Install Docker Engine</a>. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+              <li id="q3"><a href="https://www.gesetze-im-internet.de/hinschg/" rel="noopener noreferrer" target="_blank">Hinweisgeberschutzgesetz (HinSchG)</a>, gesetze-im-internet.de. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+              <li id="q4"><a href="https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX%3A32016R0679" rel="noopener noreferrer" target="_blank">Verordnung (EU) 2016/679 (DSGVO)</a>, EUR-Lex. Abgerufen am 27.&nbsp;Oktober 2026.</li>
+            </ol>
+          </section>
         </div>
       </article>
     </div>

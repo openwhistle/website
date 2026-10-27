@@ -4,7 +4,7 @@ description: 'Whistleblowing system with EU hosting: self-hosted, reports stay o
 translation_key: whistleblowing-system-gdpr-eu-hosting
 og_type: article
 published: '2026-09-27'
-modified: '2026-09-27'
+modified: '2026-10-27'
 css:
 - post
 js:
@@ -19,7 +19,7 @@ jsonld:
     '@type': WebPage
     '@id': https://openwhistle.net/en/blog/whistleblowing-system-gdpr-eu-hosting/
   datePublished: '2026-09-27'
-  dateModified: '2026-09-27'
+  dateModified: '2026-10-27'
   author:
     '@type': Organization
     name: OpenWhistle Contributors
@@ -58,6 +58,7 @@ jsonld:
           <p class="article-subtitle">Self-hosted, all reports sit on the operator's server, in the EU if the operator runs it there. What OpenWhistle encrypts, what it never stores and what the GDPR leaves with the operator.</p>
           <div class="article-meta">
             <span>27 September 2026</span>
+            <span>Updated 27 October 2026</span>
             <span>5 min read</span>
             <span>OpenWhistle Contributors</span>
           </div>
@@ -69,13 +70,13 @@ jsonld:
 
           <div class="callout callout-warn">
             <p class="callout-title">Transparency note</p>
-            <p>This article is written by the developers of OpenWhistle. Information on other offerings comes from their own websites, retrieved on 27 September 2026. Not legal advice.</p>
+            <p>This article is written by the developers of OpenWhistle. Information on other offerings comes from their own websites, each with its source and retrieval date. Not legal advice.</p>
           </div>
 
           <h2>Who offers whistleblowing systems with EU hosting?</h2>
 
           <div class="comp-wrap">
-            <table class="comp-table" aria-label="Whistleblowing systems and where their data lives, as of 27 September 2026">
+            <table class="comp-table" aria-label="Whistleblowing systems and where their data lives, as of 27 October 2026">
               <thead>
                 <tr>
                   <th scope="col">Offering</th>
@@ -84,10 +85,10 @@ jsonld:
                 </tr>
               </thead>
               <tbody>
-                <tr><td><strong>OpenWhistle</strong></td><td data-label="Model">Software, GPL-3.0</td><td data-label="Where the data lives">on your server; you choose the location</td></tr>
-                <tr><td><strong>GlobaLeaks</strong></td><td data-label="Model">Software, AGPL-3.0</td><td data-label="Where the data lives">on your server; you choose the location</td></tr>
-                <tr><td><strong>Hinweisgeberportal OpenSource</strong></td><td data-label="Model">managed GlobaLeaks</td><td data-label="Where the data lives">data centres in Germany</td></tr>
-                <tr><td><strong>WhistlePort</strong></td><td data-label="Model">SaaS</td><td data-label="Where the data lives">Germany, ISO/IEC&nbsp;27001</td></tr>
+                <tr><td><strong>OpenWhistle</strong> <a class="cite" href="#q9">[9]</a></td><td data-label="Model">Software, GPL-3.0</td><td data-label="Where the data lives">on your server; you choose the location</td></tr>
+                <tr><td><strong>GlobaLeaks</strong> <a class="cite" href="#q7">[7]</a></td><td data-label="Model">Software, AGPL-3.0</td><td data-label="Where the data lives">on your server; you choose the location</td></tr>
+                <tr><td><strong>Hinweisgeberportal OpenSource</strong> <a class="cite" href="#q5">[5]</a></td><td data-label="Model">managed GlobaLeaks</td><td data-label="Where the data lives">data centres in Germany</td></tr>
+                <tr><td><strong>WhistlePort</strong> <a class="cite" href="#q6">[6]</a></td><td data-label="Model">SaaS</td><td data-label="Where the data lives">Germany, ISO/IEC&nbsp;27001</td></tr>
               </tbody>
             </table>
           </div>
@@ -105,13 +106,13 @@ jsonld:
                 </tr>
               </thead>
               <tbody>
-                <tr><td>Report text and messages</td><td class="col-ow" data-label="Protection">a data key of its own per report (Fernet: AES-128-CBC with HMAC-SHA256)</td></tr>
+                <tr><td>Report text and messages</td><td class="col-ow" data-label="Protection">a data key of its own per report (Fernet: AES-128-CBC with HMAC-SHA256) <a class="cite" href="#q1">[1]</a></td></tr>
                 <tr><td>Attachments: content and file name</td><td class="col-ow" data-label="Protection">the same key as the report, in S3 storage too</td></tr>
                 <tr><td>Name and contact in confidential reports</td><td class="col-ow" data-label="Protection">encrypted; visible only after a logged reason</td></tr>
                 <tr><td>TOTP secrets of the accounts</td><td class="col-ow" data-label="Protection">encrypted</td></tr>
-                <tr><td>Master key</td><td class="col-ow" data-label="Protection">derived from <code>ENCRYPTION_KEY</code>, otherwise <code>SECRET_KEY</code> (HKDF-SHA256); never in the database</td></tr>
-                <tr><td>Draft while reporting</td><td class="col-ow" data-label="Protection">in Redis, 2 hours at most; the key lives only in the reporting person's cookie</td></tr>
-                <tr><td>Transport</td><td class="col-ow" data-label="Protection">TLS 1.2 and 1.3 via nginx, from the first start</td></tr>
+                <tr><td>Master key</td><td class="col-ow" data-label="Protection">derived from <code>ENCRYPTION_KEY</code>, otherwise <code>SECRET_KEY</code> (HKDF-SHA256); never in the database <a class="cite" href="#q1">[1]</a></td></tr>
+                <tr><td>Draft while reporting</td><td class="col-ow" data-label="Protection">in Redis, 2 hours at most; the key lives only in the reporting person's cookie <a class="cite" href="#q2">[2]</a></td></tr>
+                <tr><td>Transport</td><td class="col-ow" data-label="Protection">TLS 1.2 and 1.3 via nginx, from the first start <a class="cite" href="#q3">[3]</a></td></tr>
               </tbody>
             </table>
           </div>
@@ -120,13 +121,13 @@ jsonld:
 
           <h2>What OpenWhistle never stores</h2>
           <ul>
-            <li><strong>IP addresses.</strong> nginx removes the IP headers and writes no access log. The app discards the address, and the database has no IP column.</li>
+            <li><strong>IP addresses.</strong> nginx removes the IP headers and writes no access log <a class="cite" href="#q3">[3]</a>. The app discards the address, and the database has no IP column.</li>
             <li><strong>Times of the reporting person.</strong> The report, messages and attachments carry only the date.</li>
             <li><strong>Data for third parties.</strong> Every outbound request is optional and <a href="/en/docs/outbound/">listed in the documentation</a>. The update check and the installation count stay off until you switch them on.</li>
           </ul>
 
           <h2>Is a whistleblowing system GDPR-compliant?</h2>
-          <p>Compliance belongs to the operation, not the software. OpenWhistle supports GDPR-compliant operation; the operator bears the responsibility.</p>
+          <p>Compliance belongs to the operation, not the software. The articles in the table are those of the GDPR <a class="cite" href="#q8">[8]</a>. OpenWhistle supports GDPR-compliant operation; the operator bears the responsibility.</p>
 
           <div class="comp-wrap">
             <table class="comp-table" aria-label="GDPR duties: what OpenWhistle contributes and what stays with the operator">
@@ -139,7 +140,7 @@ jsonld:
               </thead>
               <tbody>
                 <tr><td>Data minimisation, Art.&nbsp;5</td><td class="col-ow" data-label="OpenWhistle">anonymous mode, no IP, date only</td><td data-label="Your part">the form's categories and texts</td></tr>
-                <tr><td>Storage limitation, Art.&nbsp;5</td><td class="col-ow" data-label="OpenWhistle">automatic deletion, by default 1095 days after closure</td><td data-label="Your part">set the period</td></tr>
+                <tr><td>Storage limitation, Art.&nbsp;5</td><td class="col-ow" data-label="OpenWhistle">automatic deletion, by default 1095 days after closure <a class="cite" href="#q4">[4]</a></td><td data-label="Your part">set the period</td></tr>
                 <tr><td>Erasure, Art.&nbsp;17</td><td class="col-ow" data-label="OpenWhistle">deletion only after confirmation by a second admin account</td><td data-label="Your part">review requests</td></tr>
                 <tr><td>Security, Art.&nbsp;32</td><td class="col-ow" data-label="OpenWhistle">encryption, TOTP for every account, roles, audit log</td><td data-label="Your part">server, updates, backups</td></tr>
                 <tr><td>Processing on behalf, Art.&nbsp;28</td><td class="col-ow" data-label="OpenWhistle">no service run by the project; without opt-in, no connection to the project</td><td data-label="Your part">contract with your hosting provider</td></tr>
@@ -152,7 +153,7 @@ jsonld:
           <p>The interface is available in German, English, French, Spanish and Portuguese (Brazil). It follows the browser's language until the person chooses one. They can write the report text in any language.</p>
 
           <h2>Open source: verifiable instead of promised</h2>
-          <p>OpenWhistle is licensed under the GPL-3.0, and the entire source code is on <a href="https://github.com/openwhistle/OpenWhistle" rel="noopener noreferrer" target="_blank">GitHub</a>. You can verify every statement in this article there. OpenWhistle has not had an external audit yet.</p>
+          <p>OpenWhistle is licensed under the GPL-3.0, and the entire source code is on <a href="https://github.com/openwhistle/OpenWhistle" rel="noopener noreferrer" target="_blank">GitHub</a> <a class="cite" href="#q9">[9]</a>. You can verify every statement in this article there. OpenWhistle has not had an external audit yet.</p>
 
           <div class="article-cta">
             <h3>Try OpenWhistle without installing it</h3>
@@ -166,6 +167,20 @@ jsonld:
             <a href="/en/blog/hinschg-compliance-guide/">HinSchG compliance guide</a> ·
             <a href="/en/blog/set-up-internal-reporting-channel/">Step-by-step installation guide</a>
           </p>
+          <section class="sources" aria-labelledby="sources-title">
+            <h2 id="sources-title">Sources</h2>
+            <ol>
+              <li id="q1"><a href="https://github.com/openwhistle/OpenWhistle/blob/v2.4.0/app/services/encryption.py" rel="noopener noreferrer" target="_blank">OpenWhistle 2.4.0, app/services/encryption.py</a>: key per report, master key. Retrieved 27 October 2026.</li>
+              <li id="q2"><a href="https://github.com/openwhistle/OpenWhistle/blob/v2.4.0/app/api/reports.py" rel="noopener noreferrer" target="_blank">OpenWhistle 2.4.0, app/api/reports.py</a>: draft, 7200 seconds. Retrieved 27 October 2026.</li>
+              <li id="q3"><a href="https://github.com/openwhistle/OpenWhistle/blob/v2.4.0/nginx/nginx.conf" rel="noopener noreferrer" target="_blank">OpenWhistle 2.4.0, nginx/nginx.conf</a>: TLS, no access log, IP headers. Retrieved 27 October 2026.</li>
+              <li id="q4"><a href="https://github.com/openwhistle/OpenWhistle/blob/v2.4.0/app/services/retention.py" rel="noopener noreferrer" target="_blank">OpenWhistle 2.4.0, app/services/retention.py</a>: retention 1095 days. Retrieved 27 October 2026.</li>
+              <li id="q5"><a href="https://opensource-hinweisgeberportal.de/" rel="noopener noreferrer" target="_blank">Hinweisgeberportal OpenSource, home page</a>: hosting. Retrieved 27 October 2026.</li>
+              <li id="q6"><a href="https://www.whistleport.de/preise/" rel="noopener noreferrer" target="_blank">WhistlePort, prices</a>: hosting. Retrieved 27 October 2026.</li>
+              <li id="q7"><a href="https://github.com/globaleaks/globaleaks-whistleblowing-software" rel="noopener noreferrer" target="_blank">GlobaLeaks, GitHub repository</a>: licence. Retrieved 27 October 2026.</li>
+              <li id="q8"><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32016R0679" rel="noopener noreferrer" target="_blank">Regulation (EU) 2016/679 (GDPR)</a>, EUR-Lex. Retrieved 27 October 2026.</li>
+              <li id="q9"><a href="https://github.com/openwhistle/OpenWhistle" rel="noopener noreferrer" target="_blank">OpenWhistle, GitHub repository</a>: licence, source code. Retrieved 27 October 2026.</li>
+            </ol>
+          </section>
         </div>
       </article>
     </div>

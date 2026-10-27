@@ -1,0 +1,130 @@
+{
+  "timeout_seconds": 600,
+  "test_groups": {
+    "ARTICLE": [
+      "tests/test_blog_sources.py",
+      "-k",
+      "cites_dated_sources"
+    ],
+    "TWINS": [
+      "tests/test_blog_sources.py",
+      "-k",
+      "twins"
+    ],
+    "UPDATED": [
+      "tests/test_blog_sources.py",
+      "-k",
+      "visible_update_date"
+    ],
+    "CITATIONS": [
+      "tests/test_hinschg_citations.py"
+    ],
+    "PHONE": [
+      "tests/e2e/test_layout.py",
+      "-m",
+      "e2e",
+      "--browser",
+      "chromium",
+      "-k",
+      "no_horizontal_overflow and who-needs and 390"
+    ],
+    "COMPARE": [
+      "tests/test_blog_sources.py",
+      "-k",
+      "compare_page"
+    ]
+  },
+  "mutations": [
+    {
+      "id": "SOURCES-SECTION-RENAMED",
+      "file": "docs/de/blog/whistleblower-software-vergleich.html",
+      "old": "<section class=\"sources\"",
+      "new": "<section class=\"refs\"",
+      "tests": "ARTICLE"
+    },
+    {
+      "id": "RETRIEVED-AFTER-MODIFIED",
+      "file": "docs/de/blog/whistleblower-software-vergleich.html",
+      "old": "Projektwebsite</a>: Sprachen, Übersetzer, Audits. Abgerufen am 27.&nbsp;Oktober 2026.",
+      "new": "Projektwebsite</a>: Sprachen, Übersetzer, Audits. Abgerufen am 28.&nbsp;Oktober 2026.",
+      "tests": "ARTICLE"
+    },
+    {
+      "id": "NO-RETRIEVAL-DATE",
+      "file": "docs/en/blog/whistleblowing-software-comparison.html",
+      "old": "GlobaLeaks, demo</a>. Retrieved 27 October 2026.",
+      "new": "GlobaLeaks, demo</a>.",
+      "tests": "ARTICLE"
+    },
+    {
+      "id": "SOURCE-NEVER-CITED",
+      "file": "docs/de/blog/whistleblower-software-vergleich.html",
+      "old": "GlobaLeaks-Demo</a> <a class=\"cite\" href=\"#q9\">[9]</a>.",
+      "new": "GlobaLeaks-Demo</a>.",
+      "tests": "ARTICLE"
+    },
+    {
+      "id": "CITE-TO-NOWHERE",
+      "file": "docs/en/blog/whistleblowing-software-comparison.html",
+      "old": "<a class=\"cite\" href=\"#q8\">[8]</a>",
+      "new": "<a class=\"cite\" href=\"#q19\">[19]</a>",
+      "tests": "ARTICLE"
+    },
+    {
+      "id": "BODY-LINK-UNSOURCED",
+      "file": "docs/de/blog/whistleblower-software-vergleich.html",
+      "old": "<a href=\"https://try.globaleaks.org/\" rel=\"noopener noreferrer\" target=\"_blank\">GlobaLeaks-Demo</a>",
+      "new": "<a href=\"https://demo.globaleaks.org/\" rel=\"noopener noreferrer\" target=\"_blank\">GlobaLeaks-Demo</a>",
+      "tests": "ARTICLE"
+    },
+    {
+      "id": "TWIN-SOURCE-DRIFT",
+      "file": "docs/en/blog/whistleblowing-software-comparison.html",
+      "old": "releases/tag/v5.0.99",
+      "new": "releases/tag/v5.0.98",
+      "tests": "TWINS"
+    },
+    {
+      "id": "EUR-LEX-LANGUAGE-NOT-NEUTRAL",
+      "file": "tests/test_blog_sources.py",
+      "old": "_EUR_LEX_LANG = re.compile(r\"/legal-content/(?:DE|EN)/\")",
+      "new": "_EUR_LEX_LANG = re.compile(r\"/legal-content/(?:XX)/\")",
+      "tests": "TWINS"
+    },
+    {
+      "id": "UPDATE-LINE-DRIFT",
+      "file": "docs/en/blog/whistleblowing-software-comparison.html",
+      "old": "<span>Updated 27 October 2026</span>",
+      "new": "<span>Updated 26 October 2026</span>",
+      "tests": "UPDATED"
+    },
+    {
+      "id": "HINSCHG-3-HAS-8-ABSAETZE",
+      "file": "tests/test_hinschg_citations.py",
+      "old": "    3: (10, {8: 7}),",
+      "new": "    3: (8, {8: 7}),",
+      "tests": "CITATIONS"
+    },
+    {
+      "id": "PHONE-CARD-CITATION-NOWRAP",
+      "file": "docs/assets/css/post.css",
+      "old": "      .data-table .td-law { white-space: normal; }\n",
+      "new": "",
+      "tests": "PHONE"
+    },
+    {
+      "id": "COMPARE-AS-OF-STALE",
+      "file": "docs/en/compare/index.html",
+      "old": "<th scope=\"col\">As of 2026-10-27</th>",
+      "new": "<th scope=\"col\">As of 2026-09-27</th>",
+      "tests": "COMPARE"
+    },
+    {
+      "id": "LKSG-READ-AS-HINSCHG",
+      "file": "tests/test_hinschg_citations.py",
+      "old": "|TDDDG|LkSG)",
+      "new": "|TDDDG)",
+      "tests": "CITATIONS"
+    }
+  ]
+}
