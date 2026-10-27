@@ -61,7 +61,7 @@ jsonld:
       <p class="docs-lead">
         Looking for a GlobaLeaks alternative? Four open source projects, side by side.
         Every fact comes from the project's own site
-        or repository, as of 2026-09. Where a source says nothing, the cell says
+        or repository, retrieved on 27 October 2026. Where a source says nothing, the cell says
         <em>not stated</em>.
       </p>
 
@@ -72,11 +72,11 @@ jsonld:
           <table class="cmp-table">
             <thead>
               <tr>
-                <th scope="col">As of 2026-09</th>
-                <th scope="col">OpenWhistle</th>
-                <th scope="col">GlobaLeaks</th>
-                <th scope="col">SecureDrop</th>
-                <th scope="col">Hush Line</th>
+                <th scope="col">As of 2026-10-27</th>
+                <th scope="col">OpenWhistle <a href="#src-ow">[1]</a></th>
+                <th scope="col">GlobaLeaks <a href="#src-gl">[2]</a></th>
+                <th scope="col">SecureDrop <a href="#src-sd">[3]</a></th>
+                <th scope="col">Hush Line <a href="#src-hl">[4]</a></th>
               </tr>
             </thead>
             <tbody>
@@ -98,8 +98,8 @@ jsonld:
                 <th scope="row">Hosting</th>
                 <td>Self-hosted: Docker Compose or Helm</td>
                 <td>Self-hosted on Debian or Ubuntu, package or Docker</td>
-                <td>Self-hosted on dedicated physical servers; virtualisation not supported</td>
-                <td>Managed service at tips.hushline.app; self-hosting not stated</td>
+                <td>Self-hosted on dedicated physical servers; cloud servers at your own risk, without support</td>
+                <td>Managed service at tips.hushline.app; “no self-hosting required”</td>
               </tr>
               <tr>
                 <th scope="row">Built for</th>
@@ -148,7 +148,7 @@ jsonld:
                 <td>TOTP, mandatory</td>
                 <td>TOTP (RFC 6238)</td>
                 <td>Two-factor code</td>
-                <td>Optional TOTP</td>
+                <td>Optional TOTP or WebAuthn key</td>
               </tr>
               <tr>
                 <th scope="row">Published security audits</th>
@@ -169,7 +169,7 @@ jsonld:
                 <td>2.4.0 (2026-10-15)</td>
                 <td>5.0.99 (2026-07-26)</td>
                 <td>2.16.1 (2026-07-08)</td>
-                <td>0.7.25 (2026-09-24)</td>
+                <td>0.7.34 (2026-10-21)</td>
               </tr>
             </tbody>
           </table>
@@ -223,7 +223,7 @@ jsonld:
         <ul>
           <li>The software is GlobaLeaks; the provider operates the server.</li>
           <li>Hosting is in German data centres, on request on dedicated hardware.</li>
-          <li>Packages come with a 30-day money-back guarantee; the home page names no price.</li>
+          <li>Packages come with a 30-day money-back guarantee; prices start at €39 a month plus VAT.</li>
         </ul>
         <p>
           The trade is the same for any managed service: someone else runs the server and processes the reports for you.
@@ -233,7 +233,7 @@ jsonld:
       <!-- Sources -->
       <section class="docs-section" id="sources" aria-labelledby="sources-h2">
         <h2 id="sources-h2">Sources</h2>
-        <p>All read on 2026-09-27. A correction is welcome as an issue on GitHub.</p>
+        <p>All retrieved on 27 October 2026. A correction is welcome as an issue on GitHub.</p>
         <ol class="sources">
           <li id="src-ow">OpenWhistle:
             <a href="/en/docs/">Documentation</a>,
@@ -253,7 +253,8 @@ jsonld:
             <a href="https://hushline.app/" rel="noopener noreferrer" target="_blank">hushline.app</a> (audience, hosting, onion);
             <a href="https://github.com/scidsg/hushline" rel="noopener noreferrer" target="_blank">github.com/scidsg/hushline</a> (licence, stack, TOTP, releases).</li>
           <li id="src-ohp">splice digital GmbH:
-            <a href="https://opensource-hinweisgeberportal.de/" rel="noopener noreferrer" target="_blank">opensource-hinweisgeberportal.de</a>.</li>
+            <a href="https://opensource-hinweisgeberportal.de/" rel="noopener noreferrer" target="_blank">opensource-hinweisgeberportal.de</a> (hosting, guarantee),
+            <a href="https://opensource-hinweisgeberportal.de/preise" rel="noopener noreferrer" target="_blank">price page</a>.</li>
         </ol>
       </section>
 

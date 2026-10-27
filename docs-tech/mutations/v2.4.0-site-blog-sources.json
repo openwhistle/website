@@ -27,6 +27,11 @@
       "chromium",
       "-k",
       "no_horizontal_overflow and who-needs and 390"
+    ],
+    "COMPARE": [
+      "tests/test_blog_sources.py",
+      "-k",
+      "compare_page"
     ]
   },
   "mutations": [
@@ -106,6 +111,13 @@
       "old": "      .data-table .td-law { white-space: normal; }\n",
       "new": "",
       "tests": "PHONE"
+    },
+    {
+      "id": "COMPARE-AS-OF-STALE",
+      "file": "docs/en/compare/index.html",
+      "old": "<th scope=\"col\">As of 2026-10-27</th>",
+      "new": "<th scope=\"col\">As of 2026-09-27</th>",
+      "tests": "COMPARE"
     }
   ]
 }

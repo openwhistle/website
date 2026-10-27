@@ -224,3 +224,16 @@ def test_the_visible_update_date_is_the_modified_date(path: Path) -> None:
     assert m, "no update line in the article meta"
     day = dt.date(int(m.group(3)), MONTHS[lang].split().index(m.group(2)) + 1, int(m.group(1)))
     assert day == dt.date.fromisoformat(str(_meta(path)["modified"]))
+
+
+def test_the_compare_page_dates_its_table_by_the_day_its_sources_were_read() -> None:
+    """/en/compare/ said "As of 2026-09" above facts read on 2026-09-27; a re-check that moves one
+    date and not the other states a table as current that nobody re-read."""
+    text = (ROOT / "docs" / "en" / "compare" / "index.html").read_text(encoding="utf-8")
+    (as_of,) = re.findall(r'<th scope="col">As of (\d{4}-\d{2}-\d{2})</th>', text)
+    (lead,) = re.findall(r"retrieved on (\d{1,2} \w+ \d{4})\. Where a source", text)
+    (read,) = re.findall(r"<p>All retrieved on (\d{1,2} \w+ \d{4})\.", text)
+    assert lead == read
+    day, month, year = read.split()
+    months = MONTHS["en"].split()
+    assert as_of == f"{year}-{months.index(month) + 1:02d}-{int(day):02d}"
