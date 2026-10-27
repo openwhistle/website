@@ -26,6 +26,7 @@ One primary keyword per page; no two pages share one. The title starts with it, 
 | `/de/blog/hinweisgebersystem-pflicht/` | Hinweisgebersystem Pflicht | wann brauche ich ein Hinweisgebersystem, Hinweisgebersystem ab wie vielen Mitarbeitern, interne Meldestelle Pflicht |
 | `/de/blog/anonymes-hinweisgebersystem/` | anonymes Hinweisgebersystem | Hinweisgeber Anonymität, Hinweisgebersystem IP-Adresse, Hinweisgebersystem Tor |
 | `/de/blog/externe-meldestelle/` | externe Meldestelle | externe Meldestelle HinSchG, Hinweisgeber Behörde melden, Bundesamt für Justiz Meldestelle |
+| `/de/blog/ombudsperson-oder-hinweisgebersystem/` | Ombudsperson Hinweisgebersystem | externe Ombudsperson HinSchG, Ombudsmann Hinweisgeber |
 | `blog/en.html` and the seven English twins | the German page's primary, in English | none yet: no Search Console data for the English blog |
 
 The blog is bilingual since 2026-09-27: every German article has an English twin (hreflang, x-default English;
