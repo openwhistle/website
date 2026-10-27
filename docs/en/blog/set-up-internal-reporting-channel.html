@@ -4,7 +4,7 @@ description: 'Set up an internal reporting channel with OpenWhistle: server, Doc
 translation_key: set-up-internal-reporting-channel
 og_type: article
 published: '2026-04-27'
-modified: '2026-09-27'
+modified: '2026-10-27'
 css:
 - post
 js:
@@ -19,7 +19,7 @@ jsonld:
     '@type': WebPage
     '@id': https://openwhistle.net/en/blog/set-up-internal-reporting-channel/
   datePublished: '2026-04-27'
-  dateModified: '2026-09-27'
+  dateModified: '2026-10-27'
   author:
     '@type': Organization
     name: OpenWhistle Contributors
@@ -58,7 +58,7 @@ jsonld:
           <p class="article-subtitle">From an empty Linux server to the first test report: Docker, configuration, HTTPS certificate, setup wizard and first steps in the admin area.</p>
           <div class="article-meta">
             <span>27 April 2026</span>
-            <span>Updated 27 September 2026</span>
+            <span>Updated 27 October 2026</span>
             <span>10 min read</span>
             <span>OpenWhistle Contributors</span>
           </div>
@@ -69,6 +69,7 @@ jsonld:
           <p>This guide sets up OpenWhistle with Docker Compose. At the end, the digital channel of your internal reporting office (interne Meldestelle) runs on your own server. The authoritative reference remains the <a href="/en/docs/install/">installation guide in the documentation</a>.</p>
 
           <h2>Prerequisites</h2>
+          <p>This is what the files of release 2.4.0 require <a class="cite" href="#q1">[1]</a>.</p>
 
           <ul>
             <li>A Linux server with 1 vCPU, at least 512 MB RAM (1 GB recommended) and 5 GB of storage</li>
@@ -89,7 +90,7 @@ jsonld:
             <div class="step-num" aria-hidden="true">1</div>
             <div class="step-content">
               <h3>Choose a VPS</h3>
-              <p>A small VPS is enough. Choose a provider with a data centre in the EU that offers a data processing agreement under Art. 28 GDPR.</p>
+              <p>A small VPS is enough. Choose a provider with a data centre in the EU that offers a data processing agreement under Art. 28 GDPR <a class="cite" href="#q4">[4]</a>.</p>
               <p>Create a user with sudo rights and log in with an SSH key.</p>
             </div>
           </div>
@@ -100,7 +101,7 @@ jsonld:
             <div class="step-num" aria-hidden="true">2</div>
             <div class="step-content">
               <h3>Docker Engine and the Compose plugin</h3>
-              <p>Follow Docker's official <a href="https://docs.docker.com/engine/install/" rel="noopener noreferrer" target="_blank">installation guide</a> for your distribution. Then check both versions:</p>
+              <p>Follow Docker's official <a href="https://docs.docker.com/engine/install/" rel="noopener noreferrer" target="_blank">installation guide</a> <a class="cite" href="#q2">[2]</a> for your distribution. Then check both versions:</p>
             </div>
           </div>
 
@@ -239,12 +240,12 @@ curl -s https://meldestelle.ihr-unternehmen.de/health
 
           <div class="callout callout-note">
             <p class="callout-title">Deadline reminders</p>
-            <p>With <code>REMINDER_ENABLED=true</code>, OpenWhistle sends an email before the 7-day or the 3-month deadline under § 17 HinSchG runs out. The check runs every 30 minutes.</p>
+            <p>With <code>REMINDER_ENABLED=true</code>, OpenWhistle sends an email before the 7-day or the 3-month deadline under § 17 HinSchG runs out. The check runs every 30 minutes <a class="cite" href="#q1">[1]</a> <a class="cite" href="#q3">[3]</a>.</p>
           </div>
 
           <h2>Step 8: Make the reporting channel known</h2>
 
-          <p>Employees need clear information about the internal procedure and about external reporting channels (§ 7 Abs. 3, § 13 Abs. 2 HinSchG). Proven ways:</p>
+          <p>Employees need clear information about the internal procedure and about external reporting channels (§ 7 Abs. 3, § 13 Abs. 2 HinSchG) <a class="cite" href="#q3">[3]</a>. Proven ways:</p>
 
           <ul>
             <li>A circular email with the link to the reporting form</li>
@@ -307,6 +308,15 @@ docker compose up -d</code></pre>
             <a href="/en/blog/free-internal-reporting-channel/">What a free whistleblowing system costs</a> ·
             <a href="https://github.com/openwhistle/OpenWhistle/issues" rel="noopener noreferrer" target="_blank">GitHub Issues</a>
           </p>
+          <section class="sources" aria-labelledby="sources-title">
+            <h2 id="sources-title">Sources</h2>
+            <ol>
+              <li id="q1"><a href="https://github.com/openwhistle/OpenWhistle/tree/v2.4.0" rel="noopener noreferrer" target="_blank">OpenWhistle 2.4.0, source code</a>: Compose files, nginx, setup, reminders. Retrieved 27 October 2026.</li>
+              <li id="q2"><a href="https://docs.docker.com/engine/install/" rel="noopener noreferrer" target="_blank">Docker, Install Docker Engine</a>. Retrieved 27 October 2026.</li>
+              <li id="q3"><a href="https://www.gesetze-im-internet.de/hinschg/" rel="noopener noreferrer" target="_blank">Hinweisgeberschutzgesetz (HinSchG)</a>, gesetze-im-internet.de (German). Retrieved 27 October 2026.</li>
+              <li id="q4"><a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32016R0679" rel="noopener noreferrer" target="_blank">Regulation (EU) 2016/679 (GDPR)</a>, EUR-Lex. Retrieved 27 October 2026.</li>
+            </ol>
+          </section>
         </div>
       </article>
     </div>

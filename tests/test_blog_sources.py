@@ -29,8 +29,8 @@ ROOT = Path(__file__).parents[1]
 ARTICLES = sorted(
     p for p in (ROOT / "docs").glob("*/blog/*.html") if p.name != "index.html"
 )
-# The project's own site and repositories: links to them are where to go, not evidence.
-OWN_HOSTS = re.compile(r"^https://(?:(?:[a-z0-9-]+\.)?openwhistle\.net(?:/|$)|github\.com/openwhistle/website/)")
+# The project's own site and repositories: where to go next, not evidence. A source may still name them.
+OWN_HOSTS = re.compile(r"^https://(?:(?:[a-z0-9-]+\.)?openwhistle\.net(?:/|$)|github\.com/openwhistle/)")
 MONTHS = {
     "de": "Januar Februar März April Mai Juni Juli August September Oktober November Dezember",
     "en": "January February March April May June July August September October November December",
