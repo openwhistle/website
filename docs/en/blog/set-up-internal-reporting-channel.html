@@ -4,7 +4,7 @@ description: 'Set up an internal reporting channel with OpenWhistle: server, Doc
 translation_key: set-up-internal-reporting-channel
 og_type: article
 published: '2026-04-27'
-modified: '2026-10-27'
+modified: '2026-10-28'
 css:
 - post
 js:
@@ -19,7 +19,7 @@ jsonld:
     '@type': WebPage
     '@id': https://openwhistle.net/en/blog/set-up-internal-reporting-channel/
   datePublished: '2026-04-27'
-  dateModified: '2026-10-27'
+  dateModified: '2026-10-28'
   author:
     '@type': Organization
     name: OpenWhistle Contributors
@@ -58,7 +58,7 @@ jsonld:
           <p class="article-subtitle">From an empty Linux server to the first test report: Docker, configuration, HTTPS certificate, setup wizard and first steps in the admin area.</p>
           <div class="article-meta">
             <span>27 April 2026</span>
-            <span>Updated 27 October 2026</span>
+            <span>Updated 28 October 2026</span>
             <span>10 min read</span>
             <span>OpenWhistle Contributors</span>
           </div>
@@ -191,7 +191,7 @@ docker compose ps
 
 # Health check
 curl -s https://meldestelle.ihr-unternehmen.de/health
-# {"status":"ok","version":"2.1.0","components":{"database":"ok","redis":"ok"}}</code></pre>
+# {"status":"ok","components":{"database":"ok","redis":"ok"}}</code></pre>
 
           <h2>Step 6: Create the first admin</h2>
 
@@ -299,7 +299,7 @@ docker compose up -d</code></pre>
           <p>Usually the key has the wrong permissions or is a symlink. Copy the files, and give <code>privkey.pem</code> to root with <code>0600</code> or <code>0644</code>. The message from <code>tls-init</code> names the path and the reason.</p>
 
           <h3>The setup wizard rejects the token</h3>
-          <p>Take the most recent token from the log. Redis keeps it only in memory: if Redis restarts, a new one is created. A <code>SETUP_TOKEN</code> you set yourself always works.</p>
+          <p>Take the most recent token from the log. Redis keeps it only in memory: if Redis restarts, a new one is created. A <code>SETUP_TOKEN</code> you set yourself stays the same. After 10 wrong tokens (<code>MAX_LOGIN_ATTEMPTS</code>) the wizard refuses even the right one for 30 minutes (<code>LOGIN_LOCKOUT_MINUTES</code>).</p>
 
           <p class="post-footnote">
             <strong>More resources:</strong>
