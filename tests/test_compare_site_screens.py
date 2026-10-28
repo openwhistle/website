@@ -5,6 +5,7 @@ from __future__ import annotations
 import importlib.util
 from pathlib import Path
 
+import pytest
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -41,6 +42,16 @@ def test_one_pixel_is_a_difference_and_leaves_a_diff_image(tmp_path: Path) -> No
     b = _png(tmp_path / "b.png", (40, 30), (8, 8, 10), dot=(3, 4))
     assert cs.same_image(a, b, tmp_path / "d.png") == 1
     assert (tmp_path / "d.png").is_file()
+
+
+@pytest.mark.parametrize("shift", [(1, 0, 0), (0, 0, 1), (0, 0, 4)])
+def test_a_one_step_colour_change_is_a_difference(
+    tmp_path: Path, shift: tuple[int, int, int]
+) -> None:
+    """Luminance weighed these to 0 changed pixels, so a refactor that moved a colour passed."""
+    a = _png(tmp_path / "a.png", (10, 10), (100, 100, 100))
+    b = _png(tmp_path / "b.png", (10, 10), tuple(100 + s for s in shift))
+    assert cs.same_image(a, b, tmp_path / "d.png") == 100
 
 
 def test_a_different_height_is_a_difference(tmp_path: Path) -> None:

@@ -985,3 +985,27 @@ def test_no_workflow_deploys_to_github_pages() -> None:
     assert not (ROOT / "docs" / "CNAME").exists()  # nginx would serve it at /CNAME
     for path in workflows.glob("*.yml"):
         assert not re.search(r"deploy-pages|upload-pages-artifact", path.read_text()), path.name
+
+
+def test_the_feed_escapes_a_url_like_the_sitemap(tmp_path: Path) -> None:
+    """<id> and <link href> took the URL raw: an & in a post's path made the feed invalid XML."""
+    post = B.Page(
+        source=Path("en/blog/a&b.html"),
+        url="/en/blog/a&b/",
+        lang="en",
+        meta={"title": "A & B", "description": "d", "published": "2026-10-28"},
+        content="",
+    )
+    site = {"base_url": "https://openwhistle.net", "languages": {"en": {}}}
+    (tmp_path / "en" / "blog").mkdir(parents=True)
+    B.write_feeds(tmp_path, [post], site, {"en": {"feed": {"title": "t"}}})
+    feed = ET.parse(tmp_path / "en" / "blog" / "feed.xml").getroot()  # noqa: S314 - written here
+    ns = {"a": "http://www.w3.org/2005/Atom"}
+    assert feed.findtext("a:entry/a:id", namespaces=ns) == "https://openwhistle.net/en/blog/a&b/"
+
+
+def test_a_noindex_page_with_an_indexable_translation_fails(src: Path, tmp_path: Path) -> None:
+    page = src / "de" / "index.html"
+    page.write_text(page.read_text().replace("---\n", "---\nnoindex: true\n", 1), encoding="utf-8")
+    with pytest.raises(B.BuildError, match="noindex and indexable translations"):
+        _build(src, tmp_path)

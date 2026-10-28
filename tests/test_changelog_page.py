@@ -168,3 +168,13 @@ def test_the_older_page_refuses_to_render_empty() -> None:
     assert RENDER_CHANGELOG.render_content(versions, link_defs, tag="v9.9.9")
     with pytest.raises(ValueError, match="would be empty"):
         RENDER_CHANGELOG.render_content(versions, link_defs, tag="v9.9.9", older=True)
+
+
+def test_a_quote_in_a_changelog_url_stays_inside_its_href() -> None:
+    """esc() keeps quotes (it escapes text); the URLs went into href="..." through it, so a " in
+    CHANGELOG.md ended the attribute and the rest became markup."""
+    link = RENDER_CHANGELOG.render_inline('[x](https://a"onmouseover="b)')
+    assert link == '<a href="https://a&quot;onmouseover=&quot;b">x</a>'
+    version = RENDER_CHANGELOG.Version("9.9.9", "")
+    line = RENDER_CHANGELOG.compare_line(version, {"9.9.9": 'https://a/compare/v1"x...v2'})
+    assert 'href="https://a/compare/v1&quot;x...v2"' in line

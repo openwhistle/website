@@ -81,3 +81,20 @@ for a release that changed.
 | `docs-python-m-app` | `docs/en/docs/rotate-key/index.html`, `docs/en/docs/lost-authenticator/index.html` | `test_the_docs_run_no_module_that_does_not_exist` |
 | `docs-link-docs-tech` | `docs/en/docs/*/index.html`, `docs/_data/config.yml` | `test_no_published_page_links_docs_tech` |
 | `roadmap-test-chore` | `docs/en/roadmap/index.html` | `test_the_public_roadmap_holds_no_test_chores` |
+
+## Bug bounty 2026-10-28 (v2.4.1)
+
+`docs-tech/mutations/v2.4.1-site-bug-bounty.json`, all RED.
+
+| Mutation | File | Test that fires |
+| --- | --- | --- |
+| `NPM-LOCK-UNAUDITED`, `COPY-FROM-UNPINNED` | `.github/workflows/security.yml`, `website/Dockerfile` | `tests/test_build_pins.py` |
+| `EXAMPLE-KEY-ELSEWHERE` | `docs/en/docs/rotate-key/index.html` | `test_no_example_key_on_the_site_passes_the_length_check` |
+| `START-STEP-SILENT` | `.github/workflows/website-image.yml` | `test_a_container_that_never_answers_fails_its_start_step` |
+| `PYTHON-VERSION-STALE`, `HEALTH-SHOWS-VERSION`, `IMAGE-SCANNER-STALE` | landing, set-up guide, security page | `tests/test_release_claims.py` |
+| `MODIFIED-BEHIND-COMMIT` | `docs/en/blog/whistleblowing-software-comparison.html` | `test_the_modified_date_is_the_sitemaps` |
+| `FEED-RAW-URL`, `NOINDEX-GROUP-MIXED` | `scripts/build_site.py` | `test_the_feed_escapes_a_url_like_the_sitemap`, `test_a_noindex_page_with_an_indexable_translation_fails` |
+| `CHANGELOG-HREF-QUOTE` | `scripts/render_changelog.py` | `test_a_quote_in_a_changelog_url_stays_inside_its_href` |
+| `SCREENS-BY-LUMINANCE` | `scripts/compare_site_screens.py` | `test_a_one_step_colour_change_is_a_difference` |
+| `ROBOTS-REGEX-DRIFT` | `website/nginx.conf` | `test_the_noindex_header_covers_exactly_the_noindex_pages` |
+| `LINKS-BODY-UNBOUNDED` | `.github/workflows/links.yml` | `test_a_report_of_every_link_twice_still_opens_an_issue` |

@@ -370,6 +370,13 @@ def load_pages(src: Path, site: dict[str, Any]) -> list[Page]:
             )
         group[page.lang] = page
     for group in groups.values():
+        # hreflang must be reciprocal: an indexable page naming a noindex sibling points search
+        # engines at a page that names nothing back (hreflang() returns [] for a noindex page).
+        if len({bool(page.meta.get("noindex")) for page in group.values()}) > 1:
+            raise BuildError(
+                "noindex and indexable translations of one page: "
+                + ", ".join(str(page.source) for page in group.values())
+            )
         for page in group.values():
             page.alternates = {lang: other.url for lang, other in group.items()}
     return pages
@@ -731,8 +738,8 @@ def write_feeds(out: Path, pages: list[Page], site: dict[str, Any], i18n: dict[s
         entries = "".join(
             "  <entry>\n"
             f"    <title>{html.escape(og_title(p))}</title>\n"
-            f"    <id>{base}{p.url}</id>\n"
-            f'    <link href="{base}{p.url}"/>\n'
+            f"    <id>{html.escape(base + p.url)}</id>\n"
+            f'    <link href="{html.escape(base + p.url)}"/>\n'
             f"    <published>{p.meta['published']}T00:00:00Z</published>\n"
             f"    <updated>{p.meta.get('modified', p.meta['published'])}T00:00:00Z</updated>\n"
             f"    <summary>{html.escape(str(p.meta['description']))}</summary>\n"
