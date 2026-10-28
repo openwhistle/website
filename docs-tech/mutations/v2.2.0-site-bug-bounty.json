@@ -234,7 +234,7 @@
   {
    "id": "CLAIM-CURRENT-RELEASE",
    "file": "docs/de/blog/whistleblower-software-vergleich.html",
-   "old": "data-label=\"OpenWhistle\">2.4.0, 15. Oktober 2026",
+   "old": "data-label=\"OpenWhistle\">2.4.1, 28. Oktober 2026",
    "new": "data-label=\"OpenWhistle\">2.1.0, 27. September 2026",
    "tests": "CLAIMS"
   },
