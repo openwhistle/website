@@ -85,7 +85,10 @@ def render_inline(text: str) -> str:
         return f"\0{len(codes) - 1}\0"  # no Markdown punctuation for the passes below to match
 
     escaped = _CODE_RE.sub(aside, esc(text))
-    escaped = _LINK_RE.sub(lambda m: f'<a href="{m.group(2)}">{m.group(1)}</a>', escaped)
+    # esc() leaves quotes alone (text); an href is an attribute, where a " would end it.
+    escaped = _LINK_RE.sub(
+        lambda m: f'<a href="{m.group(2).replace(chr(34), "&quot;")}">{m.group(1)}</a>', escaped
+    )
     escaped = _BOLD_RE.sub(lambda m: f"<strong>{m.group(1)}</strong>", escaped)
     escaped = _ITALIC_RE.sub(lambda m: f"<em>{m.group(1)}</em>", escaped)
     return re.sub("\0(\\d+)\0", lambda m: f"<code>{codes[int(m.group(1))]}</code>", escaped)
@@ -171,7 +174,7 @@ def compare_line(version: Version, link_defs: dict[str, str]) -> str:
         text = f"See the code changes between {m.group(1).lstrip('v')} and {m.group(2).lstrip('v')}"
     else:
         text = "See the code as first released"
-    return f'<p><a href="{esc(url)}">{text}</a></p>'
+    return f'<p><a href="{html.escape(url)}">{esc(text)}</a></p>'
 
 
 CONTENT_HEAD = """

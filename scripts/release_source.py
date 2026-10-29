@@ -51,6 +51,8 @@ FETCH = (
     "scripts/*.py",
     "migrations/versions/*.py",
     "charts/openwhistle/values.yaml",
+    "pyproject.toml",
+    ".github/workflows/security.yml",
 )
 TAG = re.compile(r"v[0-9]+\.[0-9]+\.[0-9]+")  # ASCII digits: \d also matches other scripts
 _SKIP = {".git", ".venv", "node_modules", "__pycache__", ".pytest_cache", ".mypy_cache"}

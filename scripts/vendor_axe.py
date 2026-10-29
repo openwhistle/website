@@ -27,10 +27,11 @@ with urllib.request.urlopen(url, timeout=30) as resp:  # noqa: S310 - fixed npm 
 member = tar.extractfile("package/axe.min.js")
 assert member, "package/axe.min.js missing from the tarball"
 data = member.read()
+digest = hashlib.sha256(data).hexdigest()
+# Checked before anything is written: an unmatched line left the old hash and still printed the new.
+pinned, count = re.subn(r'^AXE_SHA256 = "[0-9a-f]*"', f'AXE_SHA256 = "{digest}"', text, flags=re.M)
+assert count == 1, "AXE_SHA256 not found in conftest.py"
 TARGET.parent.mkdir(parents=True, exist_ok=True)
 TARGET.write_bytes(data)
-digest = hashlib.sha256(data).hexdigest()
-CONFTEST.write_text(
-    re.sub(r'^AXE_SHA256 = "[0-9a-f]*"', f'AXE_SHA256 = "{digest}"', text, flags=re.M)
-)
+CONFTEST.write_text(pinned)
 print(f"axe-core {version}: {digest}")

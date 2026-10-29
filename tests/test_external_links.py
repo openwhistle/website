@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import http.client
 import importlib.util
+import subprocess
 from pathlib import Path
 from types import ModuleType
 
@@ -155,3 +156,23 @@ def test_main_passes_a_blocked_host_as_unverifiable(
     monkeypatch.setattr(C, "status_of", lambda _url: None)
     assert C.main() == 0
     assert f"unverifiable: {url} (no connection)" in capsys.readouterr().out
+
+
+def test_a_report_of_every_link_twice_still_opens_an_issue(tmp_path: Path) -> None:
+    """GitHub refuses an issue body over 65,536 characters; a runner outage reports every link
+    twice (~80 kB for 138 links), and `gh issue create` failed, so the outage opened no issue."""
+    jobs = yaml.safe_load((ROOT / ".github" / "workflows" / "links.yml").read_text())["jobs"]
+    (step,) = jobs["issue"]["steps"]
+    body = tmp_path / "body"
+    gh = tmp_path / "gh"
+    gh.write_text(
+        '#!/bin/bash\n[ "$2" = list ] && { echo 0; exit 0; }\n'
+        f'while [ $# -gt 0 ]; do [ "$1" = --body ] && printf %s "$2" > {body}; shift; done\n'
+    )
+    gh.chmod(0o755)
+    line = "broken: https://example.org/{} (no connection) on /en/\n"
+    report = "".join(line.format(i) for i in range(2000))
+    env = {"PATH": f"{tmp_path}:/usr/bin:/bin", "REPORT": report + "\nBroken:\nlast line"}
+    subprocess.run(["bash", "-e", "-c", step["run"]], env=env, check=True)  # noqa: S603, S607
+    text = body.read_text()
+    assert 0 < len(text) <= 65536 and text.endswith("last line")

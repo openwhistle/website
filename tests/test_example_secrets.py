@@ -5,26 +5,37 @@ with a key anyone could read. The app's own example files: the same guard in
 openwhistle/OpenWhistle.
 """
 
+import html
 import re
 from pathlib import Path
 
 import release_source
 
 ROOT = Path(__file__).parents[1]
-KEYS = ("SECRET_KEY", "ENCRYPTION_KEY")
+# KEY=value or KEY: value, read as the reader sees it: tags stripped, entities decoded. It used to
+# read two named pages with a pattern each, so the other pages showing a key went unchecked.
+ASSIGNMENT = re.compile(r"\b(SECRET_KEY|ENCRYPTION_KEY)\b[ \t]*[=:][ \t]*([^\s,;]*)")
+
+
+def _shown(text: str) -> str:
+    return html.unescape(re.sub(r"<[^>]+>", "", text))
 
 
 def test_no_example_key_on_the_site_passes_the_length_check() -> None:
     minimum = release_source.constant("app/config.py", "_MIN_SECRET_KEY_LEN")
+    pages = [
+        p
+        for p in (ROOT / "docs").rglob("*")
+        if p.suffix in {".html", ".md"} and "/docs/_" not in p.as_posix()
+    ]
     found = []
-    sources = {
-        "docs/de/blog/interne-meldestelle-einrichten.html": r"^({k})=(.*)$",
-        "docs/en/docs/install/index.html": r"({k})</span>=([^\n<]*)",
-    }
-    for path, pattern in sources.items():
-        text = (ROOT / path).read_text()
-        for key in KEYS:
-            for name, value in re.findall(pattern.format(k=key), text, re.M):
-                found.append(name)
-                assert len(value.strip()) < minimum, (path, name, value)
+    for page in pages:
+        for name, value in ASSIGNMENT.findall(_shown(page.read_text(encoding="utf-8"))):
+            found.append(name)
+            assert len(value) < minimum, (page.relative_to(ROOT).as_posix(), name, value)
     assert "SECRET_KEY" in found, "no example SECRET_KEY found — the check reaches nothing"
+
+
+def test_a_key_inside_markup_is_read_as_shown() -> None:
+    shown = _shown('<span class="k">SECRET_KEY</span>=<span>&quot;abc&quot;</span>')
+    assert ASSIGNMENT.findall(shown) == [("SECRET_KEY", '"abc"')]

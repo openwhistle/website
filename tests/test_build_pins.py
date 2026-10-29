@@ -1,6 +1,7 @@
 """Build tool pins that live in several files must agree."""
 
 import re
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -41,8 +42,13 @@ def test_python_version_is_the_same_everywhere() -> None:
 
 @pytest.mark.parametrize("dockerfile", ["website/Dockerfile"])
 def test_base_images_are_pinned_by_digest(dockerfile: str) -> None:
-    images = re.findall(r"^FROM (?:--\S+ )*(\S+)", (ROOT / dockerfile).read_text(), re.M)
+    text = (ROOT / dockerfile).read_text()
+    images = re.findall(r"^FROM (?:--\S+ )*(\S+)", text, re.M)
     assert len(images) == 2, images
+    # COPY --from= an image (not a stage name) pulls an image as much as FROM does: the uv binary.
+    copied = [i for i in re.findall(r"^COPY (?:--\S+ )*--from=(\S+)", text, re.M) if "/" in i]
+    assert len(copied) == 1, copied
+    images += copied
     assert all(re.search(r"@sha256:[0-9a-f]{64}$", f) for f in images), images
 
 
@@ -114,5 +120,16 @@ def test_security_workflow_audits_dependencies_and_the_image() -> None:
     )
     for needle in needles:
         assert needle in wf, needle
+    # Every npm lockfile too: tools/seo/package-lock.json went unaudited with an advisory open.
+    tracked = subprocess.run(  # noqa: S603
+        ["git", "ls-files", "*package-lock.json"],  # noqa: S607
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.split()
+    assert tracked
+    for lock in tracked:
+        assert f"npm audit --prefix {Path(lock).parent.as_posix()} " in wf, lock
     pinned = re.search(r"aquasecurity/trivy-action@[0-9a-f]{40}", wf)
     assert pinned, "trivy action not pinned by digest"

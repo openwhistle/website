@@ -62,7 +62,10 @@ def same_image(a: Path, b: Path, diff: Path) -> int:
         pa.paste(ia)
         pb.paste(ib)
         ia, ib = pa, pb
-    delta = ImageChops.difference(ia, ib).convert("L").point(lambda v: 255 if v else 0)
+    # Any channel, not luminance: convert("L") weighs a 1-step red or a 4-step blue change to 0.
+    channels = ImageChops.difference(ia, ib).split()
+    bands = [band.point(lambda v: 255 if v else 0) for band in channels]
+    delta = ImageChops.lighter(ImageChops.lighter(bands[0], bands[1]), bands[2])
     changed = delta.histogram()[255]
     if changed == 0 and not resized:
         return 0

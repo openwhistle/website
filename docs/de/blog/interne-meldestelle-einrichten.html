@@ -4,7 +4,7 @@ description: 'Interne Meldestelle einrichten mit OpenWhistle: Server, Docker Com
 translation_key: set-up-internal-reporting-channel
 og_type: article
 published: '2026-04-27'
-modified: '2026-10-27'
+modified: '2026-10-28'
 css:
 - post
 js:
@@ -19,7 +19,7 @@ jsonld:
     '@type': WebPage
     '@id': https://openwhistle.net/de/blog/interne-meldestelle-einrichten/
   datePublished: '2026-04-27'
-  dateModified: '2026-10-27'
+  dateModified: '2026-10-28'
   author:
     '@type': Organization
     name: OpenWhistle Contributors
@@ -58,7 +58,7 @@ jsonld:
           <p class="article-subtitle">Vom leeren Linux-Server bis zur ersten Testmeldung: Docker, Konfiguration, HTTPS-Zertifikat, Einrichtungsassistent und erste Schritte im Admin-Bereich.</p>
           <div class="article-meta">
             <span>27. April 2026</span>
-            <span>Aktualisiert am 27. Oktober 2026</span>
+            <span>Aktualisiert am 28. Oktober 2026</span>
             <span>10 Min. Lesezeit</span>
             <span>OpenWhistle Contributors</span>
           </div>
@@ -191,7 +191,7 @@ docker compose ps
 
 # Health-Check
 curl -s https://meldestelle.ihr-unternehmen.de/health
-# {"status":"ok","version":"2.1.0","components":{"database":"ok","redis":"ok"}}</code></pre>
+# {"status":"ok","components":{"database":"ok","redis":"ok"}}</code></pre>
 
           <h2>Schritt 6: Den ersten Admin anlegen</h2>
 
@@ -299,7 +299,7 @@ docker compose up -d</code></pre>
           <p>Meist ist der Schlüssel falsch berechtigt oder ein Symlink. Kopieren Sie die Dateien, und geben Sie <code>privkey.pem</code> root mit <code>0600</code> oder <code>0644</code>. Die Meldung von <code>tls-init</code> nennt Pfad und Grund.</p>
 
           <h3>Der Einrichtungsassistent lehnt das Token ab</h3>
-          <p>Nehmen Sie das jüngste Token aus dem Log. Redis speichert es nur im Arbeitsspeicher: startet Redis neu, entsteht ein neues. Ein selbst gesetztes <code>SETUP_TOKEN</code> gilt immer.</p>
+          <p>Nehmen Sie das jüngste Token aus dem Log. Redis speichert es nur im Arbeitsspeicher: startet Redis neu, entsteht ein neues. Ein selbst gesetztes <code>SETUP_TOKEN</code> bleibt gleich. Nach 10 falschen Tokens (<code>MAX_LOGIN_ATTEMPTS</code>) lehnt der Assistent 30 Minuten lang auch das richtige ab (<code>LOGIN_LOCKOUT_MINUTES</code>).</p>
 
           <p class="post-footnote">
             <strong>Weitere Ressourcen:</strong>

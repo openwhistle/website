@@ -76,4 +76,7 @@ jobs:
         run: |
           title="External links broken on openwhistle.net"
           open=$(gh issue list --state open --search "in:title \"$title\"" --json number --jq length)
-          if [ "$open" = 0 ]; then gh issue create --title "$title" --body "$REPORT"; fi
+          # An issue body holds 65,536 characters; a runner outage lists every link twice (~80 kB),
+          # and an oversized body opened no issue at all. The tail keeps the summary and "Broken:".
+          body=$(printf '%s' "$REPORT" | tail -c 60000)
+          if [ "$open" = 0 ]; then gh issue create --title "$title" --body "$body"; fi

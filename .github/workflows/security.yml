@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   dependencies:
-    name: pip-audit (uv.lock)
+    name: pip-audit (uv.lock), npm audit (tools/seo)
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -28,6 +28,9 @@ jobs:
         run: |
           uv export --frozen --all-extras --all-groups --no-emit-project -o /tmp/requirements.txt
           uvx pip-audit==2.10.1 --disable-pip --no-deps --strict -r /tmp/requirements.txt
+      # The SEO tool's node:test suite runs in CI (tests/test_seo_tool.py); npm reads the lockfile only.
+      - name: Audit the SEO tool's npm lockfile
+        run: npm audit --prefix tools/seo --audit-level=low
 
   image:
     name: Trivy (published image)

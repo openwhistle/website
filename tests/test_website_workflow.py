@@ -4,6 +4,7 @@ The publish job builds the image again, from the same commit and the release the
 pinned: the tests and Trivy ran on that sibling build, not on the pushed bytes (security.txt's
 Expires, written at build time, differs by the minutes between the two)."""
 
+import subprocess
 from pathlib import Path
 
 import yaml
@@ -102,3 +103,21 @@ def test_the_browser_suite_fails_instead_of_skipping_when_required() -> None:
     # Read as text: importing the module needs Playwright, which the unit job lacks.
     suite = (Path(__file__).parent / "e2e/test_site_container.py").read_text()
     assert 'require_url(BASE, os.environ.get("WEBSITE_REQUIRED", ""))' in suite
+
+
+def _run_start_step(tmp_path: Path, curl_exit: int) -> int:
+    """The step's own script, with docker, curl and sleep stubbed: a loop that ends in `&& break`
+    exits 0 whether or not the container ever answered."""
+    step = next(s for s in JOBS["test"]["steps"] if s.get("name", "").startswith("Start it"))
+    for tool, code in (("docker", 0), ("curl", curl_exit), ("sleep", 0)):
+        stub = tmp_path / tool
+        stub.write_text(f"#!/bin/sh\nexit {code}\n")
+        stub.chmod(0o755)
+    env = {"PATH": f"{tmp_path}:/usr/bin:/bin"}
+    run = subprocess.run(["bash", "-e", "-c", step["run"]], env=env, check=False)  # noqa: S603, S607
+    return run.returncode
+
+
+def test_a_container_that_never_answers_fails_its_start_step(tmp_path: Path) -> None:
+    assert _run_start_step(tmp_path, curl_exit=7) != 0
+    assert _run_start_step(tmp_path, curl_exit=0) == 0

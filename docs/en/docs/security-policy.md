@@ -60,7 +60,7 @@ All report data is **Restricted** and subject to the controls in section 4.
   `SECRET_KEY` while that is unset) using HKDF-SHA256 and is **never stored**.
   It exists only in memory during request processing.
 - Per-report Data Encryption Keys (DEKs) are stored encrypted alongside the
-  report. Without `ENCRYPTION_KEY`, DEKs cannot be decrypted.
+  report. Without the key the MEK is derived from, DEKs cannot be decrypted.
 - Confidential whistleblower identity (name, contact) is encrypted separately
   with Fernet using a key derived from the same root.
 
@@ -69,8 +69,10 @@ All report data is **Restricted** and subject to the controls in section 4.
 - All HTTP traffic must be served over TLS 1.2+. The Ansible role obtains and
   renews a Let's Encrypt certificate; the Docker Compose stack creates a
   self-signed one (`tls-init`) until you mount your own.
-- `SECRET_KEY` and `ENCRYPTION_KEY` must be passed via a secrets manager or
-  Docker/Kubernetes secret — never in a plain-text `.env` file in production.
+- `SECRET_KEY` and `ENCRYPTION_KEY` reach the application as environment
+  variables (the Compose stack reads them from `.env`). That file must be
+  readable by the deploying account only (`chmod 600`) and never committed;
+  a secrets manager may inject the variables instead.
 
 ### 4.3 Authentication and Access Control
 
@@ -124,8 +126,10 @@ All report data is **Restricted** and subject to the controls in section 4.
 
 - The PostgreSQL database must be backed up at least daily with point-in-time
   recovery (WAL archiving) enabled.
-- Redis contains ephemeral session data only. Redis persistence (`appendonly yes`)
-  is optional; sessions will be invalidated on restart without it.
+- Redis holds sessions, rate-limit counters, the notification queue and
+  encrypted submission drafts with their attachments. Keep its persistence
+  off, as the shipped stack does (`--save "" --appendonly no`): a restart
+  ends sessions and drops unsent drafts, but no draft reaches the disk.
 - `ENCRYPTION_KEY` must be stored in a separate, offline location. Its loss
   makes encrypted report content irrecoverable.
 - Recovery Time Objective (RTO): define based on your organisation's requirements.
@@ -147,7 +151,8 @@ All report data is **Restricted** and subject to the controls in section 4.
 ## 8. Audit and Review
 
 - The OpenWhistle audit log records all admin actions with timestamps and
-  usernames. The log is append-only from the application layer.
+  usernames. The application only adds entries; deleting a report (by an admin
+  or the retention job) deletes its entries with it.
 - Access to the PostgreSQL database (direct or via admin tools) should be
   restricted and logged at the infrastructure level.
 - This policy must be reviewed at least annually and after any significant

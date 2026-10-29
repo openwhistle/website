@@ -22,6 +22,7 @@ import re
 from html.parser import HTMLParser
 from pathlib import Path
 
+import build_site
 import pytest
 import yaml
 
@@ -267,3 +268,11 @@ def test_the_blog_index_links_every_article() -> None:
         if f'href="/{lang}/blog/{path.stem}/"' not in index:
             missing.append(f"{lang}/{path.stem}")
     assert not missing, missing
+
+
+@pytest.mark.parametrize("path", ARTICLES, ids=lambda p: f"{p.parent.parent.name}/{p.name}")
+def test_the_modified_date_is_the_sitemaps(path: Path) -> None:
+    """The sitemap dates a page by its last commit (build_site.lastmod); the article's head,
+    JSON-LD, feed and visible line by `modified`. The v2.4.1 screenshot commit changed the
+    comparison's release row and left `modified` at the day before: two dates for one page."""
+    assert str(_meta(path)["modified"]) == build_site.lastmod(path)

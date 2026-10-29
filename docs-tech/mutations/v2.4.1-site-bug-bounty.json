@@ -1,0 +1,149 @@
+{
+  "timeout_seconds": 600,
+  "test_groups": {
+    "PINS": [
+      "tests/test_build_pins.py"
+    ],
+    "KEYS": [
+      "tests/test_example_secrets.py"
+    ],
+    "START": [
+      "tests/test_website_workflow.py",
+      "-k",
+      "never_answers"
+    ],
+    "CLAIMS": [
+      "tests/test_release_claims.py"
+    ],
+    "MODIFIED": [
+      "tests/test_blog_sources.py",
+      "-k",
+      "sitemaps"
+    ],
+    "BUILD": [
+      "tests/test_build_site.py",
+      "-k",
+      "feed_escapes or noindex_page_with"
+    ],
+    "CHANGELOG": [
+      "tests/test_changelog_page.py",
+      "-k",
+      "quote"
+    ],
+    "SCREENS": [
+      "tests/test_compare_site_screens.py",
+      "-k",
+      "colour"
+    ],
+    "ROBOTS": [
+      "tests/test_legal_pages.py",
+      "-k",
+      "noindex_header"
+    ],
+    "LINKS": [
+      "tests/test_external_links.py",
+      "-k",
+      "every_link_twice"
+    ]
+  },
+  "mutations": [
+    {
+      "id": "NPM-LOCK-UNAUDITED",
+      "file": ".github/workflows/security.yml",
+      "old": "run: npm audit --prefix tools/seo --audit-level=low",
+      "new": "run: echo npm",
+      "tests": "PINS"
+    },
+    {
+      "id": "COPY-FROM-UNPINNED",
+      "file": "website/Dockerfile",
+      "old": "uv:0.12.24@sha256:3af4716e991d6956a41e573eab705d0ee08500cd829ed30293eb8472f372c65a /uv",
+      "new": "uv:0.12.24 /uv",
+      "tests": "PINS"
+    },
+    {
+      "id": "EXAMPLE-KEY-ELSEWHERE",
+      "file": "docs/en/docs/rotate-key/index.html",
+      "old": "(<code>openssl rand -hex 32</code>)",
+      "new": "(<code>ENCRYPTION_KEY=0123456789abcdef0123456789abcdef0123456789abcdef</code>)",
+      "tests": "KEYS"
+    },
+    {
+      "id": "START-STEP-SILENT",
+      "file": ".github/workflows/website-image.yml",
+      "old": "curl -sf -o /dev/null http://127.0.0.1:8080/en/ || { docker logs ow-website; exit 1; }",
+      "new": "true",
+      "tests": "START"
+    },
+    {
+      "id": "PYTHON-VERSION-STALE",
+      "file": "docs/de/index.html",
+      "old": "role=\"listitem\">Python 3.15<",
+      "new": "role=\"listitem\">Python 3.14<",
+      "tests": "CLAIMS"
+    },
+    {
+      "id": "HEALTH-SHOWS-VERSION",
+      "file": "docs/en/blog/set-up-internal-reporting-channel.html",
+      "old": "# {\"status\":\"ok\",\"components\":",
+      "new": "# {\"status\":\"ok\",\"version\":\"2.4.1\",\"components\":",
+      "tests": "CLAIMS"
+    },
+    {
+      "id": "IMAGE-SCANNER-STALE",
+      "file": "docs/de/sicherheit/index.html",
+      "old": "grype auf das Container-Image",
+      "new": "Trivy auf das Container-Image",
+      "tests": "CLAIMS"
+    },
+    {
+      "id": "MODIFIED-BEHIND-COMMIT",
+      "file": "docs/en/blog/whistleblowing-software-comparison.html",
+      "old": "modified: '2026-10-28'",
+      "new": "modified: '2026-10-27'",
+      "tests": "MODIFIED"
+    },
+    {
+      "id": "FEED-RAW-URL",
+      "file": "scripts/build_site.py",
+      "old": "f\"    <id>{html.escape(base + p.url)}</id>\\n\"",
+      "new": "f\"    <id>{base}{p.url}</id>\\n\"",
+      "tests": "BUILD"
+    },
+    {
+      "id": "NOINDEX-GROUP-MIXED",
+      "file": "scripts/build_site.py",
+      "old": "if len({bool(page.meta.get(\"noindex\")) for page in group.values()}) > 1:",
+      "new": "if len({bool(page.meta.get(\"noindex\")) for page in group.values()}) > 2:",
+      "tests": "BUILD"
+    },
+    {
+      "id": "CHANGELOG-HREF-QUOTE",
+      "file": "scripts/render_changelog.py",
+      "old": "m.group(2).replace(chr(34), \"&quot;\")",
+      "new": "m.group(2)",
+      "tests": "CHANGELOG"
+    },
+    {
+      "id": "SCREENS-BY-LUMINANCE",
+      "file": "scripts/compare_site_screens.py",
+      "old": "delta = ImageChops.lighter(ImageChops.lighter(bands[0], bands[1]), bands[2])",
+      "new": "delta = ImageChops.difference(ia, ib).convert(\"L\").point(lambda v: 255 if v else 0)",
+      "tests": "SCREENS"
+    },
+    {
+      "id": "ROBOTS-REGEX-DRIFT",
+      "file": "website/nginx.conf",
+      "old": "\"~^/(impressum|de/datenschutz|en/privacy)/\" \"noindex\";",
+      "new": "\"~^/(impressum|de/datenschutz)/\" \"noindex\";",
+      "tests": "ROBOTS"
+    },
+    {
+      "id": "LINKS-BODY-UNBOUNDED",
+      "file": ".github/workflows/links.yml",
+      "old": "tail -c 60000",
+      "new": "cat",
+      "tests": "LINKS"
+    }
+  ]
+}

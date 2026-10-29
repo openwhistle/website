@@ -292,3 +292,19 @@ def test_the_image_renews_security_txt_weekly() -> None:
     workflow = yaml.safe_load((ROOT / ".github/workflows/website-image.yml").read_text())
     # `on:` parses as True in YAML 1.1.
     assert {"cron": "41 4 * * 1"} in workflow[True]["schedule"]
+
+
+def test_the_noindex_header_covers_exactly_the_noindex_pages() -> None:
+    """website/nginx.conf names the X-Robots-Tag pages in a regex of its own; the build marks them
+    by front matter. A new noindex page got the meta tag and no header, and nothing compared."""
+    conf = (ROOT / "website" / "nginx.conf").read_text(encoding="utf-8")
+    block = re.search(r"map \$uri \$robots \{(.*?)\}", conf, re.S)
+    assert block, "no robots map in website/nginx.conf"
+    (pattern,) = re.findall(r'"~(\^[^"]+)" "noindex";', block[1])
+    header = re.compile(pattern)
+    for path in built().rglob("*.html"):
+        if path.name == "404.html":
+            continue  # served with status 404, which no index keeps
+        url = "/" + path.relative_to(built()).as_posix().removesuffix("index.html")
+        meta = '<meta name="robots" content="noindex' in path.read_text(encoding="utf-8")
+        assert bool(header.match(url)) == meta, url

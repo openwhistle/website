@@ -1,7 +1,7 @@
 name: Website image
 
 # openwhistle.net as a container (docs-tech/specs/2026-10-09-website-p4-design.md). Every pull request
-# builds, runs and tests the image; main publishes it. The site documents the latest release of
+# that touches what goes into the image (the paths below) builds, runs and tests it; main publishes it. The site documents the latest release of
 # openwhistle/OpenWhistle (scripts/release_source.py): the weekly run turns a release whose
 # documentation is missing red within a week (docs-tech/specs/2026-10-09-website-repo-split-design.md).
 on:
@@ -107,6 +107,8 @@ jobs:
           docker run -d --name ow-website --read-only --tmpfs /tmp \
             -v "$PWD/tests/website/fixtures/private:/usr/share/nginx/private:ro" -p 8080:8080 openwhistle-website:test
           for i in $(seq 1 20); do curl -sf -o /dev/null http://127.0.0.1:8080/en/ && break; sleep 1; done
+          # The loop ends 0 either way: a container that never answers fails here, not as connection errors.
+          curl -sf -o /dev/null http://127.0.0.1:8080/en/ || { docker logs ow-website; exit 1; }
 
       - name: Container tests
         env:
