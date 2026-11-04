@@ -64,10 +64,11 @@ def test_the_older_page_holds_the_rest_and_no_release_is_on_both() -> None:
     }
     for major, archive in archives.items():
         assert archive in (built() / f"en/changelog/{major}.x/index.html").read_text("utf-8")
-        assert ids(archive) and all(i.startswith(f"v{major}-") for i in ids(archive)), major
+        assert ids(archive) and all(i.startswith(f"v{major.replace('.', '-')}-") for i in ids(archive)), major
         assert not ids(archive) & (current | ids(older)), major
     assert "v1-0-0" in ids(archives["1"]) and "v0-1-0" in ids(archives["0"])
-    assert not any(i.startswith(("v0-", "v1-")) for i in ids(older))
+    assert not any(i.startswith(("v0-", "v1-", "v2-0-")) for i in ids(older))
+    assert "v2-0-0" in ids(archives["2.0"])
     # Unreleased plus the newest NEWEST releases: a count, so a release never breaks the budget.
     assert len(current - {"unreleased"}) <= 5 == RENDER_CHANGELOG.NEWEST
 
@@ -178,3 +179,14 @@ def test_a_quote_in_a_changelog_url_stays_inside_its_href() -> None:
     version = RENDER_CHANGELOG.Version("9.9.9", "")
     line = RENDER_CHANGELOG.compare_line(version, {"9.9.9": 'https://a/compare/v1"x...v2'})
     assert 'href="https://a/compare/v1&quot;x...v2"' in line
+
+
+def test_a_series_is_a_whole_version_prefix() -> None:
+    """"1" archives 1.5.0, never a 10.0.0; "2.0" archives 2.0.1, never 2.1.0."""
+    from types import SimpleNamespace
+
+    series = RENDER_CHANGELOG._series
+    assert series(SimpleNamespace(name="1.5.0")) == "1"
+    assert series(SimpleNamespace(name="2.0.1")) == "2.0"
+    assert series(SimpleNamespace(name="10.0.0")) is None
+    assert series(SimpleNamespace(name="2.1.0")) is None

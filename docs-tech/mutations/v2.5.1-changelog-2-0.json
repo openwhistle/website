@@ -1,0 +1,23 @@
+{
+ "test_groups": {
+  "C": [
+   "tests/test_changelog_page.py"
+  ]
+ },
+ "mutations": [
+  {
+   "id": "SERIES-2-0-NOT-ARCHIVED",
+   "file": "scripts/render_changelog.py",
+   "old": "ARCHIVED = (\"2.0\", \"1\", \"0\")",
+   "new": "ARCHIVED = (\"1\", \"0\")",
+   "tests": "C"
+  },
+  {
+   "id": "SERIES-MATCHES-PREFIX-ONLY",
+   "file": "scripts/render_changelog.py",
+   "old": "version.name.startswith(f\"{s}.\")",
+   "new": "version.name.startswith(s)",
+   "tests": "C"
+  }
+ ]
+}
