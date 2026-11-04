@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from collections.abc import Iterator
 from pathlib import Path
 
@@ -9,6 +10,10 @@ import pytest
 import release_source
 
 FIXTURE_APP = Path(__file__).parent / "fixtures" / "app_source"
+FIXTURE_FEED = Path(__file__).parent / "fixtures" / "security.json"
+# The built /security.json comes from this file, not the GitHub API: no test reads the network
+# for it. The image build reads the real one (scripts/security_feed.py, the workflow).
+os.environ.setdefault("OW_SECURITY_FEED", str(FIXTURE_FEED))
 
 
 @pytest.fixture

@@ -200,10 +200,11 @@ groups:
     default: <code>json</code>
   - name: UPDATE_CHECK_ENABLED
     need: optional
-    description: Set to <code>true</code> to let OpenWhistle ask GitHub once a day for the latest release
-      and the published security advisories, shown on the <strong>Admin → System</strong> page. Off by
-      default (no external calls). GitHub sees the server's IP address; no instance data is sent.
-    default: <code>false</code>
+    description: Once a day OpenWhistle fetches <code>openwhistle.net/security.json</code>, the latest
+      release and the published security advisories, shown on <strong>Admin → System</strong> and the
+      dashboard. The site sees the server's IP address and logs nothing; no instance data is sent. Set
+      <code>false</code> for an air-gapped server.
+    default: <code>true</code>
   - name: TELEMETRY_ENABLED
     need: optional
     description: 'The daily <a href="/en/docs/install-count/">installation count</a>. Unset or empty:

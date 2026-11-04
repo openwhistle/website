@@ -4,7 +4,7 @@ description: 'Whistleblowing system with EU hosting: self-hosted, reports stay o
 translation_key: whistleblowing-system-gdpr-eu-hosting
 og_type: article
 published: '2026-09-27'
-modified: '2026-10-27'
+modified: '2026-11-04'
 css:
 - post
 js:
@@ -19,7 +19,7 @@ jsonld:
     '@type': WebPage
     '@id': https://openwhistle.net/en/blog/whistleblowing-system-gdpr-eu-hosting/
   datePublished: '2026-09-27'
-  dateModified: '2026-10-27'
+  dateModified: '2026-11-04'
   author:
     '@type': Organization
     name: OpenWhistle Contributors
@@ -58,7 +58,7 @@ jsonld:
           <p class="article-subtitle">Self-hosted, all reports sit on the operator's server, in the EU if the operator runs it there. What OpenWhistle encrypts, what it never stores and what the GDPR leaves with the operator.</p>
           <div class="article-meta">
             <span>27 September 2026</span>
-            <span>Updated 27 October 2026</span>
+            <span>Updated 4 November 2026</span>
             <span>5 min read</span>
             <span>OpenWhistle Contributors</span>
           </div>
@@ -123,7 +123,7 @@ jsonld:
           <ul>
             <li><strong>IP addresses.</strong> nginx removes the IP headers and writes no access log <a class="cite" href="#q3">[3]</a>. The app discards the address, and the database has no IP column.</li>
             <li><strong>Times of the reporting person.</strong> The report, messages and attachments carry only the date.</li>
-            <li><strong>Data for third parties.</strong> Every outbound request is optional and <a href="/en/docs/outbound/">listed in the documentation</a>. The update check and the installation count stay off until you switch them on.</li>
+            <li><strong>Data for third parties.</strong> Every outbound request is optional and <a href="/en/docs/outbound/">listed in the documentation</a>. The installation count stays off until you switch it on. The update check fetches one file a day from openwhistle.net and can be switched off.</li>
           </ul>
 
           <h2>Is a whistleblowing system GDPR-compliant?</h2>

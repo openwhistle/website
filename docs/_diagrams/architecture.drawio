@@ -40,7 +40,7 @@
         <mxCell id="outbound" value="outbound" style="ow:group" vertex="1" parent="1">
           <mxGeometry x="500" y="350" width="380" height="112" as="geometry"/>
         </mxCell>
-        <mxCell id="github" value="GitHub API&#xa;update check, opt-in" style="ow:step" vertex="1" parent="outbound">
+        <mxCell id="github" value="openwhistle.net&#xa;update check" style="ow:step" vertex="1" parent="outbound">
           <mxGeometry x="16" y="42" width="190" height="52" as="geometry"/>
         </mxCell>
         <mxCell id="telemetry" value="telemetry.wdkro.de&#xa;opt-in" style="ow:step" vertex="1" parent="outbound">

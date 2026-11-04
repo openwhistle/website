@@ -236,8 +236,8 @@
   {
    "id": "HEALTHZ-LOGGED",
    "file": "website/nginx.conf",
-   "old": "            access_log off;\n",
-   "new": "",
+   "old": "        location = /healthz {\n            access_log off;\n",
+   "new": "        location = /healthz {\n",
    "tests": "CONFIG"
   },
   {

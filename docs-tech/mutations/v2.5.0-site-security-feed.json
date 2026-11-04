@@ -1,0 +1,69 @@
+{
+  "timeout_seconds": 600,
+  "test_groups": {
+    "FEED": [
+      "tests/test_security_feed.py",
+      "-k",
+      "refused"
+    ],
+    "BUILT": [
+      "tests/test_security_feed.py",
+      "-k",
+      "publishes_the_feed"
+    ],
+    "CONFIG": [
+      "tests/test_website_config.py",
+      "-k",
+      "log_holds_no_address"
+    ],
+    "WF": [
+      "tests/test_website_workflow.py",
+      "-k",
+      "security_feed"
+    ]
+  },
+  "mutations": [
+    {
+      "id": "FEED-ANY-SCHEMA",
+      "file": "scripts/security_feed.py",
+      "old": "    if not isinstance(feed, dict) or feed.get(\"schema\") != 1:",
+      "new": "    if not isinstance(feed, dict):",
+      "tests": "FEED"
+    },
+    {
+      "id": "FEED-HTTP-LINK",
+      "file": "scripts/security_feed.py",
+      "old": "not url.startswith(\"https://\")",
+      "new": "not url.startswith(\"http\")",
+      "tests": "FEED"
+    },
+    {
+      "id": "FEED-ANY-RANGE",
+      "file": "scripts/security_feed.py",
+      "old": "        or not all(CONSTRAINT.fullmatch(part.strip()) for part in value.split(\",\"))",
+      "new": "        or False",
+      "tests": "FEED"
+    },
+    {
+      "id": "FEED-NOT-BUILT",
+      "file": "scripts/build_site.py",
+      "old": "    write_security_feed(out)\n",
+      "new": "",
+      "tests": "BUILT"
+    },
+    {
+      "id": "FEED-LOGGED",
+      "file": "website/nginx.conf",
+      "old": "        location = /security.json {\n            access_log off;\n",
+      "new": "        location = /security.json {\n",
+      "tests": "CONFIG"
+    },
+    {
+      "id": "FEED-UNTOKENED",
+      "file": ".github/workflows/website-image.yml",
+      "old": "--build-arg OW_SECURITY_FEED \\",
+      "new": "\\",
+      "tests": "WF"
+    }
+  ]
+}

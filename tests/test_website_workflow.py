@@ -89,7 +89,21 @@ def test_publish_builds_exactly_the_release_the_tests_tested() -> None:
     assert fetch["run"].startswith('test -n "$OW_RELEASE_TAG"\n')
     assert "--relative" in fetch["run"] and "--tag" not in fetch["run"]
     build = next(s for s in steps if s.get("uses", "").startswith("docker/build-push"))
-    assert build["with"]["build-args"] == "OW_APP_SOURCE=${{ steps.release.outputs.dir }}"
+    assert build["with"]["build-args"] == (
+        "OW_APP_SOURCE=${{ steps.release.outputs.dir }}\n"
+        "OW_SECURITY_FEED=${{ steps.release.outputs.feed }}\n"
+    )
+
+
+def test_both_jobs_build_with_the_security_feed_they_fetched() -> None:
+    """A build without OW_SECURITY_FEED asks GitHub without a token, from inside docker."""
+    for job in ("test", "publish"):
+        fetch = next(s for s in JOBS[job]["steps"] if s.get("id") == "release")
+        assert "python scripts/security_feed.py .release/security.json\n" in fetch["run"]
+        assert "feed=.release/security.json" in fetch["run"]
+    build = next(s for s in JOBS["test"]["steps"] if s.get("name") == "Build the image")
+    assert build["env"]["OW_SECURITY_FEED"] == "${{ steps.release.outputs.feed }}"
+    assert "--build-arg OW_SECURITY_FEED" in build["run"]
 
 
 def test_the_browser_tests_cannot_skip_in_the_website_job() -> None:

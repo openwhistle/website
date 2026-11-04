@@ -95,6 +95,7 @@ def test_the_log_holds_no_address_agent_or_query() -> None:
     assert re.findall(r"^\s*access_log\s+([^;]+);", CONF, re.M) == [
         "/dev/stdout counter",
         "off",
+        "off",
     ]
 
 
