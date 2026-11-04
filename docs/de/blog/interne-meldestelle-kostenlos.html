@@ -4,7 +4,7 @@ description: 'Interne Meldestelle kostenlos betreiben: was bei 0 € Lizenz an S
 translation_key: free-internal-reporting-channel
 og_type: article
 published: '2026-09-27'
-modified: '2026-10-27'
+modified: '2026-11-04'
 section: Praxis
 css:
 - post
@@ -20,7 +20,7 @@ jsonld:
     '@type': WebPage
     '@id': https://openwhistle.net/de/blog/interne-meldestelle-kostenlos/
   datePublished: '2026-09-27'
-  dateModified: '2026-10-27'
+  dateModified: '2026-11-04'
   author:
     '@type': Organization
     name: OpenWhistle Contributors
@@ -59,7 +59,7 @@ jsonld:
           <p class="article-subtitle">Die Software für eine interne Meldestelle kostenlos zu bekommen, ist leicht. Die Pflichten des HinSchG bleiben trotzdem. Was an Server, Betrieb und Arbeit übrig bleibt, welche Optionen es gibt und wie Sie mit OpenWhistle anfangen.</p>
           <div class="article-meta">
             <span>27. September 2026</span>
-            <span>Aktualisiert am 27. Oktober 2026</span>
+            <span>Aktualisiert am 4. November 2026</span>
             <span>6 Min. Lesezeit</span>
             <span>OpenWhistle Contributors</span>
           </div>
@@ -103,8 +103,8 @@ jsonld:
           <p>So sieht der Stack aus, den OpenWhistle mit Docker Compose startet. Pflicht sind App, PostgreSQL und Redis hinter nginx. ClamAV und S3 sind optional.</p>
 
           <figure class="diagram">
-            <img class="diagram-light" src="/img/diagrams/architecture.de-light.svg" alt="Aufbau: Ein Browser erreicht nginx über TLS auf Port 443, Port 80 leitet um. Tor Browser erreicht den Onion-Zugang auf 8080, nur an 127.0.0.1 gebunden. Beide führen zur zustandslosen FastAPI-App. Sie braucht PostgreSQL und Redis, kann ClamAV und S3 nutzen und stellt zwei abschaltbare Anfragen nach außen: die GitHub-Update-Prüfung und die Installationszählung." width="905" height="487" loading="lazy">
-            <img class="diagram-dark" src="/img/diagrams/architecture.de-dark.svg" alt="Aufbau: Ein Browser erreicht nginx über TLS auf Port 443, Port 80 leitet um. Tor Browser erreicht den Onion-Zugang auf 8080, nur an 127.0.0.1 gebunden. Beide führen zur zustandslosen FastAPI-App. Sie braucht PostgreSQL und Redis, kann ClamAV und S3 nutzen und stellt zwei abschaltbare Anfragen nach außen: die GitHub-Update-Prüfung und die Installationszählung." width="905" height="487" loading="lazy">
+            <img class="diagram-light" src="/img/diagrams/architecture.de-light.svg" alt="Aufbau: Ein Browser erreicht nginx über TLS auf Port 443, Port 80 leitet um. Tor Browser erreicht den Onion-Zugang auf 8080, nur an 127.0.0.1 gebunden. Beide führen zur zustandslosen FastAPI-App. Sie braucht PostgreSQL und Redis, kann ClamAV und S3 nutzen und stellt zwei abschaltbare Anfragen nach außen: die Update-Prüfung bei openwhistle.net und die Installationszählung." width="905" height="487" loading="lazy">
+            <img class="diagram-dark" src="/img/diagrams/architecture.de-dark.svg" alt="Aufbau: Ein Browser erreicht nginx über TLS auf Port 443, Port 80 leitet um. Tor Browser erreicht den Onion-Zugang auf 8080, nur an 127.0.0.1 gebunden. Beide führen zur zustandslosen FastAPI-App. Sie braucht PostgreSQL und Redis, kann ClamAV und S3 nutzen und stellt zwei abschaltbare Anfragen nach außen: die Update-Prüfung bei openwhistle.net und die Installationszählung." width="905" height="487" loading="lazy">
             <figcaption>Der OpenWhistle-Stack. Beide Anfragen nach außen sind aus, bis Sie sie einschalten.</figcaption>
           </figure>
 

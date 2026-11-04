@@ -71,10 +71,12 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         # Assignments, not an echo of $(…): a failed fetch fails the step. The tag is resolved
         # once and pinned, so the tests, the image and the publish job read one release.
+        # The security feed with the token too (scripts/security_feed.py): a broken one fails here.
         run: |
           tag=$(python scripts/release_source.py --tag)
           dir=$(OW_RELEASE_TAG="$tag" python scripts/release_source.py --relative)
-          { echo "tag=$tag"; echo "dir=$dir"; } >> "$GITHUB_OUTPUT"
+          python scripts/security_feed.py .release/security.json
+          { echo "tag=$tag"; echo "dir=$dir"; echo "feed=.release/security.json"; } >> "$GITHUB_OUTPUT"
 
       - name: Set up Node 24
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -100,7 +102,10 @@ jobs:
       - name: Build the image
         env:
           OW_APP_SOURCE: ${{ steps.release.outputs.dir }}
-        run: docker build -f website/Dockerfile --build-arg OW_APP_SOURCE -t openwhistle-website:test .
+          OW_SECURITY_FEED: ${{ steps.release.outputs.feed }}
+        run: |
+          docker build -f website/Dockerfile --build-arg OW_APP_SOURCE --build-arg OW_SECURITY_FEED \
+            -t openwhistle-website:test .
 
       - name: Start it as it will run (read-only, unprivileged)
         run: |
@@ -166,10 +171,12 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           OW_RELEASE_TAG: ${{ needs.test.outputs.tag }}
         # Never the latest again: a release published while the tests ran was not tested.
+        # The security feed is fetched again: an advisory published meanwhile belongs in it.
         run: |
           test -n "$OW_RELEASE_TAG"
           dir=$(python scripts/release_source.py --relative)
-          echo "dir=$dir" >> "$GITHUB_OUTPUT"
+          python scripts/security_feed.py .release/security.json
+          { echo "dir=$dir"; echo "feed=.release/security.json"; } >> "$GITHUB_OUTPUT"
 
       - id: meta
         uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6
@@ -184,7 +191,9 @@ jobs:
         with:
           context: .
           file: website/Dockerfile
-          build-args: OW_APP_SOURCE=${{ steps.release.outputs.dir }}
+          build-args: |
+            OW_APP_SOURCE=${{ steps.release.outputs.dir }}
+            OW_SECURITY_FEED=${{ steps.release.outputs.feed }}
           platforms: linux/amd64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

@@ -48,6 +48,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
 sys.path.insert(0, str(ROOT / "scripts"))
 import release_source  # noqa: E402 (a sibling script, not a package)
+import security_feed  # noqa: E402
 
 PAGE_KEYS = {
     "title",
@@ -723,6 +724,15 @@ def write_security_txt(out: Path, site: dict[str, Any]) -> None:
     (out / ".well-known" / "security.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def write_security_feed(out: Path) -> None:
+    """/security.json, fetched daily by every installation (scripts/security_feed.py)."""
+    try:
+        feed = security_feed.load()
+    except security_feed.FeedError as error:
+        raise BuildError(f"security.json: {error}") from error
+    (out / "security.json").write_text(security_feed.dump(feed), encoding="utf-8")
+
+
 def write_feeds(out: Path, pages: list[Page], site: dict[str, Any], i18n: dict[str, Any]) -> None:
     """One Atom feed per language: every post under /<lang>/blog/<slug>/."""
     base = site["base_url"]
@@ -1038,6 +1048,7 @@ def build(src: Path, out: Path) -> list[Page]:
         dest.write_text(render_page(env, page, data, by_key), encoding="utf-8")
     write_sitemap(out, src, pages, site)
     write_security_txt(out, site)
+    write_security_feed(out)
     write_feeds(out, pages, site, data["i18n"])
     write_og_images(out, src, pages, data["i18n"][site["default_language"]]["og_image_alt"])
     subset_fonts(out, src)  # writes the fonts the pages link

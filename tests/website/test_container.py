@@ -6,6 +6,7 @@ WEBSITE_URL=http://127.0.0.1:8080 WEBSITE_CONTAINER=ow-website pytest tests/webs
 from __future__ import annotations
 
 import gzip
+import json
 import os
 import re
 import subprocess
@@ -318,6 +319,19 @@ def test_the_health_check_answers_without_a_log_line() -> None:
         assert response.headers[name] == value, name
     assert response.headers["content-security-policy"]
     assert "/healthz" not in logs()
+
+
+def test_the_security_feed_is_json_with_the_headers_and_leaves_no_log_line() -> None:
+    """What installations fetch daily; the app tells its admins the site logs nothing about it."""
+    response = get("/security.json")
+    assert response.status == 200
+    assert response.headers["content-type"].startswith("application/json")
+    for name, value in SECURITY.items():
+        assert response.headers[name] == value, name
+    assert json.loads(response.read())["schema"] == 1
+    assert response.headers["etag"]  # the app's daily fetch is a conditional GET
+    get("/en/")  # a line that is logged, so a missed security.json line had time to arrive
+    assert "/security.json" not in wait_for_logs(lambda text: " /en/ " in text)
 
 
 @pytest.mark.parametrize("path", ["/impressum/", "/de/datenschutz/", "/en/privacy/"])

@@ -154,8 +154,8 @@
   {
    "id": "IMAGE-BUILDS-ANOTHER-RELEASE",
    "file": ".github/workflows/website-image.yml",
-   "old": "--build-arg OW_APP_SOURCE -t",
-   "new": "-t",
+   "old": "--build-arg OW_APP_SOURCE --build-arg",
+   "new": "--build-arg",
    "tests": "WEBSITE_WF"
   },
   {

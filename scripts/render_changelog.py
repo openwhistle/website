@@ -234,13 +234,16 @@ CONTENT_FOOT = """    </main>
 # new release never pushes the page over the 100 KB first-view budget by itself.
 NEWEST = 5
 
-# Closed release series with a page of their own, /en/changelog/<major>.x/: one page of every
+# Closed release series with a page of their own, /en/changelog/<series>.x/: one page of every
 # older release outgrew the budget at 2.2.1 (107 KB first view), and a closed series never grows.
-ARCHIVED = ("1", "0")
+# A series is a major ("1") or, once /older/ outgrows the budget again, a closed minor ("2.0":
+# /older/ reached 103 KB at 2.5.1).
+ARCHIVED = ("2.0", "1", "0")
 
 
-def _major(version: Version) -> str:
-    return version.name.split(".", 1)[0]
+def _series(version: Version) -> str | None:
+    """The ARCHIVED series ``version`` belongs to, if any."""
+    return next((s for s in ARCHIVED if version.name.startswith(f"{s}.")), None)
 
 
 def render_content(
@@ -261,13 +264,13 @@ def render_content(
     released = [v for v in shown if v.name.lower() != "unreleased"]
     on_main = {v.name for v in released[:NEWEST]}
     if major:
-        shown = [v for v in released if v.name not in on_main and _major(v) == major]
+        shown = [v for v in released if v.name not in on_main and _series(v) == major]
     else:
         shown = [
             v
             for v in shown
             if (v.name in on_main or v.name.lower() == "unreleased") != older
-            and not (older and _major(v) in ARCHIVED)
+            and not (older and _series(v) is not None)
         ]
     if major and not shown:
         raise ValueError(f"CHANGELOG.md has no {major}.x release older than the newest {NEWEST}")

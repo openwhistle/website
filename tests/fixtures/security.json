@@ -1,0 +1,19 @@
+{
+ "schema": 1,
+ "latest": {
+  "version": "2.4.2",
+  "url": "https://github.com/openwhistle/OpenWhistle/releases/tag/v2.4.2",
+  "published_at": "2026-11-01T10:00:00Z"
+ },
+ "advisories": [
+  {
+   "id": "GHSA-2c4f-6h8j-9mpq",
+   "cve_ids": ["CVE-2026-0001"],
+   "summary": "Fixture advisory: never published",
+   "severity": "high",
+   "affected": ">= 1.4.0, < 2.4.2",
+   "fixed": "2.4.2",
+   "url": "https://github.com/openwhistle/OpenWhistle/security/advisories/GHSA-2c4f-6h8j-9mpq"
+  }
+ ]
+}

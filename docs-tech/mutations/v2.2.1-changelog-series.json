@@ -7,14 +7,14 @@
   {
    "id": "OLDER-KEEPS-ARCHIVED",
    "file": "scripts/render_changelog.py",
-   "old": "            and not (older and _major(v) in ARCHIVED)\n",
+   "old": "            and not (older and _series(v) is not None)\n",
    "new": "",
    "tests": "SPLIT"
   },
   {
    "id": "ARCHIVE-ANY-MAJOR",
    "file": "scripts/render_changelog.py",
-   "old": "v.name not in on_main and _major(v) == major]",
+   "old": "v.name not in on_main and _series(v) == major]",
    "new": "v.name not in on_main]",
    "tests": "SPLIT"
   },

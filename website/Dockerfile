@@ -12,6 +12,9 @@ COPY . .
 # The app release the site documents: a directory in the context that the workflow filled
 # (scripts/release_source.py --relative). Unset, the build fetches the latest release itself.
 ARG OW_APP_SOURCE
+# /security.json as the workflow fetched it with its token (scripts/security_feed.py). Unset, the
+# build asks the GitHub API itself.
+ARG OW_SECURITY_FEED
 RUN git config --global --add safe.directory /src \
     && python scripts/build_site.py --out /out/site \
     && python scripts/package_site.py /out/site /out/redirects.map
