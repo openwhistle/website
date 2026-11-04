@@ -45,7 +45,14 @@ js:
         </ul>
 
         <h2 id="current-version">Current version</h2>
-        <p><strong>v2.4.1</strong>. What it changed:</p>
+        <p><strong>v2.4.2</strong>, a security release. What it changed:</p>
+        <ul>
+          <li>pypdf 6.21.4 and pyasn1 0.6.5: eleven CVEs, the pypdf ones reachable through an anonymous PDF upload.</li>
+          <li>A password change, deactivation or authenticator reset now ends a stolen session even while it refreshes.</li>
+          <li>The bundled nginx streams uploads to the app, so a full temp disk no longer logs the reporter's address.</li>
+          <li>&sect; 17 HinSchG deadlines end with their last day; the demo no longer saves branding.</li>
+        </ul>
+        <p>What v2.4.1 changed:</p>
         <ul>
           <li>A crafted PDF upload that could stall the anonymous reporting channel is refused before it is cleaned.</li>
           <li>Copying the case number or PIN now confirms over Tor (plain HTTP), not only over HTTPS.</li>
