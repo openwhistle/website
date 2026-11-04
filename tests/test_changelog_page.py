@@ -183,7 +183,7 @@ def test_a_quote_in_a_changelog_url_stays_inside_its_href() -> None:
 
 
 def test_a_series_is_a_whole_version_prefix() -> None:
-    """"1" archives 1.5.0, never a 10.0.0; "2.0" archives 2.0.1, never 2.1.0."""
+    """ "1" archives 1.5.0, never a 10.0.0; "2.0" archives 2.0.1, never 2.1.0."""
     from types import SimpleNamespace
 
     series = RENDER_CHANGELOG._series
