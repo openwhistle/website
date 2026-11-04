@@ -64,7 +64,8 @@ def test_the_older_page_holds_the_rest_and_no_release_is_on_both() -> None:
     }
     for major, archive in archives.items():
         assert archive in (built() / f"en/changelog/{major}.x/index.html").read_text("utf-8")
-        assert ids(archive) and all(i.startswith(f"v{major.replace('.', '-')}-") for i in ids(archive)), major
+        prefix = f"v{major.replace('.', '-')}-"
+        assert ids(archive) and all(i.startswith(prefix) for i in ids(archive)), major
         assert not ids(archive) & (current | ids(older)), major
     assert "v1-0-0" in ids(archives["1"]) and "v0-1-0" in ids(archives["0"])
     assert not any(i.startswith(("v0-", "v1-", "v2-0-")) for i in ids(older))
