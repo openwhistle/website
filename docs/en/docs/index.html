@@ -45,7 +45,13 @@ js:
         </ul>
 
         <h2 id="current-version">Current version</h2>
-        <p><strong>v2.4.2</strong>, a security release. What it changed:</p>
+        <p><strong>v2.5.1</strong>: <code>/admin/system</code> listed the default of <code>UPDATE_CHECK_ENABLED</code> as <code>false</code>; it is <code>true</code>.</p>
+        <p>What v2.5.0 changed:</p>
+        <ul>
+          <li>Admins see on the dashboard and on <code>/admin/system</code> when the running version has a published security advisory, and which release fixes it.</li>
+          <li>The update check is on by default and reads <code>openwhistle.net/security.json</code> once a day instead of GitHub; <code>UPDATE_CHECK_ENABLED=false</code> turns it off.</li>
+        </ul>
+        <p>What v2.4.2 changed, a security release:</p>
         <ul>
           <li>pypdf 6.21.4 and pyasn1 0.6.5: eleven CVEs, the pypdf ones reachable through an anonymous PDF upload.</li>
           <li>A password change, deactivation or authenticator reset now ends a stolen session even while it refreshes.</li>
